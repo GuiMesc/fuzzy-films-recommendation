@@ -70,7 +70,7 @@ def calcular_afinidade(historico_filmes, chave, valor_alvo, index):
     print("Quantidade de filmes filtrados: ", qtd_filtrada)
     print("Porcentagem de filmes filtrados: ", Q)
 
-    media_notas = np.mean([h['movies']['average'] for h in filmes_filtrados])
+    media_notas = np.mean([h['user_average'] for h in filmes_filtrados])
     N = media_notas / 10
     print("Média de notas dos filmes filtrados: ", media_notas)
     print("Porcentagem da média de notas: ", N)
@@ -107,99 +107,129 @@ def plotar_pertinencia(universo, baixo, medio, alto, valor, titulo):
 
 if __name__ == '__main__':
     token = login()
-    if token:
-        history = get_history(token)
-        movies = get_movies(token)
-
-        # if movies:
-        #     for movie in movies:
-        #         print("Filme do Catálogo: ", movie)
-        # else:
-        #     print("Não foi possível buscar os filmes")
-
-        # if history:
-        #     for h in history:
-        #         print("Filme do Histórico: ", h)
-        # else:
-        #     print("Não foi possível buscar o histórico")
-    else:
+    if not token:
         print("Não foi possível fazer login")
-    
-    for index, movie in enumerate(movies):
-        if index == len(movie.get("genders")):
-            break
-        afinidade_genero = calcular_afinidade(history, 'genders', movie['genders'][index]['name'], index)
-        afinidade_ator = calcular_afinidade(history, 'actors', movie['actors'][index]['name'], index)
-        afinidade_diretor = calcular_afinidade(history, 'directors', movie['directors'][index]['name'], index)
-        #calcular_afinidade(history, 'average', movie['average'], index)
-    
-    genero_valor = afinidade_genero * 10
-    diretor_valor = afinidade_diretor * 10
-    ator_valor = afinidade_ator * 10
+        exit(1)
 
-    # Variáveis Fuzzy
-    genero = ctrl.Antecedent(np.arange(0, 11, 1),'genero')
+    history = get_history(token)
+    movies = get_movies(token)
+
+    if not history or not movies:
+        print("Não foi possível buscar os dados da API")
+        exit(1)
+
+    # ── Variáveis Fuzzy (construídas uma única vez) ──────────────────────────
+    genero = ctrl.Antecedent(np.arange(0, 11, 1), 'genero')
     diretor = ctrl.Antecedent(np.arange(0, 11, 1), 'diretor')
     ator = ctrl.Antecedent(np.arange(0, 11, 1), 'ator')
-    #nota = ctrl.Antecedent(np.arange(0, 11, 1), 'nota')
+    nota = ctrl.Antecedent(np.arange(0, 11, 1), 'nota')
 
-    recomendacao = ctrl.Consequent(np.arange(0, 101, 1),'recomendacao')
+    recomendacao = ctrl.Consequent(np.arange(0, 101, 1), 'recomendacao')
 
     # Funções de Pertinência
-    variaveis = [genero, diretor, ator]
+    for variavel in [genero, diretor, ator]:
+        variavel['baixa'] = fuzz.trimf(variavel.universe, [0, 0, 5])
+        variavel['media'] = fuzz.trimf(variavel.universe, [2, 5, 8])
+        variavel['alta'] = fuzz.trimf(variavel.universe, [5, 10, 10])
 
-    for variavel in variaveis:
-        variavel['baixa'] = fuzz.trimf(variavel.universe,[0, 0, 5])
-        variavel['media'] = fuzz.trimf(variavel.universe,[2, 5, 8])
-        variavel['alta'] = fuzz.trimf(variavel.universe,[5, 10, 10])
+    nota['ruim']      = fuzz.trimf(nota.universe, [0, 0, 5])
+    nota['boa']       = fuzz.trimf(nota.universe, [4, 6, 8])
+    nota['excelente'] = fuzz.trimf(nota.universe, [7, 10, 10])
 
-    # Nota
-
-    # nota['ruim'] = fuzz.trimf(nota.universe,[0, 0, 5])
-    # nota['boa'] = fuzz.trimf(nota.universe,[4, 6, 8])
-    # nota['excelente'] = fuzz.trimf(nota.universe,[7, 10, 10])
-
-    # Recomendação
-
-    recomendacao['baixa'] = fuzz.trimf(recomendacao.universe,[0, 0, 40])
-    recomendacao['media'] = fuzz.trimf(recomendacao.universe,[30, 50, 70])
-    recomendacao['alta'] = fuzz.trimf(recomendacao.universe,[60, 80, 100])
-    recomendacao['muito_alta'] = fuzz.trimf(recomendacao.universe,[80, 100, 100])
+    recomendacao['baixa']      = fuzz.trimf(recomendacao.universe, [0,  0,   40])
+    recomendacao['media']      = fuzz.trimf(recomendacao.universe, [30, 50,  70])
+    recomendacao['alta']       = fuzz.trimf(recomendacao.universe, [60, 80, 100])
+    recomendacao['muito_alta'] = fuzz.trimf(recomendacao.universe, [80, 100, 100])
 
     # Regras Fuzzy
-
-    regra1 = ctrl.Rule(genero['alta'] & diretor['alta'] & nota['excelente'],recomendacao['muito_alta'])
-    regra2 = ctrl.Rule(genero['alta'] & nota['boa'],recomendacao['alta'])
-    regra3 = ctrl.Rule(diretor['media'] & nota['boa'],recomendacao['media'])
-    regra4 = ctrl.Rule(genero['baixa'] & nota['ruim'],recomendacao['baixa'])
-    regra5 = ctrl.Rule(nota['excelente'],recomendacao['alta'])
-    regra6 = ctrl.Rule(ator['alta'] & nota['excelente'],recomendacao['muito_alta'])
-    regra7 = ctrl.Rule(genero['alta'] & diretor['alta'] & ator['alta'],recomendacao['muito_alta'])
-
-    # SISTEMA FUZZY
+    regra1 = ctrl.Rule(genero['alta'] & diretor['alta'] & nota['excelente'], recomendacao['muito_alta'])
+    regra2 = ctrl.Rule(genero['alta'] & nota['boa'],                         recomendacao['alta'])
+    regra3 = ctrl.Rule(diretor['media'] & nota['boa'],                       recomendacao['media'])
+    regra4 = ctrl.Rule(genero['baixa'] & nota['ruim'],                       recomendacao['baixa'])
+    regra5 = ctrl.Rule(nota['excelente'],                                    recomendacao['alta'])
+    regra6 = ctrl.Rule(ator['alta'] & nota['excelente'],                     recomendacao['muito_alta'])
+    regra7 = ctrl.Rule(genero['alta'] & diretor['alta'] & ator['alta'],      recomendacao['muito_alta'])
 
     sistema_controle = ctrl.ControlSystem([regra1, regra2, regra3, regra4, regra5, regra6, regra7])
 
-    sistema = ctrl.ControlSystemSimulation(sistema_controle)
+    # ── Loop por cada filme do catálogo ─────────────────────────────────────
+    resultados = []
 
-    # ENTRADAS DO SISTEMA
+    for movie in movies:
+        # Usa sempre o índice 0 (primeiro gênero/ator/diretor do filme)
+        attr_index = 0
 
-    sistema.input['genero'] = genero_valor
-    sistema.input['diretor'] = diretor_valor
-    sistema.input['ator'] = ator_valor
-    # sistema.input['nota'] = nota_valor
+        afinidade_genero  = calcular_afinidade(history, 'genders',   movie['genders'][attr_index]['name'],   attr_index) if movie.get('genders')   else 0
+        afinidade_ator    = calcular_afinidade(history, 'actors',    movie['actors'][attr_index]['name'],    attr_index) if movie.get('actors')    else 0
+        afinidade_diretor = calcular_afinidade(history, 'directors', movie['directors'][attr_index]['name'], attr_index) if movie.get('directors') else 0
+        nota_filme        = movie['average'] / 10
 
-    # PROCESSAMENTO
+        sistema = ctrl.ControlSystemSimulation(sistema_controle)
+        sistema.input['genero']  = afinidade_genero  * 10
+        sistema.input['diretor'] = afinidade_diretor * 10
+        sistema.input['ator']    = afinidade_ator    * 10
+        sistema.input['nota']    = nota_filme        * 10
 
-    sistema.compute()
+        try:
+            sistema.compute()
+            percentual = round(sistema.output['recomendacao'], 2)
+        except Exception as e:
+            print(f"[AVISO] Nenhuma regra ativada para '{movie['title']}': {e}")
+            percentual = 0.0
 
-    # RESULTADO
+        resultados.append({
+            'id':                 movie['id'],
+            'title':              movie['title'],
+            'description':        movie.get('description', ''),
+            'average':            movie['average'],
+            'genders':            movie.get('genders', []),
+            'actors':             movie.get('actors', []),
+            'directors':          movie.get('directors', []),
+            'recommendation_score': percentual
+        })
 
-    resultado = sistema.output['recomendacao']
+    # Ordena do mais recomendado para o menos recomendado
+    resultados.sort(key=lambda x: x['recommendation_score'], reverse=True)
 
+    # ── Resultado final ──────────────────────────────────────────────────────
     print("\n====================================================")
-    print("RESULTADO FINAL")
-    print("====================================================")
+    print("RESULTADO FINAL - RECOMENDAÇÕES POR FILME")
+    print("====================================================\n")
 
-    print(f"\nPercentual de recomendação: {resultado:.2f}%")
-    
+    for r in resultados:
+        generos   = ', '.join(g['name'] for g in r['genders'])
+        diretores = ', '.join(d['name'] for d in r['directors'])
+        atores    = ', '.join(a['name'] for a in r['actors'])
+        print(f"🎬 {r['title']}")
+        print(f"   Gênero(s)  : {generos}")
+        print(f"   Diretor(es): {diretores}")
+        print(f"   Ator(es)   : {atores}")
+        print(f"   Nota média : {r['average']}")
+        print(f"   ⭐ Recomendação: {r['recommendation_score']:.2f}%")
+        print()
+
+    # ── POST /recommendation com o filme mais recomendado ────────────────────
+    if resultados:
+        top_movie = resultados[0]
+        recommendation_body = {
+            "userId": token,
+            "movieId": top_movie['id']
+        }
+
+        print("=====================================================")
+        print("ENVIANDO RECOMENDAÇÃO PARA A API")
+        print("=====================================================")
+        print(f"userId : {token}")
+        print(f"movieId: {top_movie['id']} ({top_movie['title']})")
+
+        rec_headers = {'Authorization': f'Bearer {token}'}
+        rec_response = requests.post(
+            "http://localhost:3000/recommendation",
+            json=recommendation_body,
+            headers=rec_headers
+        )
+
+        if rec_response.status_code in (200, 201):
+            print(f"✅ Recomendação registrada com sucesso! (status {rec_response.status_code})")
+        else:
+            print(f"❌ Erro ao registrar recomendação: {rec_response.status_code} - {rec_response.text}")
