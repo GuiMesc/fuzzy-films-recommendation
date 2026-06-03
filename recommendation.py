@@ -200,27 +200,26 @@ if __name__ == '__main__':
         generos   = ', '.join(g['name'] for g in r['genders'])
         diretores = ', '.join(d['name'] for d in r['directors'])
         atores    = ', '.join(a['name'] for a in r['actors'])
-        print(f"🎬 {r['title']}")
+        print(f"   {r['title']}")
         print(f"   Gênero(s)  : {generos}")
         print(f"   Diretor(es): {diretores}")
         print(f"   Ator(es)   : {atores}")
         print(f"   Nota média : {r['average']}")
-        print(f"   ⭐ Recomendação: {r['recommendation_score']:.2f}%")
+        print(f"   Recomendação: {r['recommendation_score']:.2f}%")
         print()
 
-    # ── POST /recommendation com o filme mais recomendado ────────────────────
+    # ── POST /recommendation com todos os filmes recomendados ────────────────
     if resultados:
-        top_movie = resultados[0]
+        movie_ids = [r['id'] for r in resultados]
         recommendation_body = {
-            "userId": token,
-            "movieId": top_movie['id']
+            "movieIds": movie_ids
         }
 
         print("=====================================================")
         print("ENVIANDO RECOMENDAÇÃO PARA A API")
         print("=====================================================")
         print(f"userId : {token}")
-        print(f"movieId: {top_movie['id']} ({top_movie['title']})")
+        print(f"movieIds: {movie_ids}")
 
         rec_headers = {'Authorization': f'Bearer {token}'}
         rec_response = requests.post(
@@ -230,6 +229,6 @@ if __name__ == '__main__':
         )
 
         if rec_response.status_code in (200, 201):
-            print(f"✅ Recomendação registrada com sucesso! (status {rec_response.status_code})")
+            print(f"Recomendação registrada com sucesso! (status {rec_response.status_code})")
         else:
-            print(f"❌ Erro ao registrar recomendação: {rec_response.status_code} - {rec_response.text}")
+            print(f"Erro ao registrar recomendação: {rec_response.status_code} - {rec_response.text}")
