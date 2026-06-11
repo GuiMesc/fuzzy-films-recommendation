@@ -210,16 +210,22 @@ if __name__ == '__main__':
 
     # ── POST /recommendation com todos os filmes recomendados ────────────────
     if resultados:
-        movie_ids = [r['id'] for r in resultados]
+        movies_payload = [
+            {
+                "movieId": r['id'],
+                "recommendation_score": round(float(r['recommendation_score']), 2)
+            }
+            for r in resultados
+        ]
         recommendation_body = {
-            "movieIds": movie_ids
+            "movies": movies_payload
         }
 
         print("=====================================================")
         print("ENVIANDO RECOMENDAÇÃO PARA A API")
         print("=====================================================")
-        print(f"userId : {token}")
-        print(f"movieIds: {movie_ids}")
+        for m in movies_payload:
+            print(f"  movieId: {m['movieId']}  |  score: {m['recommendation_score']}")
 
         rec_headers = {'Authorization': f'Bearer {token}'}
         rec_response = requests.post(
