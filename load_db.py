@@ -1,5 +1,4 @@
 import re
-import uuid
 import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
@@ -63,16 +62,16 @@ def get_or_create_actor(cursor, cache, actor_name):
         cache[actor_name] = result[0]
         return result[0]
 
-    actor_id = str(uuid.uuid4())
-
     cursor.execute(
         """
-        INSERT INTO tbl_actors (id, name)
-        VALUES (%s, %s)
+        INSERT INTO tbl_actors (name)
+        VALUES (%s)
+        RETURNING id
         """,
-        (actor_id, actor_name)
+        (actor_name,)
     )
 
+    actor_id = cursor.fetchone()[0]
     cache[actor_name] = actor_id
 
     return actor_id
@@ -102,16 +101,16 @@ def get_or_create_director(cursor, cache, director_name):
         cache[director_name] = result[0]
         return result[0]
 
-    director_id = str(uuid.uuid4())
-
     cursor.execute(
         """
-        INSERT INTO tbl_directors (id, name)
-        VALUES (%s, %s)
+        INSERT INTO tbl_directors (name)
+        VALUES (%s)
+        RETURNING id
         """,
-        (director_id, director_name)
+        (director_name,)
     )
 
+    director_id = cursor.fetchone()[0]
     cache[director_name] = director_id
 
     return director_id
@@ -141,16 +140,16 @@ def get_or_create_gender(cursor, cache, gender_name):
         cache[gender_name] = result[0]
         return result[0]
 
-    gender_id = str(uuid.uuid4())
-
     cursor.execute(
         """
-        INSERT INTO tbl_genders (id, name)
-        VALUES (%s, %s)
+        INSERT INTO tbl_genders (name)
+        VALUES (%s)
+        RETURNING id
         """,
-        (gender_id, gender_name)
+        (gender_name,)
     )
 
+    gender_id = cursor.fetchone()[0]
     cache[gender_name] = gender_id
 
     return gender_id
@@ -180,16 +179,16 @@ def get_or_create_rating(cursor, cache, certificate):
         cache[certificate] = result[0]
         return result[0]
 
-    rating_id = str(uuid.uuid4())
-
     cursor.execute(
         """
-        INSERT INTO tbl_ratings (id, description)
-        VALUES (%s, %s)
+        INSERT INTO tbl_ratings (description)
+        VALUES (%s)
+        RETURNING id
         """,
-        (rating_id, certificate)
+        (certificate,)
     )
 
+    rating_id = cursor.fetchone()[0]
     cache[certificate] = rating_id
 
     return rating_id
@@ -258,12 +257,9 @@ def main():
                     row["Certificate"]
                 )
 
-                movie_id = str(uuid.uuid4())
-
                 cursor.execute(
                     """
                     INSERT INTO tbl_movies (
-                        id,
                         title,
                         description,
                         duration,
@@ -277,12 +273,11 @@ def main():
                         %s,
                         %s,
                         %s,
-                        %s,
                         %s
                     )
+                    RETURNING id
                     """,
                     (
-                        movie_id,
                         title,
                         description,
                         duration,
@@ -291,6 +286,7 @@ def main():
                         rating_id
                     )
                 )
+                movie_id = cursor.fetchone()[0]
 
                 director_id = get_or_create_director(
                     cursor,

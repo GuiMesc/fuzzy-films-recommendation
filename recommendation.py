@@ -2,51 +2,158 @@ import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import matplotlib.pyplot as plt
-import requests
+import psycopg2
+import psycopg2.extras
 
-def login():
-    login_body = {
-        "email": "guilherme@mail.com",
-        "password": "12345678"
-    }
+DB_CONFIG = {
+    "host": "localhost",
+    "port": 5432,
+    "database": "recommendation_films_db",
+    "user": "postgres",
+    "password": "root"
+}
 
-    login_request = requests.post("http://localhost:3000/auth/login", json=login_body)
-    login_data = login_request.json()
+def get_db_connection():
+    return psycopg2.connect(**DB_CONFIG)
 
-    access_token = login_data.get('access_token')
-    if access_token:
-        return access_token
-    else:
-        print("Token não encontrado")
+def get_user_id_by_name(name="Guilherme"):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT id FROM tbl_users WHERE name = %s LIMIT 1;", (name,))
+            row = cursor.fetchone()
+            return row[0] if row else None
+    except Exception as e:
+        print(f"Erro ao buscar usuário: {e}")
         return None
+    finally:
+        conn.close()
 
-def get_history(token):
-    headers = {
-        'Authorization': f'Bearer {token}'
-    }
-
-    history_request = requests.get("http://localhost:3000/historic", headers=headers)
-    history_data = history_request.json()
-
-    if history_data:
-        return history_data
-    else:
-        print("Histórico não encontrado")
+def get_history(user_id):
+    conn = get_db_connection()
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+            cursor.execute(
+                """
+                SELECT 
+                    h.user_average,
+                    h.minutes_watched,
+                    h.liked,
+                    m.duration,
+                    COALESCE(
+                        (SELECT json_agg(json_build_object('name', g.name)) 
+                         FROM tbl_movie_gender mg 
+                         JOIN tbl_genders g ON mg.gender_id = g.id 
+                         WHERE mg.movie_id = m.id), 
+                        '[]'::json
+                    ) as genders,
+                    COALESCE(
+                        (SELECT json_agg(json_build_object('name', a.name)) 
+                         FROM tbl_movie_actor ma 
+                         JOIN tbl_actors a ON ma.actor_id = a.id 
+                         WHERE ma.movie_id = m.id), 
+                        '[]'::json
+                    ) as actors,
+                    COALESCE(
+                        (SELECT json_agg(json_build_object('name', d.name)) 
+                         FROM tbl_movie_director md 
+                         JOIN tbl_directors d ON md.director_id = d.id 
+                         WHERE md.movie_id = m.id), 
+                        '[]'::json
+                    ) as directors
+                FROM tbl_historic h
+                JOIN tbl_movies m ON h.movie_id = m.id
+                WHERE h.user_id = %s;
+                """,
+                (user_id,)
+            )
+            rows = cursor.fetchall()
+            
+            history_data = []
+            for row in rows:
+                history_data.append({
+                    'user_average': row['user_average'],
+                    'minutes_watched': row['minutes_watched'],
+                    'like': row['liked'],
+                    'movies': {
+                        'duration': row['duration'],
+                        'genders': row['genders'],
+                        'actors': row['actors'],
+                        'directors': row['directors']
+                    }
+                })
+            return history_data
+    except Exception as e:
+        print(f"Erro ao buscar histórico: {e}")
         return None
+    finally:
+        conn.close()
 
-def get_movies(token):
-    headers = {
-        'Authorization': f'Bearer {token}'
-    }
-
-    movies_request = requests.get("http://localhost:3000/movie", headers=headers)
-    movies_data = movies_request.json()
-
-    if movies_data:
-        return movies_data
-    else:
-        print("Filmes não encontrados")
+def get_movies():
+    conn = get_db_connection()
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+            cursor.execute(
+                """
+                SELECT 
+                    m.id,
+                    m.title,
+                    m.description,
+                    m.duration,
+                    m.released_year,
+                    m.average,
+                    COALESCE(
+                        (SELECT json_agg(json_build_object('name', g.name)) 
+                         FROM tbl_movie_gender mg 
+                         JOIN tbl_genders g ON mg.gender_id = g.id 
+                         WHERE mg.movie_id = m.id), 
+                        '[]'::json
+                    ) as genders,
+                    COALESCE(
+                        (SELECT json_agg(json_build_object('name', a.name)) 
+                         FROM tbl_movie_actor ma 
+                         JOIN tbl_actors a ON ma.actor_id = a.id 
+                         WHERE ma.movie_id = m.id), 
+                        '[]'::json
+                    ) as actors,
+                    COALESCE(
+                        (SELECT json_agg(json_build_object('name', d.name)) 
+                         FROM tbl_movie_director md 
+                         JOIN tbl_directors d ON md.director_id = d.id 
+                         WHERE md.movie_id = m.id), 
+                        '[]'::json
+                    ) as directors
+                FROM tbl_movies m;
+                """
+            )
+            return cursor.fetchall()
+    except Exception as e:
+        print(f"Erro ao buscar filmes: {e}")
         return None
+    finally:
+        conn.close()
+
+def save_recommendations(user_id, recommendations):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cursor:
+            for rec in recommendations:
+                cursor.execute(
+                    """
+                    INSERT INTO tbl_recommendations (user_id, movie_id, recommendation_score)
+                    VALUES (%s, %s, %s)
+                    ON CONFLICT (user_id, movie_id)
+                    DO UPDATE SET recommendation_score = EXCLUDED.recommendation_score;
+                    """,
+                    (user_id, rec['movieId'], rec['recommendation_score'])
+                )
+        conn.commit()
+        print("Recomendações registradas com sucesso no banco de dados!")
+    except Exception as e:
+        conn.rollback()
+        print(f"Erro ao salvar recomendações no banco: {e}")
+    finally:
+        conn.close()
 
 # Valor alvo é um atributo do filme candidato
 def calcular_afinidade(historico_filmes, chave, valor_alvo, index):
@@ -106,16 +213,13 @@ def plotar_pertinencia(universo, baixo, medio, alto, valor, titulo):
     plt.show()
 
 if __name__ == '__main__':
-    token = login()
-    if not token:
-        print("Não foi possível fazer login")
-        exit(1)
+    user_id = get_user_id_by_name("Guilherme") or 1
 
-    history = get_history(token)
-    movies = get_movies(token)
+    history = get_history(user_id)
+    movies = get_movies()
 
     if not history or not movies:
-        print("Não foi possível buscar os dados da API")
+        print("Não foi possível buscar os dados do banco de dados")
         exit(1)
 
     # ── Variáveis Fuzzy (construídas uma única vez) ──────────────────────────
@@ -208,7 +312,7 @@ if __name__ == '__main__':
         print(f"   Recomendação: {r['recommendation_score']:.2f}%")
         print()
 
-    # ── POST /recommendation com todos os filmes recomendados ────────────────
+    # ── Salvar recomendações no banco ────────────────
     if resultados:
         movies_payload = [
             {
@@ -217,24 +321,11 @@ if __name__ == '__main__':
             }
             for r in resultados
         ]
-        recommendation_body = {
-            "movies": movies_payload
-        }
 
         print("=====================================================")
-        print("ENVIANDO RECOMENDAÇÃO PARA A API")
+        print("SALVANDO RECOMENDAÇÃO NO BANCO DE DADOS")
         print("=====================================================")
         for m in movies_payload:
             print(f"  movieId: {m['movieId']}  |  score: {m['recommendation_score']}")
 
-        rec_headers = {'Authorization': f'Bearer {token}'}
-        rec_response = requests.post(
-            "http://localhost:3000/recommendation",
-            json=recommendation_body,
-            headers=rec_headers
-        )
-
-        if rec_response.status_code in (200, 201):
-            print(f"Recomendação registrada com sucesso! (status {rec_response.status_code})")
-        else:
-            print(f"Erro ao registrar recomendação: {rec_response.status_code} - {rec_response.text}")
+        save_recommendations(user_id, movies_payload)
