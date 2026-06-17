@@ -155,6 +155,44 @@ def save_recommendations(user_id, recommendations):
     finally:
         conn.close()
 
+def get_user_profile(user_id):
+    """Retorna o perfil declarado do usuário (favoritos de ator, diretor e gênero)."""
+    conn = get_db_connection()
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+            cursor.execute(
+                """
+                SELECT
+                    g.name  AS favorite_gender,
+                    a.name  AS favorite_actor,
+                    d.name  AS favorite_director
+                FROM tbl_users u
+                LEFT JOIN tbl_genders   g ON g.id = u.favorite_gender_id
+                LEFT JOIN tbl_actors    a ON a.id = u.favorite_actor_id
+                LEFT JOIN tbl_directors d ON d.id = u.favorite_director_id
+                WHERE u.id = %s;
+                """,
+                (user_id,)
+            )
+            row = cursor.fetchone()
+            return dict(row) if row else {}
+    except Exception as e:
+        print(f"Erro ao buscar perfil do usuário: {e}")
+        return {}
+    finally:
+        conn.close()
+
+
+def aplicar_boost_perfil(valor_base, nome_favorito, lista_itens_filme, boost=2.0):
+    """
+    Eleva o valor fuzzy base em `boost` pontos se o favorito declarado
+    do usuário está presente no filme. Resultado é limitado a 10.
+    """
+    if nome_favorito and any(item['name'] == nome_favorito for item in lista_itens_filme):
+        return min(10.0, valor_base + boost)
+    return valor_base
+
+
 # Valor alvo é um atributo do filme candidato
 def calcular_afinidade(historico_filmes, chave, valor_alvo, index):
     movie = []
@@ -215,6 +253,14 @@ def plotar_pertinencia(universo, baixo, medio, alto, valor, titulo):
 if __name__ == '__main__':
     user_id = get_user_id_by_name("Guilherme") or 1
 
+    profile = get_user_profile(user_id)
+    print("\n=====================================================")
+    print("PERFIL DECLARADO DO USUÁRIO")
+    print("=====================================================")
+    print(f"  Gênero favorito  : {profile.get('favorite_gender')  or '(não definido)'}")
+    print(f"  Ator favorito    : {profile.get('favorite_actor')    or '(não definido)'}")
+    print(f"  Diretor favorito : {profile.get('favorite_director') or '(não definido)'}")
+
     history = get_history(user_id)
     movies = get_movies()
 
@@ -269,10 +315,35 @@ if __name__ == '__main__':
         nota_filme        = movie['average'] / 10
 
         sistema = ctrl.ControlSystemSimulation(sistema_controle)
-        sistema.input['genero']  = afinidade_genero  * 10
-        sistema.input['diretor'] = afinidade_diretor * 10
-        sistema.input['ator']    = afinidade_ator    * 10
-        sistema.input['nota']    = nota_filme        * 10
+
+        # ── Entradas base (somente histórico) ───────────────────────────────
+        input_genero  = afinidade_genero  * 10
+        input_ator    = afinidade_ator    * 10
+        input_diretor = afinidade_diretor * 10
+
+        # ── Boost por perfil declarado ───────────────────────────────────────
+        input_genero_boosted  = aplicar_boost_perfil(input_genero,  profile.get('favorite_gender'),    movie.get('genders',   []))
+        input_ator_boosted    = aplicar_boost_perfil(input_ator,    profile.get('favorite_actor'),     movie.get('actors',    []))
+        input_diretor_boosted = aplicar_boost_perfil(input_diretor, profile.get('favorite_director'),  movie.get('directors', []))
+
+        # ── Log de boost (exibe somente quando houve alteração) ──────────────
+        boost_lines = []
+        if input_genero_boosted != input_genero:
+            boost_lines.append(f"    gênero  : {input_genero:.2f} → {input_genero_boosted:.2f}  (+{input_genero_boosted - input_genero:.2f}) [favorito: {profile.get('favorite_gender')}]")
+        if input_ator_boosted != input_ator:
+            boost_lines.append(f"    ator    : {input_ator:.2f} → {input_ator_boosted:.2f}  (+{input_ator_boosted - input_ator:.2f}) [favorito: {profile.get('favorite_actor')}]")
+        if input_diretor_boosted != input_diretor:
+            boost_lines.append(f"    diretor : {input_diretor:.2f} → {input_diretor_boosted:.2f}  (+{input_diretor_boosted - input_diretor:.2f}) [favorito: {profile.get('favorite_director')}]")
+
+        if boost_lines:
+            print(f"\n  [BOOST DE PERFIL] '{movie['title']}'")
+            for line in boost_lines:
+                print(line)
+
+        sistema.input['genero']  = input_genero_boosted
+        sistema.input['diretor'] = input_diretor_boosted
+        sistema.input['ator']    = input_ator_boosted
+        sistema.input['nota']    = nota_filme * 10
 
         try:
             sistema.compute()
