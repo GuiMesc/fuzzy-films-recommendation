@@ -52,7 +52,7 @@ SELECT
         '[]'::json
     ) AS directors
 FROM tbl_movies m
-WHERE m.id = 64;
+WHERE m.id = 280;
 """
 
 def get_db_connection():
@@ -193,20 +193,24 @@ def get_user_profile(user_id):
         conn.close()
 
 
-def aplicar_boost_perfil(valor_base, nome_favorito, lista_itens_filme, boost=2.0):
+def calcular_input_com_perfil(score_historico, nome_favorito, lista_itens_filme,
+                              peso_historico=0.6, peso_perfil=0.4):
     """
-    Eleva o valor fuzzy base em `boost` pontos se o favorito declarado
-    do usuário está presente no filme. Resultado é limitado a 10.
+    Combina o score do histórico (0-10) com o sinal do perfil declarado.
+    Quando o favorito do usuário está no filme, o sinal de perfil vale 10;
+    caso contrário, vale 0. A média ponderada garante que o match de perfil
+    sempre eleva o input para a zona correta das funções de pertinência fuzzy.
     """
-    if nome_favorito and any(item['name'] == nome_favorito for item in lista_itens_filme):
-        return min(10.0, valor_base + boost)
-    return valor_base
+    perfil_score = 10.0 if (nome_favorito and any(
+        item['name'] == nome_favorito for item in lista_itens_filme
+    )) else 0.0
+    return round(peso_historico * score_historico + peso_perfil * perfil_score, 2)
 
 
 # valores_alvo é a lista completa de atributos do filme candidato (ex: todos os gêneros)
 def calcular_afinidade(historico_filmes, chave, valores_alvo):
     nomes_alvo = {item['name'] for item in valores_alvo}
-    print("Nomes alvo: ", nomes_alvo)
+    print("\n\nNomes alvo: ", nomes_alvo)
 
     filmes_filtrados = [
         h for h in historico_filmes
@@ -330,7 +334,7 @@ def plotar_pertinencia(variaveis_entrada, consequente, valores_entrada, valor_sa
     return caminho
 
 if __name__ == '__main__':
-    user_id = get_user_id_by_name("Guilherme")
+    user_id = get_user_id_by_name("João")
 
     profile = get_user_profile(user_id)
     print("\n=====================================================")
@@ -399,22 +403,22 @@ if __name__ == '__main__':
         input_ator    = afinidade_ator    * 10
         input_diretor = afinidade_diretor * 10
 
-        # ── Boost por perfil declarado ───────────────────────────────────────
-        input_genero_boosted  = aplicar_boost_perfil(input_genero,  profile.get('favorite_gender'),    movie.get('genders',   []))
-        input_ator_boosted    = aplicar_boost_perfil(input_ator,    profile.get('favorite_actor'),     movie.get('actors',    []))
-        input_diretor_boosted = aplicar_boost_perfil(input_diretor, profile.get('favorite_director'),  movie.get('directors', []))
+        # ── Blending histórico + perfil declarado ────────────────────────────
+        input_genero_boosted  = calcular_input_com_perfil(input_genero,  profile.get('favorite_gender'),    movie.get('genders',   []))
+        input_ator_boosted    = calcular_input_com_perfil(input_ator,    profile.get('favorite_actor'),     movie.get('actors',    []))
+        input_diretor_boosted = calcular_input_com_perfil(input_diretor, profile.get('favorite_director'),  movie.get('directors', []))
 
-        # ── Log de boost (exibe somente quando houve alteração) ──────────────
+                # ── Log de blending (exibe somente quando houve alteração) ───────────
         boost_lines = []
         if input_genero_boosted != input_genero:
-            boost_lines.append(f"    gênero  : {input_genero:.2f} → {input_genero_boosted:.2f}  (+{input_genero_boosted - input_genero:.2f}) [favorito: {profile.get('favorite_gender')}]")
+            boost_lines.append(f"    gênero  : {input_genero:.2f} → {input_genero_boosted:.2f} [favorito: {profile.get('favorite_gender')}]")
         if input_ator_boosted != input_ator:
-            boost_lines.append(f"    ator    : {input_ator:.2f} → {input_ator_boosted:.2f}  (+{input_ator_boosted - input_ator:.2f}) [favorito: {profile.get('favorite_actor')}]")
+            boost_lines.append(f"    ator    : {input_ator:.2f} → {input_ator_boosted:.2f} [favorito: {profile.get('favorite_actor')}]")
         if input_diretor_boosted != input_diretor:
-            boost_lines.append(f"    diretor : {input_diretor:.2f} → {input_diretor_boosted:.2f}  (+{input_diretor_boosted - input_diretor:.2f}) [favorito: {profile.get('favorite_director')}]")
+            boost_lines.append(f"    diretor : {input_diretor:.2f} → {input_diretor_boosted:.2f} [favorito: {profile.get('favorite_director')}]")
 
         if boost_lines:
-            print(f"\n  [BOOST DE PERFIL] '{movie['title']}'")
+            print(f"\n  [BLENDING DE PERFIL] '{movie['title']}'")
             for line in boost_lines:
                 print(line)
 
