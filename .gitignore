@@ -1,0 +1,15 @@
+# Ambiente virtual Python
+venv/
+.venv/
+env/
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Arquivos de ambiente
+.env
+
+# Gráficos
+fuzzy_plots/*.png
