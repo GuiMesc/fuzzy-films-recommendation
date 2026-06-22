@@ -45,7 +45,7 @@ source .venv/bin/activate
 Dentro do ambiente virtual, execute o seguitne comando para instalar as dependências:
 
 ```bash
-pip install numpy scikit-fuzzy matplotlib networkx psycopg2-binary
+pip install numpy scipy scikit-fuzzy matplotlib networkx psycopg2-binary
 ```
 
 Caso não consiga executar algum comando acima, atualize o pip:
