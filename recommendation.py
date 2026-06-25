@@ -374,17 +374,117 @@ if __name__ == '__main__':
     recomendacao['alta']       = fuzz.trimf(recomendacao.universe, [60, 80, 100])
     recomendacao['muito_alta'] = fuzz.trimf(recomendacao.universe, [80, 100, 100])
 
-    # Regras Fuzzy
-    regra1 = ctrl.Rule(genero['alta'] & diretor['alta'] & nota['excelente'], recomendacao['muito_alta'])
-    regra2 = ctrl.Rule(genero['alta'] & nota['boa'],                         recomendacao['alta'])
-    regra3 = ctrl.Rule(diretor['media'] & nota['boa'],                       recomendacao['media'])
-    regra4 = ctrl.Rule(genero['baixa'] & nota['ruim'],                       recomendacao['baixa'])
-    regra5 = ctrl.Rule(ator['alta'] & nota['boa'],                           recomendacao['alta'])
-    regra6 = ctrl.Rule(ator['alta'] & nota['excelente'],                     recomendacao['muito_alta'])
-    regra7 = ctrl.Rule(genero['alta'] & diretor['alta'] & ator['alta'],      recomendacao['muito_alta'])
-    regra8 = ctrl.Rule(diretor['alta'] & nota['boa'],                        recomendacao['alta'])
+    # Regras Fuzzy (base abrangente com conectores E e OU)
 
-    sistema_controle = ctrl.ControlSystem([regra1, regra2, regra3, regra4, regra5, regra6, regra7, regra8])
+    # ── MUITO ALTA ────────────────────────────────────────────────────────────
+    # R1: Os três pilares com alta afinidade (match completo de perfil)
+    regra1 = ctrl.Rule(
+        genero['alta'] & diretor['alta'] & ator['alta'],
+        recomendacao['muito_alta']
+    )
+    # R2: Gênero E Diretor com alta afinidade E nota excelente
+    regra2 = ctrl.Rule(
+        genero['alta'] & diretor['alta'] & nota['excelente'],
+        recomendacao['muito_alta']
+    )
+    # R3: Gênero E Ator com alta afinidade E nota excelente
+    regra3 = ctrl.Rule(
+        genero['alta'] & ator['alta'] & nota['excelente'],
+        recomendacao['muito_alta']
+    )
+    # R4: Diretor E Ator com alta afinidade E nota excelente
+    regra4 = ctrl.Rule(
+        diretor['alta'] & ator['alta'] & nota['excelente'],
+        recomendacao['muito_alta']
+    )
+
+    # ── ALTA ──────────────────────────────────────────────────────────────────
+    # R5: Qualquer pilar com alta afinidade (OU) E nota excelente
+    regra5 = ctrl.Rule(
+        (genero['alta'] | diretor['alta'] | ator['alta']) & nota['excelente'],
+        recomendacao['alta']
+    )
+    # R6: Gênero com alta afinidade E nota boa
+    regra6 = ctrl.Rule(
+        genero['alta'] & nota['boa'],
+        recomendacao['alta']
+    )
+    # R7: Diretor com alta afinidade E nota boa
+    regra7 = ctrl.Rule(
+        diretor['alta'] & nota['boa'],
+        recomendacao['alta']
+    )
+    # R8: Ator com alta afinidade E nota boa
+    regra8 = ctrl.Rule(
+        ator['alta'] & nota['boa'],
+        recomendacao['alta']
+    )
+    # R9: Gênero alto E (Diretor OU Ator médios) E nota boa
+    regra9 = ctrl.Rule(
+        genero['alta'] & (diretor['media'] | ator['media']) & nota['boa'],
+        recomendacao['alta']
+    )
+    # R10: Gênero médio E (Diretor OU Ator altos) E nota boa
+    regra10 = ctrl.Rule(
+        genero['media'] & (diretor['alta'] | ator['alta']) & nota['boa'],
+        recomendacao['alta']
+    )
+
+    # ── MEDIA ─────────────────────────────────────────────────────────────────
+    # R11: Qualquer pilar com afinidade média (OU) E nota boa
+    regra11 = ctrl.Rule(
+        (genero['media'] | diretor['media'] | ator['media']) & nota['boa'],
+        recomendacao['media']
+    )
+    # R12: Qualquer pilar com alta afinidade (OU) E nota ruim (perfil ok, avaliação fraca)
+    regra12 = ctrl.Rule(
+        (genero['alta'] | diretor['alta'] | ator['alta']) & nota['ruim'],
+        recomendacao['media']
+    )
+    # R13: Gênero médio E (Diretor OU Ator médios) — dois pilares medianos
+    regra13 = ctrl.Rule(
+        genero['media'] & (diretor['media'] | ator['media']),
+        recomendacao['media']
+    )
+    # R14: Qualquer afinidade média (OU) E nota excelente (nota compensa afinidade mediana)
+    regra14 = ctrl.Rule(
+        (genero['media'] | diretor['media'] | ator['media']) & nota['excelente'],
+        recomendacao['media']
+    )
+    # R15: Gênero baixo E (Diretor OU Ator baixos) E nota boa (nota salva parcialmente)
+    regra15 = ctrl.Rule(
+        genero['baixa'] & (diretor['baixa'] | ator['baixa']) & nota['boa'],
+        recomendacao['media']
+    )
+
+    # ── BAIXA ─────────────────────────────────────────────────────────────────
+    # R16: Os três pilares com baixa afinidade (nenhum indicador positivo)
+    regra16 = ctrl.Rule(
+        genero['baixa'] & diretor['baixa'] & ator['baixa'],
+        recomendacao['baixa']
+    )
+    # R17: Gênero com baixa afinidade E nota ruim (principal pilar negativo)
+    regra17 = ctrl.Rule(
+        genero['baixa'] & nota['ruim'],
+        recomendacao['baixa']
+    )
+    # R18: Diretor E Ator com baixa afinidade E nota ruim
+    regra18 = ctrl.Rule(
+        diretor['baixa'] & ator['baixa'] & nota['ruim'],
+        recomendacao['baixa']
+    )
+    # R19: Qualquer afinidade média (OU) E nota ruim (indicadores mistos com nota negativa)
+    regra19 = ctrl.Rule(
+        (genero['media'] | diretor['media'] | ator['media']) & nota['ruim'],
+        recomendacao['baixa']
+    )
+
+    sistema_controle = ctrl.ControlSystem([
+        regra1,  regra2,  regra3,  regra4,
+        regra5,  regra6,  regra7,  regra8,  regra9,  regra10,
+        regra11, regra12, regra13, regra14, regra15,
+        regra16, regra17, regra18, regra19,
+    ])
 
     # ── Loop por cada filme do catálogo ─────────────────────────────────────
     resultados = []
@@ -403,12 +503,12 @@ if __name__ == '__main__':
         input_ator    = afinidade_ator    * 10
         input_diretor = afinidade_diretor * 10
 
-        # ── Blending histórico + perfil declarado ────────────────────────────
+        # ── Boost histórico + perfil declarado ────────────────────────────
         input_genero_boosted  = calcular_input_com_perfil(input_genero,  profile.get('favorite_gender'),    movie.get('genders',   []))
         input_ator_boosted    = calcular_input_com_perfil(input_ator,    profile.get('favorite_actor'),     movie.get('actors',    []))
         input_diretor_boosted = calcular_input_com_perfil(input_diretor, profile.get('favorite_director'),  movie.get('directors', []))
 
-                # ── Log de blending (exibe somente quando houve alteração) ───────────
+                # ── Log de boosting (exibe somente quando houve alteração) ───────────
         boost_lines = []
         if input_genero_boosted != input_genero:
             boost_lines.append(f"    gênero  : {input_genero:.2f} → {input_genero_boosted:.2f} [favorito: {profile.get('favorite_gender')}]")
@@ -418,7 +518,7 @@ if __name__ == '__main__':
             boost_lines.append(f"    diretor : {input_diretor:.2f} → {input_diretor_boosted:.2f} [favorito: {profile.get('favorite_director')}]")
 
         if boost_lines:
-            print(f"\n  [BLENDING DE PERFIL] '{movie['title']}'")
+            print(f"\n  [BOOSTING DE PERFIL] '{movie['title']}'")
             for line in boost_lines:
                 print(line)
 
