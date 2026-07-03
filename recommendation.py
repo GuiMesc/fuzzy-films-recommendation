@@ -4,6 +4,17 @@ from skfuzzy import control as ctrl
 import matplotlib.pyplot as plt
 import psycopg2
 import psycopg2.extras
+import os
+import sys
+
+from queries import (
+    GET_USER_ID_BY_NAME,
+    GET_USER_PROFILE,
+    GET_HISTORY,
+    GET_MOVIE_BY_ID,
+    GET_MOVIES,
+    SAVE_RECOMMENDATION,
+)
 
 DB_CONFIG = {
     "host": "localhost",
@@ -13,47 +24,29 @@ DB_CONFIG = {
     "password": "root"
 }
 
-query_get_movies = """
-SELECT 
-    m.id,
-    m.title,
-    m.description,
-    m.duration,
-    m.released_year,
-    m.average,
-    COALESCE(
-        (
-            SELECT json_agg(json_build_object('name', g.name))
-            FROM tbl_movie_gender mg
-            INNER JOIN tbl_genders g
-                ON mg.gender_id = g.id
-            WHERE mg.movie_id = m.id
-        ),
-        '[]'::json
-    ) AS genders,
-    COALESCE(
-        (
-            SELECT json_agg(json_build_object('name', a.name))
-            FROM tbl_movie_actor ma
-            INNER JOIN tbl_actors a
-                ON ma.actor_id = a.id
-            WHERE ma.movie_id = m.id
-        ),
-        '[]'::json
-    ) AS actors,
-    COALESCE(
-        (
-            SELECT json_agg(json_build_object('name', d.name))
-            FROM tbl_movie_director md
-            INNER JOIN tbl_directors d
-                ON md.director_id = d.id
-            WHERE md.movie_id = m.id
-        ),
-        '[]'::json
-    ) AS directors
-FROM tbl_movies m
-WHERE m.id = 280;
-"""
+CLASSES_RECOMENDACAO = ['baixa', 'media', 'alta', 'muito_alta']
+
+CENARIOS_TESTE = [
+    # The Dark Knight (id=3)
+    {'usuario': 'Ana',     'movie_id': 3,  'esperado': 'muito_alta'},
+    {'usuario': 'Carlos',  'movie_id': 3,  'esperado': 'alta'},
+    {'usuario': 'Beatriz', 'movie_id': 3,  'esperado': 'alta'},
+    {'usuario': 'Diego',   'movie_id': 3,  'esperado': 'media'},
+    {'usuario': 'Elena',   'movie_id': 3,  'esperado': 'baixa'},
+    # The Green Mile (id=26)
+    {'usuario': 'Ana',     'movie_id': 26, 'esperado': 'media'},
+    {'usuario': 'Carlos',  'movie_id': 26, 'esperado': 'media'},
+    {'usuario': 'Beatriz', 'movie_id': 26, 'esperado': 'media'},
+    {'usuario': 'Diego',   'movie_id': 26, 'esperado': 'muito_alta'},
+    {'usuario': 'Elena',   'movie_id': 26, 'esperado': 'alta'},
+    # The Usual Suspects (id=42)
+    {'usuario': 'Ana',     'movie_id': 42, 'esperado': 'media'},
+    {'usuario': 'Carlos',  'movie_id': 42, 'esperado': 'media'},
+    {'usuario': 'Beatriz', 'movie_id': 42, 'esperado': 'alta'},
+    {'usuario': 'Diego',   'movie_id': 42, 'esperado': 'media'},
+    {'usuario': 'Elena',   'movie_id': 42, 'esperado': 'baixa'},
+]
+
 
 def get_db_connection():
     return psycopg2.connect(**DB_CONFIG)
@@ -62,7 +55,7 @@ def get_user_id_by_name(name="Guilherme"):
     conn = get_db_connection()
     try:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT id FROM tbl_users WHERE name = %s LIMIT 1;", (name,))
+            cursor.execute(GET_USER_ID_BY_NAME, (name,))
             row = cursor.fetchone()
             return row[0] if row else None
     except Exception as e:
@@ -75,42 +68,9 @@ def get_history(user_id):
     conn = get_db_connection()
     try:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
-            cursor.execute(
-                """
-                SELECT 
-                    h.user_average,
-                    h.minutes_watched,
-                    h.liked,
-                    m.duration,
-                    COALESCE(
-                        (SELECT json_agg(json_build_object('name', g.name)) 
-                         FROM tbl_movie_gender mg 
-                         JOIN tbl_genders g ON mg.gender_id = g.id 
-                         WHERE mg.movie_id = m.id), 
-                        '[]'::json
-                    ) as genders,
-                    COALESCE(
-                        (SELECT json_agg(json_build_object('name', a.name)) 
-                         FROM tbl_movie_actor ma 
-                         JOIN tbl_actors a ON ma.actor_id = a.id 
-                         WHERE ma.movie_id = m.id), 
-                        '[]'::json
-                    ) as actors,
-                    COALESCE(
-                        (SELECT json_agg(json_build_object('name', d.name)) 
-                         FROM tbl_movie_director md 
-                         JOIN tbl_directors d ON md.director_id = d.id 
-                         WHERE md.movie_id = m.id), 
-                        '[]'::json
-                    ) as directors
-                FROM tbl_historic h
-                JOIN tbl_movies m ON h.movie_id = m.id
-                WHERE h.user_id = %s;
-                """,
-                (user_id,)
-            )
+            cursor.execute(GET_HISTORY, (user_id,))
             rows = cursor.fetchall()
-            
+
             history_data = []
             for row in rows:
                 history_data.append({
@@ -149,12 +109,7 @@ def save_recommendations(user_id, recommendations):
         with conn.cursor() as cursor:
             for rec in recommendations:
                 cursor.execute(
-                    """
-                    INSERT INTO tbl_recommendations (user_id, movie_id, recommendation_score)
-                    VALUES (%s, %s, %s)
-                    ON CONFLICT (user_id, movie_id)
-                    DO UPDATE SET recommendation_score = EXCLUDED.recommendation_score;
-                    """,
+                    SAVE_RECOMMENDATION,
                     (user_id, rec['movieId'], rec['recommendation_score'])
                 )
         conn.commit()
@@ -166,24 +121,10 @@ def save_recommendations(user_id, recommendations):
         conn.close()
 
 def get_user_profile(user_id):
-    """Retorna o perfil declarado do usuário (favoritos de ator, diretor e gênero)."""
     conn = get_db_connection()
     try:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
-            cursor.execute(
-                """
-                SELECT
-                    g.name  AS favorite_gender,
-                    a.name  AS favorite_actor,
-                    d.name  AS favorite_director
-                FROM tbl_users u
-                LEFT JOIN tbl_genders   g ON g.id = u.favorite_gender_id
-                LEFT JOIN tbl_actors    a ON a.id = u.favorite_actor_id
-                LEFT JOIN tbl_directors d ON d.id = u.favorite_director_id
-                WHERE u.id = %s;
-                """,
-                (user_id,)
-            )
+            cursor.execute(GET_USER_PROFILE, (user_id,))
             row = cursor.fetchone()
             return dict(row) if row else {}
     except Exception as e:
@@ -192,74 +133,79 @@ def get_user_profile(user_id):
     finally:
         conn.close()
 
+def get_movie_by_id(movie_id):
+    conn = get_db_connection()
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+            cursor.execute(GET_MOVIE_BY_ID, (movie_id,))
+            return cursor.fetchone()
+    except Exception as e:
+        print(f"Erro ao buscar filme: {e}")
+        return None
+    finally:
+        conn.close()
 
-def calcular_input_com_perfil(score_historico, nome_favorito, lista_itens_filme,
-                              peso_historico=0.6, peso_perfil=0.4):
-    """
-    Combina o score do histórico (0-10) com o sinal do perfil declarado.
-    Quando o favorito do usuário está no filme, o sinal de perfil vale 10;
-    caso contrário, vale 0. A média ponderada garante que o match de perfil
-    sempre eleva o input para a zona correta das funções de pertinência fuzzy.
-    """
+
+def calcular_input_com_perfil(score_historico, nome_favorito, lista_itens_filme, peso_historico=0.6, peso_perfil=0.4):
     perfil_score = 10.0 if (nome_favorito and any(
         item['name'] == nome_favorito for item in lista_itens_filme
     )) else 0.0
     return round(peso_historico * score_historico + peso_perfil * perfil_score, 2)
 
 
-# valores_alvo é a lista completa de atributos do filme candidato (ex: todos os gêneros)
-def calcular_afinidade(historico_filmes, chave, valores_alvo):
+def calcular_afinidade(historico_filmes, chave, valores_alvo, verbose=True):
     nomes_alvo = {item['name'] for item in valores_alvo}
-    print("\n\nNomes alvo: ", nomes_alvo)
+    if verbose:
+        print("\n\nNomes alvo: ", nomes_alvo)
 
     filmes_filtrados = [
         h for h in historico_filmes
         if any(item['name'] in nomes_alvo for item in h["movies"].get(chave, []))
     ]
-    print("Filmes filtrados: ", filmes_filtrados)
-
-    #filmes_filtrados = [filme for filme in historico_filmes if filme[chave] == valor_alvo]
+    if verbose:
+        print("Filmes filtrados: ", filmes_filtrados)
 
     if len(filmes_filtrados) == 0:
         return 0
 
-    qtd_total = len(historico_filmes)
+    qtd_total    = len(historico_filmes)
     qtd_filtrada = len(filmes_filtrados)
     Q = qtd_filtrada / qtd_total
-    print("Quantidade total de filmes no histórico: ", qtd_total)
-    print("Quantidade de filmes filtrados: ", qtd_filtrada)
-    print("Porcentagem de filmes filtrados: ", Q)
+    if verbose:
+        print("Quantidade total de filmes no histórico: ", qtd_total)
+        print("Quantidade de filmes filtrados: ", qtd_filtrada)
+        print("Porcentagem de filmes filtrados: ", Q)
 
     media_notas = np.mean([h['user_average'] for h in filmes_filtrados])
     N = media_notas / 10
-    print("Média de notas dos filmes filtrados: ", media_notas)
-    print("Porcentagem da média de notas: ", N)
+    if verbose:
+        print("Média de notas dos filmes filtrados: ", media_notas)
+        print("Porcentagem da média de notas: ", N)
 
     media_tempo = np.mean([h['minutes_watched'] / h['movies']['duration'] for h in filmes_filtrados])
-    print("Média de tempo dos filmes filtrados: ", media_tempo)
     T = min(media_tempo, 1)
-    print("Porcentagem da média de tempo: ", T)
+    if verbose:
+        print("Média de tempo dos filmes filtrados: ", media_tempo)
+        print("Porcentagem da média de tempo: ", T)
 
     media_curtidas = np.mean([h['like'] for h in filmes_filtrados])
     C = media_curtidas
-    print("Média de curtidas dos filmes filtrados: ", media_curtidas)
-    print("Porcentagem da média de curtidas: ", C)
+    if verbose:
+        print("Média de curtidas dos filmes filtrados: ", media_curtidas)
+        print("Porcentagem da média de curtidas: ", C)
 
     afinidade = 0.4 * Q + 0.3 * N + 0.2 * T + 0.1 * C
-    print("Afinidade: ", afinidade)
+    if verbose:
+        print("Afinidade: ", afinidade)
 
     return round(afinidade, 2)
+
 
 def plotar_pertinencia(variaveis_entrada, consequente, valores_entrada, valor_saida, titulo, output_dir="fuzzy_plots"):
     """
     Gera e salva um PNG com os conjuntos fuzzy de todas as variáveis
-    e as operações realizadas na inferência:
-      - Funções de pertinência de cada antecedente e do consequente
-      - Valor de entrada de cada antecedente (linha vertical tracejada)
-      - Grau de pertinência em cada conjunto para o valor de entrada
-      - Valor defuzzificado de saída destacado no consequente
+    e as operações realizadas na inferência
     """
-    import os
     os.makedirs(output_dir, exist_ok=True)
 
     entradas_items = list(variaveis_entrada.items())
@@ -298,7 +244,7 @@ def plotar_pertinencia(variaveis_entrada, consequente, valores_entrada, valor_sa
         ax.legend(fontsize=8)
         ax.grid(True, alpha=0.3)
 
-    # ── Consequente (saída) ─────────────────────────────────────────────────
+    # ── Consequente (saída)
     ax_out = axes[-1]
     universo_saida = consequente.universe
 
@@ -317,7 +263,7 @@ def plotar_pertinencia(variaveis_entrada, consequente, valores_entrada, valor_sa
     ax_out.legend(fontsize=8)
     ax_out.grid(True, alpha=0.3)
 
-    # ── Título geral e salvamento ────────────────────────────────────────────
+    # ── Título geral e salvamento
     fig.suptitle(titulo, fontsize=13, fontweight='bold')
     plt.tight_layout()
 
@@ -333,37 +279,18 @@ def plotar_pertinencia(variaveis_entrada, consequente, valores_entrada, valor_sa
     print(f"  [PLOT] Gráfico salvo: {caminho}")
     return caminho
 
-if __name__ == '__main__':
-    user_id = get_user_id_by_name("João")
 
-    profile = get_user_profile(user_id)
-    print("\n=====================================================")
-    print("PERFIL DECLARADO DO USUÁRIO")
-    print("=====================================================")
-    print(f"  Gênero favorito  : {profile.get('favorite_gender')  or '(não definido)'}")
-    print(f"  Ator favorito    : {profile.get('favorite_actor')    or '(não definido)'}")
-    print(f"  Diretor favorito : {profile.get('favorite_director') or '(não definido)'}")
-
-    history = get_history(user_id)
-    movies = get_movies(query_get_movies)
-
-    if not history or not movies:
-        print("Não foi possível buscar os dados do banco de dados")
-        exit(1)
-
-    # ── Variáveis Fuzzy (construídas uma única vez) ──────────────────────────
-    genero = ctrl.Antecedent(np.arange(0, 11, 1), 'genero')
-    diretor = ctrl.Antecedent(np.arange(0, 11, 1), 'diretor')
-    ator = ctrl.Antecedent(np.arange(0, 11, 1), 'ator')
-    nota = ctrl.Antecedent(np.arange(0, 11, 1), 'nota')
-
+def construir_sistema_fuzzy():
+    genero       = ctrl.Antecedent(np.arange(0, 11, 1), 'genero')
+    diretor      = ctrl.Antecedent(np.arange(0, 11, 1), 'diretor')
+    ator         = ctrl.Antecedent(np.arange(0, 11, 1), 'ator')
+    nota         = ctrl.Antecedent(np.arange(0, 11, 1), 'nota')
     recomendacao = ctrl.Consequent(np.arange(0, 101, 1), 'recomendacao')
 
-    # Funções de Pertinência
     for variavel in [genero, diretor, ator]:
         variavel['baixa'] = fuzz.trimf(variavel.universe, [0, 0, 5])
         variavel['media'] = fuzz.trimf(variavel.universe, [2, 5, 8])
-        variavel['alta'] = fuzz.trimf(variavel.universe, [5, 10, 10])
+        variavel['alta']  = fuzz.trimf(variavel.universe, [5, 10, 10])
 
     nota['ruim']      = fuzz.trimf(nota.universe, [0, 0, 5])
     nota['boa']       = fuzz.trimf(nota.universe, [4, 6, 8])
@@ -374,129 +301,304 @@ if __name__ == '__main__':
     recomendacao['alta']       = fuzz.trimf(recomendacao.universe, [60, 80, 100])
     recomendacao['muito_alta'] = fuzz.trimf(recomendacao.universe, [80, 100, 100])
 
-    # Regras Fuzzy
-    regra1 = ctrl.Rule(genero['alta'] & diretor['alta'] & nota['excelente'], recomendacao['muito_alta'])
-    regra2 = ctrl.Rule(genero['alta'] & nota['boa'],                         recomendacao['alta'])
-    regra3 = ctrl.Rule(diretor['media'] & nota['boa'],                       recomendacao['media'])
-    regra4 = ctrl.Rule(genero['baixa'] & nota['ruim'],                       recomendacao['baixa'])
-    regra5 = ctrl.Rule(ator['alta'] & nota['boa'],                           recomendacao['alta'])
-    regra6 = ctrl.Rule(ator['alta'] & nota['excelente'],                     recomendacao['muito_alta'])
-    regra7 = ctrl.Rule(genero['alta'] & diretor['alta'] & ator['alta'],      recomendacao['muito_alta'])
-    regra8 = ctrl.Rule(diretor['alta'] & nota['boa'],                        recomendacao['alta'])
+    # ── MUITO ALTA ──
+    regra1  = ctrl.Rule(genero['alta'] & diretor['alta'] & ator['alta'], recomendacao['muito_alta'])
+    regra2  = ctrl.Rule(genero['alta'] & diretor['alta'] & nota['excelente'], recomendacao['muito_alta'])
+    regra3  = ctrl.Rule(genero['alta'] & ator['alta'] & nota['excelente'], recomendacao['muito_alta'])
+    regra4  = ctrl.Rule(diretor['alta'] & ator['alta'] & nota['excelente'], recomendacao['muito_alta'])
 
-    sistema_controle = ctrl.ControlSystem([regra1, regra2, regra3, regra4, regra5, regra6, regra7, regra8])
+    # ── ALTA ──
+    regra5  = ctrl.Rule((genero['alta'] | diretor['alta'] | ator['alta']) & nota['excelente'], recomendacao['alta'])
+    regra6  = ctrl.Rule(genero['alta'] & nota['boa'], recomendacao['alta'])
+    regra7  = ctrl.Rule(diretor['alta'] & nota['boa'], recomendacao['alta'])
+    regra8  = ctrl.Rule(ator['alta'] & nota['boa'], recomendacao['alta'])
+    regra9  = ctrl.Rule(genero['alta'] & (diretor['media'] | ator['media']) & nota['boa'], recomendacao['alta'])
+    regra10 = ctrl.Rule(genero['media'] & (diretor['alta'] | ator['alta']) & nota['boa'], recomendacao['alta'])
 
-    # ── Loop por cada filme do catálogo ─────────────────────────────────────
+    # ── MEDIA ──
+    regra11 = ctrl.Rule((genero['media'] | diretor['media'] | ator['media']) & nota['boa'], recomendacao['media'])
+    regra12 = ctrl.Rule((genero['alta'] | diretor['alta'] | ator['alta']) & nota['ruim'], recomendacao['media'])
+    regra13 = ctrl.Rule(genero['media'] & (diretor['media'] | ator['media']), recomendacao['media'])
+    regra14 = ctrl.Rule((genero['media'] | diretor['media'] | ator['media']) & nota['excelente'], recomendacao['media'])
+    regra15 = ctrl.Rule(genero['baixa'] & (diretor['baixa'] | ator['baixa']) & nota['boa'], recomendacao['media'])
+
+    # ── BAIXA ──
+    regra16 = ctrl.Rule(genero['baixa'] & diretor['baixa'] & ator['baixa'], recomendacao['baixa'])
+    regra17 = ctrl.Rule(genero['baixa'] & nota['ruim'], recomendacao['baixa'])
+    regra18 = ctrl.Rule(diretor['baixa'] & ator['baixa'] & nota['ruim'], recomendacao['baixa'])
+    regra19 = ctrl.Rule((genero['media'] | diretor['media'] | ator['media']) & nota['ruim'], recomendacao['baixa'])
+
+    sistema_controle = ctrl.ControlSystem([
+        regra1,  regra2,  regra3,  regra4,
+        regra5,  regra6,  regra7,  regra8,  regra9,  regra10,
+        regra11, regra12, regra13, regra14, regra15,
+        regra16, regra17, regra18, regra19,
+    ])
+
+    return sistema_controle, recomendacao, genero, diretor, ator, nota
+
+
+def score_para_categoria(score, recomendacao_var):
+    """Converte score defuzzificado (0–100) para categoria usando argmax de pertinência."""
+    universo = recomendacao_var.universe
+    pertinencias = {
+        termo: fuzz.interp_membership(universo, obj.mf, score)
+        for termo, obj in recomendacao_var.terms.items()
+    }
+    return max(pertinencias, key=pertinencias.get)
+
+
+def calcular_score_usuario_filme(user_name, movie, sistema_controle, recomendacao_var):
+    """Calcula o score de recomendação fuzzy para um usuário e um filme específicos."""
+    user_id = get_user_id_by_name(user_name)
+    if user_id is None:
+        print(f"  [AVISO] Usuário '{user_name}' não encontrado.")
+        return 0.0, 'baixa'
+
+    history = get_history(user_id)
+    profile = get_user_profile(user_id)
+
+    if not history:
+        print(f"  [AVISO] Histórico vazio para '{user_name}'.")
+        return 0.0, 'baixa'
+
+    afinidade_genero  = calcular_afinidade(history, 'genders',   movie['genders'],   verbose=False) if movie.get('genders')   else 0
+    afinidade_ator    = calcular_afinidade(history, 'actors',    movie['actors'],     verbose=False) if movie.get('actors')    else 0
+    afinidade_diretor = calcular_afinidade(history, 'directors', movie['directors'],  verbose=False) if movie.get('directors') else 0
+
+    input_genero  = calcular_input_com_perfil(afinidade_genero  * 10, profile.get('favorite_gender'),   movie.get('genders',   []))
+    input_ator    = calcular_input_com_perfil(afinidade_ator    * 10, profile.get('favorite_actor'),    movie.get('actors',    []))
+    input_diretor = calcular_input_com_perfil(afinidade_diretor * 10, profile.get('favorite_director'), movie.get('directors', []))
+    input_nota    = float(movie['average'])  # float() evita Decimal do psycopg2 que quebra o np.interp do skfuzzy
+
+    sistema = ctrl.ControlSystemSimulation(sistema_controle)
+    sistema.input['genero']  = input_genero
+    sistema.input['diretor'] = input_diretor
+    sistema.input['ator']    = input_ator
+    sistema.input['nota']    = input_nota
+
+    try:
+        sistema.compute()
+        score = round(sistema.output['recomendacao'], 2)
+    except Exception as e:
+        print(f"  [ERRO compute] '{user_name}' (g={input_genero}, d={input_diretor}, a={input_ator}, n={input_nota}): {e}")
+        score = 0.0
+
+    categoria = score_para_categoria(score, recomendacao_var)
+    return score, categoria
+
+
+def avaliar_cenarios(cenarios):
+    """Roda o sistema fuzzy para cada cenário e coleta predição vs. esperado."""
+    cache_filmes = {}
+
+    print(f"\n{'Usuário':<12} {'Filme ID':>8}  {'Esperado':<12} {'Previsto':<12} {'Score':>8}  Status")
+    print("-" * 68)
+
     resultados = []
+    for c in cenarios:
+        movie_id = c['movie_id']
+        if movie_id not in cache_filmes:
+            cache_filmes[movie_id] = get_movie_by_id(movie_id)
+        movie = cache_filmes[movie_id]
+        if not movie:
+            print(f"  [AVISO] Filme id={movie_id} não encontrado, cenário ignorado.")
+            continue
 
-    for movie in movies:
-        # Passa a lista completa de atributos para verificar todas as posições
-        afinidade_genero  = calcular_afinidade(history, 'genders',   movie['genders'])   if movie.get('genders')   else 0
-        afinidade_ator    = calcular_afinidade(history, 'actors',    movie['actors'])     if movie.get('actors')    else 0
-        afinidade_diretor = calcular_afinidade(history, 'directors', movie['directors'])  if movie.get('directors') else 0
-        nota_filme        = movie['average'] / 10
+        # Cada cenário usa um sistema fuzzy isolado para evitar cache de estado interno do skfuzzy
+        sistema_controle, recomendacao_var, *_ = construir_sistema_fuzzy()
 
-        sistema = ctrl.ControlSystemSimulation(sistema_controle)
-
-        # ── Entradas base (somente histórico) ───────────────────────────────
-        input_genero  = afinidade_genero  * 10
-        input_ator    = afinidade_ator    * 10
-        input_diretor = afinidade_diretor * 10
-
-        # ── Blending histórico + perfil declarado ────────────────────────────
-        input_genero_boosted  = calcular_input_com_perfil(input_genero,  profile.get('favorite_gender'),    movie.get('genders',   []))
-        input_ator_boosted    = calcular_input_com_perfil(input_ator,    profile.get('favorite_actor'),     movie.get('actors',    []))
-        input_diretor_boosted = calcular_input_com_perfil(input_diretor, profile.get('favorite_director'),  movie.get('directors', []))
-
-                # ── Log de blending (exibe somente quando houve alteração) ───────────
-        boost_lines = []
-        if input_genero_boosted != input_genero:
-            boost_lines.append(f"    gênero  : {input_genero:.2f} → {input_genero_boosted:.2f} [favorito: {profile.get('favorite_gender')}]")
-        if input_ator_boosted != input_ator:
-            boost_lines.append(f"    ator    : {input_ator:.2f} → {input_ator_boosted:.2f} [favorito: {profile.get('favorite_actor')}]")
-        if input_diretor_boosted != input_diretor:
-            boost_lines.append(f"    diretor : {input_diretor:.2f} → {input_diretor_boosted:.2f} [favorito: {profile.get('favorite_director')}]")
-
-        if boost_lines:
-            print(f"\n  [BLENDING DE PERFIL] '{movie['title']}'")
-            for line in boost_lines:
-                print(line)
-
-        sistema.input['genero']  = input_genero_boosted
-        sistema.input['diretor'] = input_diretor_boosted
-        sistema.input['ator']    = input_ator_boosted
-        sistema.input['nota']    = nota_filme * 10
-
-        try:
-            sistema.compute()
-            percentual = round(sistema.output['recomendacao'], 2)
-        except Exception as e:
-            print(f"[AVISO] Nenhuma regra ativada para '{movie['title']}': {e}")
-            percentual = 0.0
-
-        plotar_pertinencia(
-            variaveis_entrada={
-                'Genero':  genero,
-                'Ator':    ator,
-                'Diretor': diretor,
-                'Nota':    nota,
-            },
-            consequente=recomendacao,
-            valores_entrada={
-                'Genero':  input_genero_boosted,
-                'Ator':    input_ator_boosted,
-                'Diretor': input_diretor_boosted,
-                'Nota':    nota_filme * 10,
-            },
-            valor_saida=percentual,
-            titulo=movie['title'],
+        score, previsto = calcular_score_usuario_filme(
+            c['usuario'], movie, sistema_controle, recomendacao_var
         )
-
+        correto = previsto == c['esperado']
         resultados.append({
-            'id':                 movie['id'],
-            'title':              movie['title'],
-            'description':        movie.get('description', ''),
-            'average':            movie['average'],
-            'genders':            movie.get('genders', []),
-            'actors':             movie.get('actors', []),
-            'directors':          movie.get('directors', []),
-            'recommendation_score': percentual
+            'usuario':  c['usuario'],
+            'movie_id': movie_id,
+            'esperado': c['esperado'],
+            'previsto': previsto,
+            'score':    score,
+            'correto':  correto,
         })
+        status = "OK" if correto else "ERRO"
+        print(f"{c['usuario']:<12} {movie_id:>8}  {c['esperado']:<12} {previsto:<12} {score:>7.1f}%  {status}")
 
-    # Ordena do mais recomendado para o menos recomendado
-    resultados.sort(key=lambda x: x['recommendation_score'], reverse=True)
+    return resultados
 
-    # ── Resultado final ──────────────────────────────────────────────────────
-    print("\n====================================================")
-    print("RESULTADO FINAL - RECOMENDAÇÕES POR FILME")
-    print("====================================================\n")
 
+def plotar_matriz_confusao(resultados, output_dir="fuzzy_plots"):
+    """Plota e salva a matriz de confusão como heatmap."""
+    classes = CLASSES_RECOMENDACAO
+    n = len(classes)
+    idx = {c: i for i, c in enumerate(classes)}
+
+    matriz = np.zeros((n, n), dtype=int)
     for r in resultados:
-        generos   = ', '.join(g['name'] for g in r['genders'])
-        diretores = ', '.join(d['name'] for d in r['directors'])
-        atores    = ', '.join(a['name'] for a in r['actors'])
-        print(f"   {r['title']}")
-        print(f"   Gênero(s)  : {generos}")
-        print(f"   Diretor(es): {diretores}")
-        print(f"   Ator(es)   : {atores}")
-        print(f"   Nota média : {r['average']}")
-        print(f"   Recomendação: {r['recommendation_score']:.2f}%")
-        print()
+        matriz[idx[r['esperado']]][idx[r['previsto']]] += 1
 
-    # ── Salvar recomendações no banco ────────────────
-    if resultados:
-        movies_payload = [
-            {
-                "movieId": r['id'],
-                "recommendation_score": round(float(r['recommendation_score']), 2)
-            }
-            for r in resultados
-        ]
+    fig, ax = plt.subplots(figsize=(7, 6))
+    im = ax.imshow(matriz, cmap='Blues')
 
+    ax.set_xticks(range(n))
+    ax.set_yticks(range(n))
+    ax.set_xticklabels(classes, fontsize=11)
+    ax.set_yticklabels(classes, fontsize=11)
+    ax.set_xlabel('Previsto', fontsize=12, fontweight='bold')
+    ax.set_ylabel('Real (esperado)', fontsize=12, fontweight='bold')
+    ax.set_title('Matriz de Confusão – Sistema Fuzzy de Recomendação',
+                 fontsize=13, fontweight='bold', pad=15)
+
+    for i in range(n):
+        for j in range(n):
+            cor = 'white' if matriz[i, j] > 0 and matriz[i, j] == matriz.max() else 'black'
+            ax.text(j, i, str(matriz[i, j]),
+                    ha='center', va='center',
+                    fontsize=16, color=cor, fontweight='bold')
+
+    plt.colorbar(im, ax=ax, label='Quantidade')
+    plt.tight_layout()
+
+    os.makedirs(output_dir, exist_ok=True)
+    caminho = os.path.join(output_dir, 'matriz_confusao.png')
+    fig.savefig(caminho, dpi=150, bbox_inches='tight')
+    plt.show()
+
+    acertos = sum(1 for r in resultados if r['correto'])
+    total   = len(resultados)
+    print(f"\n[PLOT] Matriz salva: {caminho}")
+    print(f"Acurácia: {acertos}/{total} ({100 * acertos / total:.0f}%)")
+
+
+if __name__ == '__main__':
+    modo_avaliacao = '--avaliar' in sys.argv
+
+    sistema_controle, recomendacao, genero, diretor, ator, nota = construir_sistema_fuzzy()
+
+    if modo_avaliacao:
+        resultados_eval = avaliar_cenarios(CENARIOS_TESTE)
+        plotar_matriz_confusao(resultados_eval)
+
+    else:
+        user_id = get_user_id_by_name("Guilherme")
+
+        profile = get_user_profile(user_id)
+        print("\n=====================================================")
+        print("PERFIL DECLARADO DO USUÁRIO")
         print("=====================================================")
-        print("SALVANDO RECOMENDAÇÃO NO BANCO DE DADOS")
-        print("=====================================================")
-        for m in movies_payload:
-            print(f"  movieId: {m['movieId']}  |  score: {m['recommendation_score']}")
+        print(f"  Gênero favorito  : {profile.get('favorite_gender')  or '(não definido)'}")
+        print(f"  Ator favorito    : {profile.get('favorite_actor')    or '(não definido)'}")
+        print(f"  Diretor favorito : {profile.get('favorite_director') or '(não definido)'}")
 
-        save_recommendations(user_id, movies_payload)
+        history = get_history(user_id)
+        movies  = get_movies(GET_MOVIES)
+
+        if not history or not movies:
+            print("Não foi possível buscar os dados do banco de dados")
+            exit(1)
+
+        resultados = []
+
+        for movie in movies:
+            afinidade_genero  = calcular_afinidade(history, 'genders',   movie['genders'])   if movie.get('genders')   else 0
+            afinidade_ator    = calcular_afinidade(history, 'actors',    movie['actors'])     if movie.get('actors')    else 0
+            afinidade_diretor = calcular_afinidade(history, 'directors', movie['directors'])  if movie.get('directors') else 0
+            nota_filme        = movie['average'] / 10
+
+            sistema = ctrl.ControlSystemSimulation(sistema_controle)
+
+            input_genero  = afinidade_genero  * 10
+            input_ator    = afinidade_ator    * 10
+            input_diretor = afinidade_diretor * 10
+
+            input_genero_boosted  = calcular_input_com_perfil(input_genero,  profile.get('favorite_gender'),    movie.get('genders',   []))
+            input_ator_boosted    = calcular_input_com_perfil(input_ator,    profile.get('favorite_actor'),     movie.get('actors',    []))
+            input_diretor_boosted = calcular_input_com_perfil(input_diretor, profile.get('favorite_director'),  movie.get('directors', []))
+
+            boost_lines = []
+            if input_genero_boosted != input_genero:
+                boost_lines.append(f"    gênero  : {input_genero:.2f} → {input_genero_boosted:.2f} [favorito: {profile.get('favorite_gender')}]")
+            if input_ator_boosted != input_ator:
+                boost_lines.append(f"    ator    : {input_ator:.2f} → {input_ator_boosted:.2f} [favorito: {profile.get('favorite_actor')}]")
+            if input_diretor_boosted != input_diretor:
+                boost_lines.append(f"    diretor : {input_diretor:.2f} → {input_diretor_boosted:.2f} [favorito: {profile.get('favorite_director')}]")
+
+            if boost_lines:
+                print(f"\n  [BOOSTING DE PERFIL] '{movie['title']}'")
+                for line in boost_lines:
+                    print(line)
+
+            sistema.input['genero']  = input_genero_boosted
+            sistema.input['diretor'] = input_diretor_boosted
+            sistema.input['ator']    = input_ator_boosted
+            sistema.input['nota']    = nota_filme * 10
+
+            try:
+                sistema.compute()
+                percentual = round(sistema.output['recomendacao'], 2)
+            except Exception as e:
+                print(f"[AVISO] Nenhuma regra ativada para '{movie['title']}': {e}")
+                percentual = 0.0
+
+            plotar_pertinencia(
+                variaveis_entrada={
+                    'Genero':  genero,
+                    'Ator':    ator,
+                    'Diretor': diretor,
+                    'Nota':    nota,
+                },
+                consequente=recomendacao,
+                valores_entrada={
+                    'Genero':  input_genero_boosted,
+                    'Ator':    input_ator_boosted,
+                    'Diretor': input_diretor_boosted,
+                    'Nota':    nota_filme * 10,
+                },
+                valor_saida=percentual,
+                titulo=movie['title'],
+            )
+
+            resultados.append({
+                'id':                   movie['id'],
+                'title':                movie['title'],
+                'description':          movie.get('description', ''),
+                'average':              movie['average'],
+                'genders':              movie.get('genders', []),
+                'actors':               movie.get('actors', []),
+                'directors':            movie.get('directors', []),
+                'recommendation_score': percentual
+            })
+
+        resultados.sort(key=lambda x: x['recommendation_score'], reverse=True)
+
+        print("\n====================================================")
+        print("RESULTADO FINAL - RECOMENDAÇÕES POR FILME")
+        print("====================================================\n")
+
+        for r in resultados:
+            generos   = ', '.join(g['name'] for g in r['genders'])
+            diretores = ', '.join(d['name'] for d in r['directors'])
+            atores    = ', '.join(a['name'] for a in r['actors'])
+            print(f"   {r['title']}")
+            print(f"   Gênero(s)  : {generos}")
+            print(f"   Diretor(es): {diretores}")
+            print(f"   Ator(es)   : {atores}")
+            print(f"   Nota média : {r['average']}")
+            print(f"   Recomendação: {r['recommendation_score']:.2f}%")
+            print()
+
+        if resultados:
+            movies_payload = [
+                {
+                    "movieId": r['id'],
+                    "recommendation_score": round(float(r['recommendation_score']), 2)
+                }
+                for r in resultados
+            ]
+
+            print("=====================================================")
+            print("SALVANDO RECOMENDAÇÃO NO BANCO DE DADOS")
+            print("=====================================================")
+            for m in movies_payload:
+                print(f"  movieId: {m['movieId']}  |  score: {m['recommendation_score']}")
+
+            save_recommendations(user_id, movies_payload)

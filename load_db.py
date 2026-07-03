@@ -155,45 +155,6 @@ def get_or_create_gender(cursor, cache, gender_name):
     return gender_id
 
 
-def get_or_create_rating(cursor, cache, certificate):
-    certificate = normalize(certificate)
-
-    if not certificate:
-        certificate = "Not Rated"
-
-    if certificate in cache:
-        return cache[certificate]
-
-    cursor.execute(
-        """
-        SELECT id
-        FROM tbl_ratings
-        WHERE description = %s
-        """,
-        (certificate,)
-    )
-
-    result = cursor.fetchone()
-
-    if result:
-        cache[certificate] = result[0]
-        return result[0]
-
-    cursor.execute(
-        """
-        INSERT INTO tbl_ratings (description)
-        VALUES (%s)
-        RETURNING id
-        """,
-        (certificate,)
-    )
-
-    rating_id = cursor.fetchone()[0]
-    cache[certificate] = rating_id
-
-    return rating_id
-
-
 def movie_exists(cursor, title):
     cursor.execute(
         """
@@ -218,7 +179,6 @@ def main():
     actor_cache = {}
     director_cache = {}
     gender_cache = {}
-    rating_cache = {}
 
     try:
         with conn.cursor() as cursor:
@@ -251,12 +211,6 @@ def main():
                     except (ValueError, TypeError):
                         released_year = 0
 
-                rating_id = get_or_create_rating(
-                    cursor,
-                    rating_cache,
-                    row["Certificate"]
-                )
-
                 cursor.execute(
                     """
                     INSERT INTO tbl_movies (
@@ -264,11 +218,9 @@ def main():
                         description,
                         duration,
                         released_year,
-                        average,
-                        rating_id
+                        average
                     )
                     VALUES (
-                        %s,
                         %s,
                         %s,
                         %s,
@@ -282,8 +234,7 @@ def main():
                         description,
                         duration,
                         released_year,
-                        average,
-                        rating_id
+                        average
                     )
                 )
                 movie_id = cursor.fetchone()[0]
