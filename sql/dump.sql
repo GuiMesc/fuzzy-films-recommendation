@@ -2,10 +2,8 @@
 -- PostgreSQL database dump
 --
 
-\restrict DghNUhACGMQgmgdOxfuHngdQzz4efxg3apmJpt8zBBUTOLfkun1JlwF2Q8yaqZp
-
--- Dumped from database version 16.14 (Ubuntu 16.14-0ubuntu0.24.04.1)
--- Dumped by pg_dump version 16.14 (Ubuntu 16.14-0ubuntu0.24.04.1)
+-- Dumped from database version 12.13 (Ubuntu 12.13-0ubuntu0.20.04.1)
+-- Dumped by pg_dump version 12.13 (Ubuntu 12.13-0ubuntu0.20.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -161,8 +159,7 @@ CREATE TABLE public.tbl_movies (
     description text NOT NULL,
     duration integer NOT NULL,
     released_year integer DEFAULT 0 NOT NULL,
-    average double precision DEFAULT 0 NOT NULL,
-    rating_id bigint NOT NULL
+    average double precision DEFAULT 0 NOT NULL
 );
 
 
@@ -174,32 +171,6 @@ ALTER TABLE public.tbl_movies OWNER TO postgres;
 
 ALTER TABLE public.tbl_movies ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public.tbl_movies_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: tbl_ratings; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.tbl_ratings (
-    id bigint NOT NULL,
-    description character varying(255) NOT NULL
-);
-
-
-ALTER TABLE public.tbl_ratings OWNER TO postgres;
-
---
--- Name: tbl_ratings_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-ALTER TABLE public.tbl_ratings ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.tbl_ratings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2167,10 +2138,34 @@ COPY public.tbl_genders (id, name) FROM stdin;
 --
 
 COPY public.tbl_historic (user_id, movie_id, minutes_watched, user_average, liked) FROM stdin;
-1	3	152	10	t
 1	155	140	10	t
-2	65	60	5	f
-2	72	100	6	f
+1	3	152	10	t
+2	64	164	10	t
+2	9	148	9	t
+2	37	130	9	t
+2	155	140	10	t
+2	70	113	8	t
+2	22	169	9	t
+3	40	155	9	t
+3	73	115	9	t
+3	43	110	8	t
+3	15	136	9	t
+3	7	154	9	t
+4	37	130	9	t
+4	64	164	8	t
+4	155	140	9	t
+4	12	142	8	t
+4	46	155	7	f
+5	43	110	8	t
+5	15	68	7	f
+5	12	142	9	t
+5	1	71	8	t
+5	46	78	7	f
+6	1	142	9	t
+6	12	142	8	t
+6	46	155	7	t
+6	51	102	8	t
+6	33	130	8	t
 \.
 
 
@@ -7089,1031 +7084,1006 @@ COPY public.tbl_movie_gender (movie_id, gender_id) FROM stdin;
 -- Data for Name: tbl_movies; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.tbl_movies (id, title, description, duration, released_year, average, rating_id) FROM stdin;
-1	The Shawshank Redemption	Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.	142	1994	9.3	1
-2	The Godfather	An organized crime dynasty's aging patriarch transfers control of his clandestine empire to his reluctant son.	175	1972	9.2	1
-3	The Dark Knight	When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.	152	2008	9	2
-4	The Godfather: Part II	The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.	202	1974	9	1
-5	12 Angry Men	A jury holdout attempts to prevent a miscarriage of justice by forcing his colleagues to reconsider the evidence.	96	1957	9	3
-6	The Lord of the Rings: The Return of the King	Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.	201	2003	8.9	3
-7	Pulp Fiction	The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.	154	1994	8.9	1
-8	Schindler's List	In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.	195	1993	8.9	1
-9	Inception	A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.	148	2010	8.8	2
-10	Fight Club	An insomniac office worker and a devil-may-care soapmaker form an underground fight club that evolves into something much, much more.	139	1999	8.8	1
-11	The Lord of the Rings: The Fellowship of the Ring	A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.	178	2001	8.8	3
-12	Forrest Gump	The presidencies of Kennedy and Johnson, the events of Vietnam, Watergate and other historical events unfold through the perspective of an Alabama man with an IQ of 75, whose only desire is to be reunited with his childhood sweetheart.	142	1994	8.8	2
-13	Il buono, il brutto, il cattivo	A bounty hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery.	161	1966	8.8	1
-14	The Lord of the Rings: The Two Towers	While Frodo and Sam edge closer to Mordor with the help of the shifty Gollum, the divided fellowship makes a stand against Sauron's new ally, Saruman, and his hordes of Isengard.	179	2002	8.7	2
-15	The Matrix	When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence.	136	1999	8.7	1
-16	Goodfellas	The story of Henry Hill and his life in the mob, covering his relationship with his wife Karen Hill and his mob partners Jimmy Conway and Tommy DeVito in the Italian-American crime syndicate.	146	1990	8.7	1
-17	Star Wars: Episode V - The Empire Strikes Back	After the Rebels are brutally overpowered by the Empire on the ice planet Hoth, Luke Skywalker begins Jedi training with Yoda, while his friends are pursued by Darth Vader and a bounty hunter named Boba Fett all over the galaxy.	124	1980	8.7	2
-18	One Flew Over the Cuckoo's Nest	A criminal pleads insanity and is admitted to a mental institution, where he rebels against the oppressive nurse and rallies up the scared patients.	133	1975	8.7	1
-19	Hamilton	The real life of one of America's foremost founding fathers and first Secretary of the Treasury, Alexander Hamilton. Captured live on Broadway from the Richard Rodgers Theater with the original Broadway cast.	160	2020	8.6	4
-20	Gisaengchung	Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.	132	2019	8.6	1
-21	Soorarai Pottru	Nedumaaran Rajangam "Maara" sets out to make the common man fly and in the process takes on the world's most capital intensive industry and several enemies who stand in his way.	153	2020	8.6	3
-22	Interstellar	A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.	169	2014	8.6	2
-23	Cidade de Deus	In the slums of Rio, two kids' paths diverge as one struggles to become a photographer and the other a kingpin.	130	2002	8.6	1
-24	Sen to Chihiro no kamikakushi	During her family's move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, and where humans are changed into beasts.	125	2001	8.6	3
-25	Saving Private Ryan	Following the Normandy Landings, a group of U.S. soldiers go behind enemy lines to retrieve a paratrooper whose brothers have been killed in action.	169	1998	8.6	5
-26	The Green Mile	The lives of guards on Death Row are affected by one of their charges: a black man accused of child murder and rape, yet who has a mysterious gift.	189	1999	8.6	1
-27	La vita è bella	When an open-minded Jewish librarian and his son become victims of the Holocaust, he uses a perfect mixture of will, humor, and imagination to protect his son from the dangers around their camp.	116	1997	8.6	3
-28	Se7en	Two detectives, a rookie and a veteran, hunt a serial killer who uses the seven deadly sins as his motives.	127	1995	8.6	1
-29	The Silence of the Lambs	A young F.B.I. cadet must receive the help of an incarcerated and manipulative cannibal killer to help catch another serial killer, a madman who skins his victims.	118	1991	8.6	1
-30	Star Wars	Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station, while also attempting to rescue Princess Leia from the mysterious Darth Vader.	121	1977	8.6	2
-31	Seppuku	When a ronin requesting seppuku at a feudal lord's palace is told of the brutal suicide of another ronin who previously visited, he reveals how their pasts are intertwined - and in doing so challenges the clan's integrity.	133	1962	8.6	6
-32	Shichinin no samurai	A poor village under attack by bandits recruits seven unemployed samurai to help them defend themselves.	207	1954	8.6	3
-33	It's a Wonderful Life	An angel is sent from Heaven to help a desperately frustrated businessman by showing him what life would have been like if he had never existed.	130	1946	8.6	7
-34	Joker	In Gotham City, mentally troubled comedian Arthur Fleck is disregarded and mistreated by society. He then embarks on a downward spiral of revolution and bloody crime. This path brings him face-to-face with his alter-ego: the Joker.	122	2019	8.5	1
-35	Whiplash	A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential.	106	2014	8.5	1
-36	The Intouchables	After he becomes a quadriplegic from a paragliding accident, an aristocrat hires a young man from the projects to be his caregiver.	112	2011	8.5	2
-37	The Prestige	After a tragic accident, two stage magicians engage in a battle to create the ultimate illusion while sacrificing everything they have to outwit each other.	130	2006	8.5	3
-38	The Departed	An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.	151	2006	8.5	1
-39	The Pianist	A Polish Jewish musician struggles to survive the destruction of the Warsaw ghetto of World War II.	150	2002	8.5	5
-40	Gladiator	A former Roman General sets out to exact vengeance against the corrupt emperor who murdered his family and sent him into slavery.	155	2000	8.5	2
-41	American History X	A former neo-nazi skinhead tries to prevent his younger brother from going down the same wrong path that he did.	119	1998	8.5	5
-42	The Usual Suspects	A sole survivor tells of the twisty events leading up to a horrific gun battle on a boat, which began when five criminals met at a seemingly random police lineup.	106	1995	8.5	1
-43	Léon	Mathilda, a 12-year-old girl, is reluctantly taken in by Léon, a professional assassin, after her family is murdered. An unusual relationship forms as she becomes his protégée and learns the assassin's trade.	110	1994	8.5	1
-44	The Lion King	Lion prince Simba and his father are targeted by his bitter uncle, who wants to ascend the throne himself.	88	1994	8.5	3
-45	Terminator 2: Judgment Day	A cyborg, identical to the one who failed to kill Sarah Connor, must now protect her teenage son, John Connor, from a more advanced and powerful cyborg.	137	1991	8.5	3
-46	Nuovo Cinema Paradiso	A filmmaker recalls his childhood when falling in love with the pictures at the cinema of his home village and forms a deep friendship with the cinema's projectionist.	155	1988	8.5	3
-47	Hotaru no haka	A young boy and his little sister struggle to survive in Japan during World War II.	89	1988	8.5	3
-48	Back to the Future	Marty McFly, a 17-year-old high school student, is accidentally sent thirty years into the past in a time-traveling DeLorean invented by his close friend, the eccentric scientist Doc Brown.	116	1985	8.5	3
-49	Once Upon a Time in the West	A mysterious stranger with a harmonica joins forces with a notorious desperado to protect a beautiful widow from a ruthless assassin working for the railroad.	165	1968	8.5	3
-50	Psycho	A Phoenix secretary embezzles $40,000 from her employer's client, goes on the run, and checks into a remote motel run by a young man under the domination of his mother.	109	1960	8.5	1
-51	Casablanca	A cynical expatriate American cafe owner struggles to decide whether or not to help his former lover and her fugitive husband escape the Nazis in French Morocco.	102	1942	8.5	3
-52	Modern Times	The Tramp struggles to live in modern industrial society with the help of a young homeless woman.	87	1936	8.5	8
-53	City Lights	With the aid of a wealthy erratic tippler, a dewy-eyed tramp who has fallen in love with a sightless flower girl accumulates money to be able to help her medically.	87	1931	8.5	8
-54	Capharnaüm	While serving a five-year sentence for a violent crime, a 12-year-old boy sues his parents for neglect.	126	2018	8.4	1
-55	Ayla: The Daughter of War	In 1950, amid-st the ravages of the Korean War, Sergeant Süleyman stumbles upon a half-frozen little girl, with no parents and no help in sight. Frantic, scared and on the verge of death, ...                See full summary »	125	2017	8.4	6
-56	Vikram Vedha	Vikram, a no-nonsense police officer, accompanied by Simon, his partner, is on the hunt to capture Vedha, a smuggler and a murderer. Vedha tries to change Vikram's life, which leads to a conflict.	147	2017	8.4	2
-57	Kimi no na wa.	Two strangers find themselves linked in a bizarre way. When a connection forms, will distance be the only thing to keep them apart?	106	2016	8.4	3
-58	Dangal	Former wrestler Mahavir Singh Phogat and his two wrestler daughters struggle towards glory at the Commonwealth Games in the face of societal oppression.	161	2016	8.4	3
-59	Spider-Man: Into the Spider-Verse	Teen Miles Morales becomes the Spider-Man of his universe, and must join with five spider-powered individuals from other dimensions to stop a threat for all realities.	117	2018	8.4	3
-60	Avengers: Endgame	After the devastating events of Avengers: Infinity War (2018), the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.	181	2019	8.4	2
-61	Avengers: Infinity War	The Avengers and their allies must be willing to sacrifice all in an attempt to defeat the powerful Thanos before his blitz of devastation and ruin puts an end to the universe.	149	2018	8.4	2
-62	Coco	Aspiring musician Miguel, confronted with his family's ancestral ban on music, enters the Land of the Dead to find his great-great-grandfather, a legendary singer.	105	2017	8.4	3
-63	Django Unchained	With the help of a German bounty hunter, a freed slave sets out to rescue his wife from a brutal Mississippi plantation owner.	165	2012	8.4	1
-64	The Dark Knight Rises	Eight years after the Joker's reign of anarchy, Batman, with the help of the enigmatic Catwoman, is forced from his exile to save Gotham City from the brutal guerrilla terrorist Bane.	164	2012	8.4	2
-65	3 Idiots	Two friends are searching for their long lost companion. They revisit their college days and recall the memories of their friend who inspired them to think differently, even as the rest of the world called them "idiots".	170	2009	8.4	2
-66	Taare Zameen Par	An eight-year-old boy is thought to be a lazy trouble-maker, until the new art teacher has the patience and compassion to discover the real problem behind his struggles in school.	165	2007	8.4	3
-67	WALL·E	In the distant future, a small waste-collecting robot inadvertently embarks on a space journey that will ultimately decide the fate of mankind.	98	2008	8.4	3
-68	The Lives of Others	In 1984 East Berlin, an agent of the secret police, conducting surveillance on a writer and his lover, finds himself becoming increasingly absorbed by their lives.	137	2006	8.4	1
-69	Oldeuboi	After being kidnapped and imprisoned for fifteen years, Oh Dae-Su is released, only to find that he must find his captor in five days.	101	2003	8.4	1
-70	Memento	A man with short-term memory loss attempts to track down his wife's murderer.	113	2000	8.4	2
-71	Mononoke-hime	On a journey to find the cure for a Tatarigami's curse, Ashitaka finds himself in the middle of a war between the forest gods and Tatara, a mining colony. In this quest he also meets San, the Mononoke Hime.	134	1997	8.4	3
-72	Once Upon a Time in America	A former Prohibition-era Jewish gangster returns to the Lower East Side of Manhattan over thirty years later, where he once again must confront the ghosts and regrets of his old life.	229	1984	8.4	1
-73	Raiders of the Lost Ark	In 1936, archaeologist and adventurer Indiana Jones is hired by the U.S. government to find the Ark of the Covenant before Adolf Hitler's Nazis can obtain its awesome powers.	115	1981	8.4	1
-74	The Shining	A family heads to an isolated hotel for the winter where a sinister presence influences the father into violence, while his psychic son sees horrific forebodings from both past and future.	146	1980	8.4	1
-75	Apocalypse Now	A U.S. Army officer serving in Vietnam is tasked with assassinating a renegade Special Forces Colonel who sees himself as a god.	147	1979	8.4	5
-76	Alien	After a space merchant vessel receives an unknown transmission as a distress call, one of the crew is attacked by a mysterious life form and they soon realize that its life cycle has merely begun.	117	1979	8.4	5
-77	Anand	The story of a terminally ill man who wishes to live life to the fullest before the inevitable occurs, as told by his best friend.	122	1971	8.4	3
-78	Tengoku to jigoku	An executive of a shoe company becomes a victim of extortion when his chauffeur's son is kidnapped and held for ransom.	143	1963	8.4	6
-79	Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb	An insane general triggers a path to nuclear holocaust that a War Room full of politicians and generals frantically tries to stop.	95	1964	8.4	1
-80	Witness for the Prosecution	A veteran British barrister must defend his client in a murder trial that has surprise after surprise.	116	1957	8.4	3
-81	Paths of Glory	After refusing to attack an enemy position, a general accuses the soldiers of cowardice and their commanding officer must defend them.	88	1957	8.4	1
-82	Rear Window	A wheelchair-bound photographer spies on his neighbors from his apartment window and becomes convinced one of them has committed murder.	112	1954	8.4	3
-83	Sunset Blvd.	A screenwriter develops a dangerous relationship with a faded film star determined to make a triumphant return.	110	1950	8.4	9
-84	The Great Dictator	Dictator Adenoid Hynkel tries to expand his empire while a poor Jewish barber tries to avoid persecution from Hynkel's regime.	125	1940	8.4	9
-85	1917	April 6th, 1917. As a regiment assembles to wage war deep in enemy territory, two soldiers are assigned to race against time and deliver a message that will stop 1,600 men from walking straight into a deadly trap.	119	2019	8.3	5
-86	Tumbbad	A mythological story about a goddess who created the entire universe. The plot revolves around the consequences when humans build a temple for her first-born.	104	2018	8.3	1
-87	Andhadhun	A series of mysterious events change the life of a blind pianist, who must now report a crime that he should technically know nothing of.	139	2018	8.3	2
-88	Drishyam	A man goes to extreme lengths to save his family from punishment after the family commits an accidental crime.	160	2013	8.3	3
-89	Jagten	A teacher lives a lonely life, all the while struggling over his son's custody. His life slowly gets better as he finds love and receives good news from his son, but his new luck is about to be brutally shattered by an innocent little lie.	115	2012	8.3	5
-90	Jodaeiye Nader az Simin	A married couple are faced with a difficult decision - to improve the life of their child by moving to another country or to stay in Iran and look after a deteriorating parent who has Alzheimer's disease.	123	2011	8.3	4
-91	Incendies	Twins journey to the Middle East to discover their family history and fulfill their mother's last wishes.	131	2010	8.3	5
-92	Miracle in cell NO.7	A story of love between a mentally-ill father who was wrongly accused of murder and his lovely six years old daughter. The prison would be their home. Based on the 2013 Korean movie 7-beon-bang-ui seon-mul (2013).	132	2019	8.3	10
-93	Babam ve Oglum	The family of a left-wing journalist is torn apart after the military coup of Turkey in 1980.	112	2005	8.3	6
-94	Inglourious Basterds	In Nazi-occupied France during World War II, a plan to assassinate Nazi leaders by a group of Jewish U.S. soldiers coincides with a theatre owner's vengeful plans for the same.	153	2009	8.3	1
-95	Eternal Sunshine of the Spotless Mind	When their relationship turns sour, a couple undergoes a medical procedure to have each other erased from their memories.	108	2004	8.3	2
-96	Amélie	Amélie is an innocent and naive girl in Paris with her own sense of justice. She decides to help those around her and, along the way, discovers love.	122	2001	8.3	3
-97	Snatch	Unscrupulous boxing promoters, violent bookmakers, a Russian gangster, incompetent amateur robbers and supposedly Jewish jewelers fight to track down a priceless stolen diamond.	104	2000	8.3	2
-98	Requiem for a Dream	The drug-induced utopias of four Coney Island people are shattered when their addictions run deep.	102	2000	8.3	1
-99	American Beauty	A sexually frustrated suburban father has a mid-life crisis after becoming infatuated with his daughter's best friend.	122	1999	8.3	2
-100	Good Will Hunting	Will Hunting, a janitor at M.I.T., has a gift for mathematics, but needs help from a psychologist to find direction in his life.	126	1997	8.3	3
-101	Bacheha-Ye aseman	After a boy loses his sister's pair of shoes, he goes on a series of adventures in order to find them. When he can't, he tries a new way to "win" a new pair.	89	1997	8.3	7
-102	Toy Story	A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy's room.	81	1995	8.3	3
-103	Braveheart	Scottish warrior William Wallace leads his countrymen in a rebellion to free his homeland from the tyranny of King Edward I of England.	178	1995	8.3	1
-104	Reservoir Dogs	When a simple jewelry heist goes horribly wrong, the surviving criminals begin to suspect that one of them is a police informant.	99	1992	8.3	5
-105	Full Metal Jacket	A pragmatic U.S. Marine observes the dehumanizing effects the Vietnam War has on his fellow recruits from their brutal boot camp training to the bloody street fighting in Hue.	116	1987	8.3	2
-106	Idi i smotri	After finding an old rifle, a young boy joins the Soviet resistance movement against ruthless German forces and experiences the horrors of World War II.	142	1985	8.3	1
-107	Aliens	Fifty-seven years after surviving an apocalyptic attack aboard her space vessel by merciless space creatures, Officer Ripley awakens from hyper-sleep and tries to warn anyone who will listen about the predators.	137	1986	8.3	3
-108	Amadeus	The life, success and troubles of Wolfgang Amadeus Mozart, as told by Antonio Salieri, the contemporaneous composer who was insanely jealous of Mozart's talent and claimed to have murdered him.	160	1984	8.3	5
-109	Scarface	In 1980 Miami, a determined Cuban immigrant takes over a drug cartel and succumbs to greed.	170	1983	8.3	1
-110	Star Wars: Episode VI - Return of the Jedi	After a daring mission to rescue Han Solo from Jabba the Hutt, the Rebels dispatch to Endor to destroy the second Death Star. Meanwhile, Luke struggles to help Darth Vader back from the dark side without falling into the Emperor's trap.	131	1983	8.3	3
-111	Das Boot	The claustrophobic world of a WWII German U-boat; boredom, filth and sheer terror.	149	1981	8.3	5
-112	Taxi Driver	A mentally unstable veteran works as a nighttime taxi driver in New York City, where the perceived decadence and sleaze fuels his urge for violent action by attempting to liberate a presidential campaign worker and an underage prostitute.	114	1976	8.3	1
-113	The Sting	Two grifters team up to pull off the ultimate con.	129	1973	8.3	3
-114	A Clockwork Orange	In the future, a sadistic gang leader is imprisoned and volunteers for a conduct-aversion experiment, but it doesn't go as planned.	136	1971	8.3	1
-115	2001: A Space Odyssey	After discovering a mysterious artifact buried beneath the Lunar surface, mankind sets off on a quest to find its origins with help from intelligent supercomputer H.A.L. 9000.	149	1968	8.3	3
-116	Per qualche dollaro in più	Two bounty hunters with the same intentions team up to track down a Western outlaw.	132	1965	8.3	3
-117	Lawrence of Arabia	The story of T.E. Lawrence, the English officer who successfully united and led the diverse, often warring, Arab tribes during World War I in order to fight the Turks.	228	1962	8.3	3
-118	The Apartment	A man tries to rise in his company by letting its executives use his apartment for trysts, but complications and a romance of his own ensue.	125	1960	8.3	3
-119	North by Northwest	A New York City advertising executive goes on the run after being mistaken for a government agent by a group of foreign spies.	136	1959	8.3	3
-120	Vertigo	A former police detective juggles wrestling with his personal demons and becoming obsessed with a hauntingly beautiful woman.	128	1958	8.3	1
-121	Singin' in the Rain	A silent film production company and cast make a difficult transition to sound.	103	1952	8.3	8
-122	Ikiru	A bureaucrat tries to find a meaning in his life after he discovers he has terminal cancer.	143	1952	8.3	6
-123	Ladri di biciclette	In post-war Italy, a working-class man's bicycle is stolen. He and his son set out to find it.	89	1948	8.3	6
-124	Double Indemnity	An insurance representative lets himself be talked by a seductive housewife into a murder/insurance fraud scheme that arouses the suspicion of an insurance investigator.	107	1944	8.3	9
-125	Citizen Kane	Following the death of publishing tycoon Charles Foster Kane, reporters scramble to uncover the meaning of his final utterance; 'Rosebud'.	119	1941	8.3	2
-126	M - Eine Stadt sucht einen Mörder	When the police in a German city are unable to catch a child-murderer, other criminals join in the manhunt.	117	1931	8.3	9
-127	Metropolis	In a futuristic city sharply divided between the working class and the city planners, the son of the city's mastermind falls in love with a working-class prophet who predicts the coming of a savior to mediate their differences.	153	1927	8.3	6
-128	The Kid	The Tramp cares for an abandoned child, but events put that relationship in jeopardy.	68	1921	8.3	9
-129	Chhichhore	A tragic incident forces Anirudh, a middle-aged man, to take a trip down memory lane and reminisce his college days along with his friends, who were labelled as losers.	143	2019	8.2	2
-130	Uri: The Surgical Strike	Indian army special forces execute a covert operation, avenging the killing of fellow army men at their base by a terrorist group.	138	2018	8.2	2
-131	K.G.F: Chapter 1	In the 1970s, a fierce rebel rises against brutal oppression and becomes the symbol of hope to legions of downtrodden people.	156	2018	8.2	2
-132	Green Book	A working-class Italian-American bouncer becomes the driver of an African-American classical pianist on a tour of venues through the 1960s American South.	130	2018	8.2	2
-133	Three Billboards Outside Ebbing, Missouri	A mother personally challenges the local authorities to solve her daughter's murder when they fail to catch the culprit.	115	2017	8.2	1
-134	Talvar	An experienced investigator confronts several conflicting theories about the perpetrators of a violent double homicide.	132	2015	8.2	2
-135	Baahubali 2: The Conclusion	When Shiva, the son of Bahubali, learns about his heritage, he begins to look for answers. His story is juxtaposed with past events that unfolded in the Mahishmati Kingdom.	167	2017	8.2	2
-136	Klaus	A simple act of kindness always sparks another, even in a frozen, faraway place. When Smeerensburg's new postman, Jesper, befriends toymaker Klaus, their gifts melt an age-old feud and deliver a sleigh full of holiday traditions.	96	2019	8.2	7
-137	Queen	A Delhi girl from a traditional family sets out on a solo honeymoon after her marriage gets cancelled.	146	2013	8.2	2
-138	Mandariinid	In 1992, war rages in Abkhazia, a breakaway region of Georgia. An Estonian man Ivo has decided to stay behind and harvest his crops of tangerines. In a bloody conflict at his door, a wounded man is left behind, and Ivo takes him in.	87	2013	8.2	6
-139	Bhaag Milkha Bhaag	The truth behind the ascension of Milkha Singh who was scarred because of the India-Pakistan partition.	186	2013	8.2	3
-140	Gangs of Wasseypur	A clash between Sultan and Shahid Khan leads to the expulsion of Khan from Wasseypur, and ignites a deadly blood feud spanning three generations.	321	2012	8.2	1
-141	Udaan	Expelled from his school, a 16-year old boy returns home to his abusive and oppressive father.	134	2010	8.2	2
-142	Paan Singh Tomar	The story of Paan Singh Tomar, an Indian athlete and seven-time national steeplechase champion who becomes one of the most feared dacoits in Chambal Valley after his retirement.	135	2012	8.2	2
-143	El secreto de sus ojos	A retired legal counselor writes a novel hoping to find closure for one of his past unresolved homicide cases and for his unreciprocated love with his superior - both of which still haunt him decades later.	129	2009	8.2	5
-144	Warrior	The youngest son of an alcoholic former boxer returns home, where he's trained by his father for competition in a mixed martial arts tournament - a path that puts the fighter on a collision course with his estranged, older brother.	140	2011	8.2	2
-145	Shutter Island	In 1954, a U.S. Marshal investigates the disappearance of a murderer who escaped from a hospital for the criminally insane.	138	2010	8.2	1
-146	Up	78-year-old Carl Fredricksen travels to Paradise Falls in his house equipped with balloons, inadvertently taking a young stowaway.	96	2009	8.2	3
-147	The Wolf of Wall Street	Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.	180	2013	8.2	1
-148	Chak De! India	Kabir Khan is the coach of the Indian Women's National Hockey Team and his dream is to make his all girls team emerge victorious against all odds.	153	2007	8.2	3
-149	There Will Be Blood	A story of family, religion, hatred, oil and madness, focusing on a turn-of-the-century prospector in the early days of the business.	158	2007	8.2	1
-150	Pan's Labyrinth	In the Falangist Spain of 1944, the bookish young stepdaughter of a sadistic army officer escapes into an eerie but captivating fantasy world.	118	2006	8.2	2
-151	Toy Story 3	The toys are mistakenly delivered to a day-care center instead of the attic right before Andy leaves for college, and it's up to Woody to convince the other toys that they weren't abandoned and to return home.	103	2010	8.2	3
-152	V for Vendetta	In a future British tyranny, a shadowy freedom fighter, known only by the alias of "V", plots to overthrow it with the help of a young woman.	132	2005	8.2	1
-153	Rang De Basanti	The story of six young Indians who assist an English woman to film a documentary on the freedom fighters from their past, and the events that lead them to relive the long-forgotten saga of freedom.	167	2006	8.2	2
-154	Black	The cathartic tale of a young woman who can't see, hear or talk and the teacher who brings a ray of light into her dark world.	122	2005	8.2	3
-155	Batman Begins	After training with his mentor, Batman begins his fight to free crime-ridden Gotham City from corruption.	140	2005	8.2	2
-156	Swades: We, the People	A successful Indian scientist returns to an Indian village to take his nanny to America with him and in the process rediscovers his roots.	210	2004	8.2	3
-157	Der Untergang	Traudl Junge, the final secretary for Adolf Hitler, tells of the Nazi dictator's final days in his Berlin bunker at the end of WWII.	156	2004	8.2	5
-158	Hauru no ugoku shiro	When an unconfident young woman is cursed with an old body by a spiteful witch, her only chance of breaking the spell lies with a self-indulgent yet insecure young wizard and his companions in his legged, walking castle.	119	2004	8.2	3
-159	A Beautiful Mind	After John Nash, a brilliant but asocial mathematician, accepts secret work in cryptography, his life takes a turn for the nightmarish.	135	2001	8.2	2
-160	Hera Pheri	Three unemployed men look for answers to all their money problems - but when their opportunity arrives, will they know what to do with it?	156	2000	8.2	3
-161	Lock, Stock and Two Smoking Barrels	A botched card game in London triggers four friends, thugs, weed-growers, hard gangsters, loan sharks and debt collectors to collide with each other in a series of unexpected events, all for the sake of weed, cash and two antique shotguns.	107	1998	8.2	1
-162	L.A. Confidential	As corruption grows in 1950s Los Angeles, three policemen - one strait-laced, one brutal, and one sleazy - investigate a series of murders with their own brand of justice.	138	1997	8.2	1
-163	Eskiya	Baran the Bandit, released from prison after 35 years, searches for vengeance and his lover.	128	1996	8.2	6
-164	Heat	A group of professional bank robbers start to feel the heat from police when they unknowingly leave a clue at their latest heist.	170	1995	8.2	1
-165	Casino	A tale of greed, deception, money, power, and murder occur between two best friends: a mafia enforcer and a casino executive compete against each other over a gambling empire, and over a fast-living and fast-loving socialite.	178	1995	8.2	1
-166	Andaz Apna Apna	Two slackers competing for the affections of an heiress inadvertently become her protectors from an evil criminal.	160	1994	8.2	3
-167	Unforgiven	Retired Old West gunslinger William Munny reluctantly takes on one last job, with the help of his old partner Ned Logan and a young man, The "Schofield Kid."	130	1992	8.2	1
-168	Indiana Jones and the Last Crusade	In 1938, after his father Professor Henry Jones, Sr. goes missing while pursuing the Holy Grail, Professor Henry "Indiana" Jones, Jr. finds himself up against Adolf Hitler's Nazis again to stop them from obtaining its powers.	127	1989	8.2	3
-169	Dom za vesanje	In this luminous tale set in the area around Sarajevo and in Italy, Perhan, an engaging young Romany (gypsy) with telekinetic powers, is seduced by the quick-cash world of petty crime, which threatens to destroy him and those he loves.	142	1988	8.2	5
-170	Tonari no Totoro	When two girls move to the country to be near their ailing mother, they have adventures with the wondrous forest spirits who live nearby.	86	1988	8.2	3
-171	Die Hard	An NYPD officer tries to save his wife and several others taken hostage by German terrorists during a Christmas party at the Nakatomi Plaza in Los Angeles.	132	1988	8.2	1
-172	Ran	In Medieval Japan, an elderly warlord retires, handing over his empire to his three sons. However, he vastly underestimates how the new-found power will corrupt them and cause them to turn on each other...and him.	162	1985	8.2	3
-173	Raging Bull	The life of boxer Jake LaMotta, whose violence and temper that led him to the top in the ring destroyed his life outside of it.	129	1980	8.2	1
-174	Stalker	A guide leads two men through an area known as the Zone to find a room that grants wishes.	162	1979	8.2	3
-175	Höstsonaten	A married daughter who longs for her mother's love is visited by the latter, a successful concert pianist.	99	1978	8.2	3
-176	The Message	This epic historical drama chronicles the life and times of Prophet Muhammad and serves as an introduction to early Islamic history.	177	1976	8.2	7
-177	Sholay	After his family is murdered by a notorious and ruthless bandit, a former police officer enlists the services of two outlaws to capture the bandit.	204	1975	8.2	3
-178	Monty Python and the Holy Grail	King Arthur and his Knights of the Round Table embark on a surreal, low-budget search for the Holy Grail, encountering many, very silly obstacles.	91	1975	8.2	7
-179	The Great Escape	Allied prisoners of war plan for several hundred of their number to escape from a German camp during World War II.	172	1963	8.2	3
-180	To Kill a Mockingbird	Atticus Finch, a lawyer in the Depression-era South, defends a black man against an undeserved rape charge, and his children against prejudice.	129	1962	8.2	3
-181	Yôjinbô	A crafty ronin comes to a town divided by two criminal gangs and decides to play them against each other to free the town.	110	1961	8.2	6
-182	Judgment at Nuremberg	In 1948, an American court in occupied Germany tries four Nazis judged for war crimes.	179	1961	8.2	1
-183	Some Like It Hot	After two male musicians witness a mob hit, they flee the state in an all-female band disguised as women, but further complications set in.	121	1959	8.2	3
-184	Smultronstället	After living a life marked by coldness, an aging professor is forced to confront the emptiness of his existence.	91	1957	8.2	3
-185	Det sjunde inseglet	A man seeks answers about life, death, and the existence of God as he plays chess against the Grim Reaper during the Black Plague.	96	1957	8.2	1
-186	Du rififi chez les hommes	Four men plan a technically perfect crime, but the human element intervenes...	118	1955	8.2	6
-187	Dial M for Murder	A former tennis player tries to arrange his wife's murder after learning of her affair.	105	1954	8.2	1
-188	Tôkyô monogatari	An old couple visit their children and grandchildren in the city, but receive little attention.	136	1953	8.2	3
-189	Rashômon	The rape of a bride and the murder of her samurai husband are recalled from the perspectives of a bandit, the bride, the samurai's ghost and a woodcutter.	88	1950	8.2	6
-190	All About Eve	A seemingly timid but secretly ruthless ingénue insinuates herself into the lives of an aging Broadway star and her circle of theater friends.	138	1950	8.2	9
-191	The Treasure of the Sierra Madre	Two Americans searching for work in Mexico convince an old prospector to help them mine for gold in the Sierra Madre Mountains.	126	1948	8.2	9
-192	To Be or Not to Be	During the Nazi occupation of Poland, an acting troupe becomes embroiled in a Polish soldier's efforts to track down a German spy.	99	1942	8.2	9
-193	The Gold Rush	A prospector goes to the Klondike in search of gold and finds it and more.	95	1925	8.2	9
-194	Sherlock Jr.	A film projectionist longs to be a detective, and puts his meagre skills to work when he is framed by a rival for stealing his girlfriend's father's pocketwatch.	45	1924	8.2	9
-195	Portrait de la jeune fille en feu	On an isolated island in Brittany at the end of the eighteenth century, a female painter is obliged to paint a wedding portrait of a young woman.	122	2019	8.1	5
-196	Pink	When three young women are implicated in a crime, a retired lawyer steps forward to help them clear their names.	136	2016	8.1	2
-197	Koe no katachi	A young man is ostracized by his classmates after he bullies a deaf girl to the point where she moves away. Years later, he sets off on a path for redemption.	130	2016	8.1	11
-198	Contratiempo	A successful entrepreneur accused of murder and a witness preparation expert have less than three hours to come up with an impregnable defense.	106	2016	8.1	12
-199	Ah-ga-ssi	A woman is hired as a handmaiden to a Japanese heiress, but secretly she is involved in a plot to defraud her.	145	2016	8.1	1
-200	Mommy	A widowed single mother, raising her violent son alone, finds new hope when a mysterious neighbor inserts herself into their household.	139	2014	8.1	5
-201	Haider	A young man returns to Kashmir after his father's disappearance to confront his uncle, whom he suspects of playing a role in his father's fate.	160	2014	8.1	2
-202	Logan	In a future where mutants are nearly extinct, an elderly and weary Logan leads a quiet life. But when Laura, a mutant child pursued by scientists, comes to him for help, he must get her to safety.	137	2017	8.1	1
-203	Room	Held captive for 7 years in an enclosed space, a woman and her young son finally gain their freedom, allowing the boy to experience the outside world for the first time.	118	2015	8.1	5
-204	Relatos salvajes	Six short stories that explore the extremities of human behavior involving people in distress.	122	2014	8.1	5
-205	Soul	After landing the gig of a lifetime, a New York jazz pianist suddenly finds himself trapped in a strange land between Earth and the afterlife.	100	2020	8.1	3
-206	Kis Uykusu	A hotel owner and landlord in a remote Turkish village deals with conflicts within his family and a tenant behind on his rent.	196	2014	8.1	6
-207	PK	An alien on Earth loses the only device he can use to communicate with his spaceship. His innocent nature and child-like questions force the country to evaluate the impact of religion on its people.	153	2014	8.1	2
-208	OMG: Oh My God!	A shopkeeper takes God to court when his shop is destroyed by an earthquake.	125	2012	8.1	3
-209	The Grand Budapest Hotel	A writer encounters the owner of an aging high-class hotel, who tells him of his early years serving as a lobby boy in the hotel's glorious years under an exceptional concierge.	99	2014	8.1	2
-210	Gone Girl	With his wife's disappearance having become the focus of an intense media circus, a man sees the spotlight turned on him when it's suspected that he may not be innocent.	149	2014	8.1	1
-211	Ôkami kodomo no Ame to Yuki	After her werewolf lover unexpectedly dies in an accident while hunting for food for their children, a young woman must find ways to raise the werewolf son and daughter that she had with him while keeping their trait hidden from society.	117	2012	8.1	3
-212	Hacksaw Ridge	World War II American Army Medic Desmond T. Doss, who served during the Battle of Okinawa, refuses to kill people, and becomes the first man in American history to receive the Medal of Honor without firing a shot.	139	2016	8.1	1
-213	Inside Out	After young Riley is uprooted from her Midwest life and moved to San Francisco, her emotions - Joy, Fear, Anger, Disgust and Sadness - conflict on how best to navigate a new city, house, and school.	95	2015	8.1	3
-214	Barfi!	Three young people learn that love can neither be defined nor contained by society's definition of normal and abnormal.	151	2012	8.1	3
-215	12 Years a Slave	In the antebellum United States, Solomon Northup, a free black man from upstate New York, is abducted and sold into slavery.	134	2013	8.1	1
-216	Rush	The merciless 1970s rivalry between Formula One rivals James Hunt and Niki Lauda.	123	2013	8.1	2
-217	Ford v Ferrari	American car designer Carroll Shelby and driver Ken Miles battle corporate interference and the laws of physics to build a revolutionary race car for Ford in order to defeat Ferrari at the 24 Hours of Le Mans in 1966.	152	2019	8.1	2
-218	Spotlight	The true story of how the Boston Globe uncovered the massive scandal of child molestation and cover-up within the local Catholic Archdiocese, shaking the entire Catholic Church to its core.	129	2015	8.1	1
-219	Song of the Sea	Ben, a young Irish boy, and his little sister Saoirse, a girl who can turn into a seal, go on an adventure to free the fairies and save the spirit world.	93	2014	8.1	7
-220	Kahaani	A pregnant woman's search for her missing husband takes her from London to Kolkata, but everyone she questions denies having ever met him.	122	2012	8.1	2
-221	Zindagi Na Milegi Dobara	Three friends decide to turn their fantasy vacation into reality after one of their friends gets engaged.	155	2011	8.1	3
-222	Prisoners	When Keller Dover's daughter and her friend go missing, he takes matters into his own hands as the police pursue multiple leads and the pressure mounts.	153	2013	8.1	1
-223	Mad Max: Fury Road	In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler in search for her homeland with the aid of a group of female prisoners, a psychotic worshiper, and a drifter named Max.	120	2015	8.1	2
-224	A Wednesday	A retiring police officer reminisces about the most astounding day of his career. About a case that was never filed but continues to haunt him in his memories - the case of a man and a Wednesday.	104	2008	8.1	2
-225	Gran Torino	Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.	116	2008	8.1	5
-226	Harry Potter and the Deathly Hallows: Part 2	Harry, Ron, and Hermione search for Voldemort's remaining Horcruxes in their effort to destroy the Dark Lord as the final battle rages on at Hogwarts.	130	2011	8.1	2
-227	Okuribito	A newly unemployed cellist takes a job preparing the dead for funerals.	130	2008	8.1	4
-228	Hachi: A Dog's Tale	A college professor bonds with an abandoned dog he takes into his home.	93	2009	8.1	8
-229	Mary and Max	A tale of friendship between two unlikely pen pals: Mary, a lonely, eight-year-old girl living in the suburbs of Melbourne, and Max, a forty-four-year old, severely obese man living in New York.	92	2009	8.1	6
-230	How to Train Your Dragon	A hapless young Viking who aspires to hunt dragons becomes the unlikely friend of a young dragon himself, and learns there may be more to the creatures than he assumed.	98	2010	8.1	3
-231	Into the Wild	After graduating from Emory University, top student and athlete Christopher McCandless abandons his possessions, gives his entire $24,000 savings account to charity and hitchhikes to Alaska to live in the wilderness. Along the way, Christopher encounters a series of characters that shape his life.	148	2007	8.1	5
-232	No Country for Old Men	Violence and mayhem ensue after a hunter stumbles upon a drug deal gone wrong and more than two million dollars in cash near the Rio Grande.	122	2007	8.1	5
-233	Lage Raho Munna Bhai	Munna Bhai embarks on a journey with Mahatma Gandhi in order to fight against a corrupt property dealer.	144	2006	8.1	3
-234	Million Dollar Baby	A determined woman works with a hardened boxing trainer to become a professional.	132	2004	8.1	2
-235	Hotel Rwanda	Paul Rusesabagina, a hotel manager, houses over a thousand Tutsi refugees during their struggle against the Hutu militia in Rwanda, Africa.	121	2004	8.1	4
-236	Taegukgi hwinalrimyeo	When two brothers are forced to fight in the Korean War, the elder decides to take the riskiest missions if it will help shield the younger from battle.	140	2004	8.1	5
-237	Before Sunset	Nine years after Jesse and Celine first met, they encounter each other again on the French leg of Jesse's book tour.	80	2004	8.1	5
-238	Munna Bhai M.B.B.S.	A gangster sets out to fulfill his father's dream of becoming a doctor.	156	2003	8.1	3
-239	Salinui chueok	In a small Korean province in 1986, two detectives struggle with the case of multiple young women being found raped and murdered by an unknown culprit.	131	2003	8.1	2
-240	Dil Chahta Hai	Three inseparable childhood friends are just out of college. Nothing comes between them - until they each fall in love, and their wildly different approaches to relationships creates tension.	183	2001	8.1	13
-241	Kill Bill: Vol. 1	After awakening from a four-year coma, a former assassin wreaks vengeance on the team of assassins who betrayed her.	111	2003	8.1	5
-242	Finding Nemo	After his son is captured in the Great Barrier Reef and taken to Sydney, a timid clownfish sets out on a journey to bring him home.	100	2003	8.1	3
-243	Catch Me If You Can	Barely 21 yet, Frank is a skilled forger who has passed as a doctor, lawyer and pilot. FBI agent Carl becomes obsessed with tracking down the con man, who only revels in the pursuit.	141	2002	8.1	1
-244	Amores perros	A horrific car accident connects three stories, each involving characters dealing with loss, regret, and life's harsh realities, all in the name of love.	154	2000	8.1	1
-245	Monsters, Inc.	In order to power the city, monsters have to scare children so that they scream. However, the children are toxic to the monsters, and after a child gets through, 2 monsters realize things may not be what they think.	92	2001	8.1	3
-246	Shin seiki Evangelion Gekijô-ban: Air/Magokoro wo, kimi ni	Concurrent theatrical ending of the TV series Shin seiki evangerion (1995).	87	1997	8.1	2
-247	Lagaan: Once Upon a Time in India	The people of a small village in Victorian India stake their future on a game of cricket against their ruthless British rulers.	224	2001	8.1	3
-248	The Sixth Sense	A boy who communicates with spirits seeks the help of a disheartened child psychologist.	107	1999	8.1	1
-249	La leggenda del pianista sull'oceano	A baby boy, discovered in 1900 on an ocean liner, grows into a musical prodigy, never setting foot on land.	169	1998	8.1	3
-250	The Truman Show	An insurance salesman discovers his whole life is actually a reality TV show.	103	1998	8.1	3
-251	Crna macka, beli macor	Matko and his son Zare live on the banks of the Danube river and get by through hustling and basically doing anything to make a living. In order to pay off a business debt Matko agrees to marry off Zare to the sister of a local gangster.	127	1998	8.1	5
-252	The Big Lebowski	Jeff "The Dude" Lebowski, mistaken for a millionaire of the same name, seeks restitution for his ruined rug and enlists his bowling buddies to help get it.	117	1998	8.1	5
-253	Fa yeung nin wah	Two neighbors, a woman and a man, form a strong bond after both suspect extramarital activities of their spouses. However, they agree to keep their bond platonic so as not to commit similar wrongs.	98	2000	8.1	3
-254	Trainspotting	Renton, deeply immersed in the Edinburgh drug scene, tries to clean up and get out, despite the allure of the drugs and influence of friends.	93	1996	8.1	1
-255	Fargo	Jerry Lundegaard's inept crime falls apart due to his and his henchmen's bungling and the persistent police work of the quite pregnant Marge Gunderson.	98	1996	8.1	1
-256	Underground	A group of Serbian socialists prepares for the war in a surreal underground filled by parties, tragedies, love and hate.	170	1995	8.1	6
-257	La haine	24 hours in the lives of three young men in the French suburbs the day after a violent riot.	98	1995	8.1	2
-258	Dilwale Dulhania Le Jayenge	When Raj meets Simran in Europe, it isn't love at first sight but when Simran moves to India for an arranged marriage, love makes its presence felt.	189	1995	8.1	3
-259	Before Sunrise	A young man and woman meet on a train in Europe, and wind up spending one evening together in Vienna. Unfortunately, both know that this will probably be their only night together.	101	1995	8.1	5
-260	Trois couleurs: Rouge	A model discovers a retired judge is keen on invading people's privacy.	99	1994	8.1	3
-261	Chung Hing sam lam	Two melancholy Hong Kong policemen fall in love: one with a mysterious female underworld figure, the other with a beautiful and ethereal server at a late-night restaurant he frequents.	102	1994	8.1	3
-262	Jurassic Park	A pragmatic paleontologist visiting an almost complete theme park is tasked with protecting a couple of kids after a power failure causes the park's cloned dinosaurs to run loose.	127	1993	8.1	2
-263	In the Name of the Father	A man's coerced confession to an I.R.A. bombing he did not commit results in the imprisonment of his father as well. An English lawyer fights to free them.	133	1993	8.1	2
-264	Ba wang bie ji	Two boys meet at an opera training school in Peking in 1924. Their resulting friendship will span nearly 70 years and will endure some of the most troublesome times in China's history.	171	1993	8.1	5
-265	Dà hóng denglong gaogao guà	A young woman becomes the fourth wife of a wealthy lord, and must learn to live with the strict rules and tensions within the household.	125	1991	8.1	7
-266	Dead Poets Society	Maverick teacher John Keating uses poetry to embolden his boarding school students to new heights of self-expression.	128	1989	8.1	3
-267	Stand by Me	After the death of one of his friends, a writer recounts a childhood journey with his friends to find the body of a missing boy.	89	1986	8.1	3
-268	Platoon	Chris Taylor, a neophyte recruit in Vietnam, finds himself caught in a battle of wills between two sergeants, one good and the other evil. A shrewd examination of the brutality of war and the duality of man in conflict.	120	1986	8.1	1
-269	Paris, Texas	Travis Henderson, an aimless drifter who has been missing for four years, wanders out of the desert and must reconnect with society, himself, his life, and his family.	145	1984	8.1	3
-270	Kaze no tani no Naushika	Warrior and pacifist Princess Nausicaä desperately struggles to prevent two warring nations from destroying themselves and their dying planet.	117	1984	8.1	3
-271	The Thing	A research team in Antarctica is hunted by a shape-shifting alien that assumes the appearance of its victims.	109	1982	8.1	1
-272	Pink Floyd: The Wall	A confined but troubled rock star descends into madness in the midst of his physical and social isolation from everyone.	95	1982	8.1	2
-273	Fitzcarraldo	The story of Brian Sweeney Fitzgerald, an extremely determined man who intends to build an opera house in the middle of a jungle.	158	1982	8.1	5
-274	Fanny och Alexander	Two young Swedish children experience the many comedies and tragedies of their family, the Ekdahls.	188	1982	8.1	1
-275	Blade Runner	A blade runner must pursue and terminate four replicants who stole a ship in space, and have returned to Earth to find their creator.	117	1982	8.1	2
-276	The Elephant Man	A Victorian surgeon rescues a heavily disfigured man who is mistreated while scraping a living as a side-show freak. Behind his monstrous façade, there is revealed a person of kindness, intelligence and sophistication.	124	1980	8.1	2
-277	Life of Brian	Born on the original Christmas in the stable next door to Jesus Christ, Brian of Nazareth spends his life being mistaken for a messiah.	94	1979	8.1	5
-278	The Deer Hunter	An in-depth examination of the ways in which the U.S. Vietnam War impacts and disrupts the lives of people in a small industrial town in Pennsylvania.	183	1978	8.1	1
-279	Rocky	A small-time boxer gets a supremely rare chance to fight a heavy-weight champion in a bout in which he strives to go the distance for his self-respect.	120	1976	8.1	3
-280	Network	A television network cynically exploits a deranged former anchor's ravings and revelations about the news media for its own profit.	121	1976	8.1	2
-281	Barry Lyndon	An Irish rogue wins the heart of a rich widow and assumes her dead husband's aristocratic position in 18th-century England.	185	1975	8.1	7
-282	Zerkalo	A dying man in his forties remembers his past. His childhood, his mother, the war, personal moments and things that tell of the recent history of all the Russian nation.	107	1975	8.1	8
-283	Chinatown	A private detective hired to expose an adulterer finds himself caught up in a web of deceit, corruption, and murder.	130	1974	8.1	2
-284	Paper Moon	During the Great Depression, a con man finds himself saddled with a young girl who may or may not be his daughter, and the two forge an unlikely partnership.	102	1973	8.1	3
-285	Viskningar och rop	When a woman dying of cancer in early twentieth-century Sweden is visited by her two sisters, long-repressed feelings between the siblings rise to the surface.	91	1972	8.1	1
-286	Solaris	A psychologist is sent to a station orbiting a distant planet in order to discover what has caused the crew to go insane.	167	1972	8.1	7
-287	Le samouraï	After professional hitman Jef Costello is seen by witnesses his efforts to provide himself an alibi drive him further into a corner.	105	1967	8.1	14
-288	Cool Hand Luke	A laid back Southern man is sentenced to two years in a rural prison, but refuses to conform.	127	1967	8.1	1
-289	Persona	A nurse is put in charge of a mute actress and finds that their personae are melding together.	85	1966	8.1	6
-290	Andrei Rublev	The life, times and afflictions of the fifteenth-century Russian iconographer St. Andrei Rublev.	205	1966	8.1	5
-291	La battaglia di Algeri	In the 1950s, fear and violence escalate as the people of Algiers fight for independence from the French government.	121	1966	8.1	6
-292	El ángel exterminador	The guests at an upper-class dinner party find themselves unable to leave.	95	1962	8.1	6
-293	What Ever Happened to Baby Jane?	A former child star torments her paraplegic sister in their decaying Hollywood mansion.	134	1962	8.1	9
-294	Sanjuro	A crafty samurai helps a young man and his fellow clansmen save his uncle, who has been framed and imprisoned by a corrupt superintendent.	96	1962	8.1	3
-295	The Man Who Shot Liberty Valance	A senator returns to a western town for the funeral of an old friend and tells the story of his origins.	123	1962	8.1	6
-296	Ivanovo detstvo	In WW2, twelve year old Soviet orphan Ivan Bondarev works for the Soviet army as a scout behind the German lines and strikes a friendship with three sympathetic Soviet officers.	95	1962	8.1	6
-297	Jungfrukällan	An innocent yet pampered young virgin and her family's pregnant and jealous servant set out to deliver candles to church, but only one returns from events that transpire in the woods along the way.	89	1960	8.1	1
-298	Inherit the Wind	Based on a real-life case in 1925, two great lawyers argue the case for and against a science teacher accused of the crime of teaching evolution.	128	1960	8.1	9
-299	Les quatre cents coups	A young boy, left without attention, delves into a life of petty crime.	99	1959	8.1	6
-300	Ben-Hur	After a Jewish prince is betrayed and sent into slavery by a Roman friend, he regains his freedom and comes back for revenge.	212	1959	8.1	3
-301	Kakushi-toride no san-akunin	Lured by gold, two greedy peasants unknowingly escort a princess and her general across enemy lines.	139	1958	8.1	6
-302	Le notti di Cabiria	A waifish prostitute wanders the streets of Rome looking for true love but finds only heartbreak.	110	1957	8.1	6
-303	Kumonosu-jô	A war-hardened general, egged on by his ambitious wife, works to fulfill a prophecy that he would become lord of Spider's Web Castle.	110	1957	8.1	6
-304	The Bridge on the River Kwai	British POWs are forced to build a railway bridge across the river Kwai for their Japanese captors, not knowing that the allied forces are planning to destroy it.	161	1957	8.1	7
-305	On the Waterfront	An ex-prize fighter turned longshoreman struggles to stand up to his corrupt union bosses.	108	1954	8.1	1
-306	Le salaire de la peur	In a decrepit South American village, four men are hired to transport an urgent nitroglycerine shipment without the equipment that would make it safe.	131	1953	8.1	3
-307	Ace in the Hole	A frustrated former big-city journalist now stuck working for an Albuquerque newspaper exploits a story about a man trapped in a cave to rekindle his career, but the situation quickly escalates into an out-of-control circus.	111	1951	8.1	15
-308	White Heat	A psychopathic criminal with a mother complex makes a daring break from prison and leads his old gang in a chemical plant payroll heist.	114	1949	8.1	6
-309	The Third Man	Pulp novelist Holly Martins travels to shadowy, postwar Vienna, only to find himself investigating the mysterious death of an old friend, Harry Lime.	104	1949	8.1	15
-310	The Red Shoes	A young ballet dancer is torn between the man she loves and her pursuit to become a prima ballerina.	135	1948	8.1	6
-311	The Shop Around the Corner	Two employees at a gift shop can barely stand each other, without realizing that they are falling in love through the post as each other's anonymous pen pal.	99	1940	8.1	6
-312	Rebecca	A self-conscious woman juggles adjusting to her new role as an aristocrat's wife and avoiding being intimidated by his first wife's spectral presence.	130	1940	8.1	15
-313	Mr. Smith Goes to Washington	A naive man is appointed to fill a vacancy in the United States Senate. His plans promptly collide with political corruption, but he doesn't back down.	129	1939	8.1	9
-314	Gone with the Wind	A manipulative woman and a roguish man conduct a turbulent romance during the American Civil War and Reconstruction periods.	238	1939	8.1	3
-595	Kaze tachinu	A look at the life of Jiro Horikoshi, the man who designed Japanese fighter planes during World War II.	126	2013	7.8	4
-315	La Grande Illusion	During WWI, two French soldiers are captured and imprisoned in a German P.O.W. camp. Several escape attempts follow until they are eventually sent to a seemingly inescapable fortress.	113	1937	8.1	6
-316	It Happened One Night	A renegade reporter and a crazy young heiress meet on a bus heading for New York, and end up stuck with each other when the bus leaves them behind at one of the stops.	105	1934	8.1	15
-317	La passion de Jeanne d'Arc	In 1431, Jeanne d'Arc is placed on trial on charges of heresy. The ecclesiastical jurists attempt to force Jeanne to recant her claims of holy visions.	110	1928	8.1	9
-318	The Circus	The Tramp finds work and the girl of his dreams at a circus.	72	1928	8.1	9
-319	Sunrise: A Song of Two Humans	An allegorical tale about a man fighting the good and evil within him. Both sides are made flesh - one a sophisticated woman he is attracted to and the other his wife.	94	1927	8.1	9
-320	The General	When Union spies steal an engineer's beloved locomotive, he pursues it single-handedly and straight through enemy lines.	67	1926	8.1	9
-321	Das Cabinet des Dr. Caligari	Hypnotist Dr. Caligari uses a somnambulist, Cesare, to commit murders.	76	1920	8.1	6
-322	Badhaai ho	A man is embarrassed when he finds out his mother is pregnant.	124	2018	8	2
-323	Togo	The story of Togo, the sled dog who led the 1925 serum run yet was considered by most to be too small and weak to lead such an intense race.	113	2019	8	3
-324	Airlift	When Iraq invades Kuwait in August 1990, a callous Indian businessman becomes the spokesperson for more than 170,000 stranded countrymen.	130	2016	8	2
-325	Bajrangi Bhaijaan	An Indian man with a magnanimous heart takes a young mute Pakistani girl back to her homeland to reunite her with her family.	163	2015	8	2
-326	Baby	An elite counter-intelligence unit learns of a plot, masterminded by a maniacal madman. With the clock ticking, it's up to them to track the terrorists' international tentacles and prevent them from striking at the heart of India.	159	2015	8	2
-327	La La Land	While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to reconcile their aspirations for the future.	128	2016	8	1
-328	Lion	A five-year-old Indian boy is adopted by an Australian couple after getting lost hundreds of kilometers from home. 25 years later, he sets out to find his lost family.	118	2016	8	3
-329	The Martian	An astronaut becomes stranded on Mars after his team assume him dead, and must rely on his ingenuity to find a way to signal to Earth that he is alive.	144	2015	8	2
-330	Zootopia	In a city of anthropomorphic animals, a rookie bunny cop and a cynical con artist fox must work together to uncover a conspiracy.	108	2016	8	3
-331	Bãhubali: The Beginning	In ancient India, an adventurous and daring man becomes involved in a decades-old feud between two warring peoples.	159	2015	8	2
-332	Kaguyahime no monogatari	Found inside a shining stalk of bamboo by an old bamboo cutter and his wife, a tiny girl grows rapidly into an exquisite young lady. The mysterious young princess enthralls all who encounter her, but ultimately she must confront her fate, the punishment for her crime.	137	2013	8	3
-333	Wonder	Based on the New York Times bestseller, this movie tells the incredibly inspiring and heartwarming story of August Pullman, a boy with facial differences who enters the fifth grade, attending a mainstream elementary school for the first time.	113	2017	8	3
-334	Gully Boy	A coming-of-age story based on the lives of street rappers in Mumbai.	154	2019	8	2
-335	Special Chabbis	A gang of con-men rob prominent rich businessmen and politicians by posing as C.B.I and income tax officers.	144	2013	8	2
-336	Short Term 12	A 20-something supervising staff member of a residential treatment facility navigates the troubled waters of that world alongside her co-worker and longtime boyfriend.	96	2013	8	5
-337	Serbuan maut 2: Berandal	Only a short time after the first raid, Rama goes undercover with the thugs of Jakarta and plans to bring down the syndicate and uncover the corruption within his police force.	150	2014	8	1
-338	The Imitation Game	During World War II, the English mathematical genius Alan Turing tries to crack the German Enigma code with help from fellow mathematicians.	114	2014	8	2
-339	Guardians of the Galaxy	A group of intergalactic criminals must pull together to stop a fanatical warrior with plans to purge the universe.	121	2014	8	2
-340	Blade Runner 2049	Young Blade Runner K's discovery of a long-buried secret leads him to track down former Blade Runner Rick Deckard, who's been missing for thirty years.	164	2017	8	2
-341	Her	In a near future, a lonely writer develops an unlikely relationship with an operating system designed to meet his every need.	126	2013	8	1
-342	Bohemian Rhapsody	The story of the legendary British rock band Queen and lead singer Freddie Mercury, leading up to their famous performance at Live Aid (1985).	134	2018	8	2
-343	The Revenant	A frontiersman on a fur trading expedition in the 1820s fights for survival after being mauled by a bear and left for dead by members of his own hunting team.	156	2015	8	1
-344	The Perks of Being a Wallflower	An introvert freshman is taken under the wings of two seniors who welcome him to the real world	103	2012	8	2
-345	Tropa de Elite 2: O Inimigo Agora é Outro	After a prison riot, former-Captain Nascimento, now a high ranking security officer in Rio de Janeiro, is swept into a bloody political dispute that involves government officials and paramilitary groups.	115	2010	8	6
-346	The King's Speech	The story of King George VI, his impromptu ascension to the throne of the British Empire in 1936, and the speech therapist who helped the unsure monarch overcome his stammer.	118	2010	8	3
-347	The Help	An aspiring author during the civil rights movement of the 1960s decides to write a book detailing the African American maids' point of view on the white families for which they work, and the hardships they go through on a daily basis.	146	2011	8	2
-348	Deadpool	A wisecracking mercenary gets experimented on and becomes immortal but ugly, and sets out to track down the man who ruined his looks.	108	2016	8	5
-349	Darbareye Elly	The mysterious disappearance of a kindergarten teacher during a picnic in the north of Iran is followed by a series of misadventures for her fellow travelers.	119	2009	8	16
-350	Dev.D	After breaking up with his childhood sweetheart, a young man finds solace in drugs. Meanwhile, a teenage girl is caught in the world of prostitution. Will they be destroyed, or will they find redemption?	144	2009	8	1
-351	Yip Man	During the Japanese invasion of China, a wealthy martial artist is forced to leave his home when his city is occupied. With little means of providing for themselves, Ip Man and the remaining members of the city must find a way to survive.	106	2008	8	5
-352	My Name Is Khan	An Indian Muslim man with Asperger's syndrome takes a challenge to speak to the President of the United States seriously and embarks on a cross-country journey.	165	2010	8	2
-353	Nefes: Vatan Sagolsun	Story of 40-man Turkish task force who must defend a relay station.	128	2009	8	6
-354	Slumdog Millionaire	A Mumbai teenager reflects on his life after being accused of cheating on the Indian version of "Who Wants to be a Millionaire?".	120	2008	8	2
-355	Black Swan	A committed dancer struggles to maintain her sanity after winning the lead role in a production of Tchaikovsky's "Swan Lake".	108	2010	8	1
-356	Tropa de Elite	In 1997 Rio de Janeiro, Captain Nascimento has to find a substitute for his position while trying to take down drug dealers and criminals before the Pope visits.	115	2007	8	5
-357	The Avengers	Earth's mightiest heroes must come together and learn to fight as a team if they are going to stop the mischievous Loki and his alien army from enslaving humanity.	143	2012	8	2
-358	Persepolis	A precocious and outspoken Iranian girl grows up during the Islamic Revolution.	96	2007	8	4
-359	Dallas Buyers Club	In 1985 Dallas, electrician and hustler Ron Woodroof works around the system to help AIDS patients get the medication they need after he is diagnosed with the disease.	117	2013	8	5
-360	The Pursuit of Happyness	A struggling salesman takes custody of his son as he's poised to begin a life-changing professional career.	117	2006	8	3
-361	Blood Diamond	A fisherman, a smuggler, and a syndicate of businessmen match wits over the possession of a priceless diamond.	143	2006	8	1
-362	The Bourne Ultimatum	Jason Bourne dodges a ruthless C.I.A. official and his Agents from a new assassination program while searching for the origins of his life as a trained killer.	115	2007	8	2
-363	Bin-jip	A transient young man breaks into empty homes to partake of the vacationing residents' lives for a few days.	88	2004	8	3
-364	Sin City	A movie that explores the dark and miserable town, Basin City, tells the story of three different people, all caught up in violent corruption.	124	2005	8	1
-365	Le scaphandre et le papillon	The true story of Elle editor Jean-Dominique Bauby who suffers a stroke and has to live with an almost totally paralyzed body; only his left eye isn't paralyzed.	112	2007	8	4
-366	G.O.R.A.	A slick young Turk kidnapped by extraterrestrials shows his great « humanitarian spirit » by outwitting the evil commander-in-chief of the planet of G.O.R.A.	127	2004	8	6
-367	Ratatouille	A rat who can cook makes an unusual alliance with a young kitchen worker at a famous restaurant.	111	2007	8	3
-368	Casino Royale	After earning 00 status and a licence to kill, Secret Agent James Bond sets out on his first mission as 007. Bond must defeat a private banker funding terrorists in a high-stakes game of poker at Casino Royale, Montenegro.	144	2006	8	4
-369	Kill Bill: Vol. 2	The Bride continues her quest of vengeance against her former boss and lover Bill, the reclusive bouncer Budd, and the treacherous, one-eyed Elle.	137	2004	8	1
-370	Vozvrashchenie	In the Russian wilderness, two brothers face a range of new, conflicting emotions when their father - a man they know only through a single photograph - resurfaces.	110	2003	8	6
-371	Bom Yeoareum Gaeul Gyeoul Geurigo Bom	A boy is raised by a Buddhist monk in an isolated floating temple where the years pass like the seasons.	103	2003	8	5
-372	Mar adentro	The factual story of Spaniard Ramon Sampedro, who fought a thirty-year campaign in favor of euthanasia and his own right to die.	126	2014	8	3
-373	Cinderella Man	The story of James J. Braddock, a supposedly washed-up boxer who came back to become a champion and an inspiration in the 1930s.	144	2005	8	2
-374	Kal Ho Naa Ho	Naina, an introverted, perpetually depressed girl's life changes when she meets Aman. But Aman has a secret of his own which changes their lives forever. Embroiled in all this is Rohit, Naina's best friend who conceals his love for her.	186	2003	8	3
-375	Mou gaan dou	A story between a mole in the police department and an undercover cop. Their objectives are the same: to find out who is the mole, and who is the cop.	101	2002	8	2
-376	Pirates of the Caribbean: The Curse of the Black Pearl	Blacksmith Will Turner teams up with eccentric pirate "Captain" Jack Sparrow to save his love, the governor's daughter, from Jack's former pirate allies, who are now undead.	143	2003	8	2
-377	Big Fish	A frustrated son tries to determine the fact from fiction in his dying father's life.	125	2003	8	3
-378	The Incredibles	A family of undercover superheroes, while trying to live the quiet suburban life, are forced into action to save the world.	115	2004	8	3
-379	Yeopgijeogin geunyeo	A young man sees a drunk, cute woman standing too close to the tracks at a metro station in Seoul and pulls her back. She ends up getting him into trouble repeatedly after that, starting on the train.	137	2001	8	6
-380	Dogville	A woman on the run from the mob is reluctantly accepted in a small Colorado community in exchange for labor, but when a search visits the town she finds out that their support has a price.	178	2003	8	5
-381	Vizontele	Lives of residents in a small Anatolian village change when television is introduced to them	110	2001	8	6
-382	Donnie Darko	After narrowly escaping a bizarre accident, a troubled teenager is plagued by visions of a man in a large rabbit suit who manipulates him to commit a series of crimes.	113	2001	8	5
-383	Magnolia	An epic mosaic of interrelated characters in search of love, forgiveness, and meaning in the San Fernando Valley.	188	1999	8	5
-384	Dancer in the Dark	An East European girl travels to the United States with her young son, expecting it to be like a Hollywood film.	140	2000	8	3
-385	The Straight Story	An old man makes a long journey by lawnmower to mend his relationship with an ill brother.	112	1999	8	3
-386	Pâfekuto burû	A pop singer gives up her career to become an actress, but she slowly goes insane when she starts being stalked by an obsessed fan and what seems to be a ghost of her past.	81	1997	8	1
-387	Festen	At Helge's 60th birthday party, some unpleasant family truths are revealed.	105	1998	8	5
-388	Central do Brasil	An emotive journey of a former school teacher, who writes letters for illiterate people, and a young boy, whose mother has just died, as they search for the father he never knew.	110	1998	8	5
-389	The Iron Giant	A young boy befriends a giant robot from outer space that a paranoid government agent wants to destroy.	86	1999	8	7
-390	Knockin' on Heaven's Door	Two terminally ill patients escape from a hospital, steal a car and rush towards the sea.	87	1997	8	6
-391	Sling Blade	Karl Childers, a simple man hospitalized since his childhood murder of his mother and her lover, is released to start a new life in a small town.	135	1996	8	5
-392	Secrets & Lies	Following the death of her adoptive parents, a successful young black optometrist establishes contact with her biological mother -- a lonely white factory worker living in poverty in East London.	136	1996	8	3
-393	Twelve Monkeys	In a future world devastated by disease, a convict is sent back in time to gather information about the man-made virus that wiped out most of the human population on the planet.	129	1995	8	1
-394	Kôkaku Kidôtai	A cyborg policewoman and her partner hunt a mysterious and powerful hacker called the Puppet Master.	83	1995	8	2
-395	The Nightmare Before Christmas	Jack Skellington, king of Halloween Town, discovers Christmas Town, but his attempts to bring Christmas to his home causes confusion.	76	1993	8	3
-396	Groundhog Day	A weatherman finds himself inexplicably living the same day over and over again.	101	1993	8	3
-397	Bound by Honor	Based on the true life experiences of poet Jimmy Santiago Baca, the film focuses on step-brothers Paco and Cruz, and their bi-racial cousin Miklo.	180	1993	8	5
-398	Scent of a Woman	A prep school student needing money agrees to "babysit" a blind man, but the job is not at all what he anticipated.	156	1992	8	2
-399	Aladdin	A kindhearted street urchin and a power-hungry Grand Vizier vie for a magic lamp that has the power to make their deepest wishes come true.	90	1992	8	3
-400	JFK	New Orleans District Attorney Jim Garrison discovers there's more to the Kennedy assassination than the official story.	189	1991	8	2
-401	Beauty and the Beast	A prince cursed to spend his days as a hideous monster sets out to regain his humanity by earning a young woman's love.	84	1991	8	8
-402	Dances with Wolves	Lieutenant John Dunbar, assigned to a remote western Civil War outpost, befriends wolves and Indians, making him an intolerable aberration in the military.	181	1990	8	3
-403	Do the Right Thing	On the hottest day of the year on a street in the Bedford-Stuyvesant section of Brooklyn, everyone's hate and bigotry smolders and builds until it explodes into violence.	120	1989	8	5
-404	Rain Man	Selfish yuppie Charlie Babbitt's father left a fortune to his savant brother Raymond and a pittance to Charlie; they travel cross-country.	133	1988	8	3
-405	Akira	A secret military project endangers Neo-Tokyo when it turns a biker gang member into a rampaging psychic psychopath who can only be stopped by two teenagers and a group of psychics.	124	1988	8	2
-406	The Princess Bride	While home sick in bed, a young boy's grandfather reads him the story of a farmboy-turned-pirate who encounters numerous obstacles, enemies and allies in his quest to be reunited with his true love.	98	1987	8	3
-407	Der Himmel über Berlin	An angel tires of overseeing human activity and wishes to become human when he falls in love with a mortal.	128	1987	8	3
-408	Au revoir les enfants	A French boarding school run by priests seems to be a haven from World War II until a new student arrives. He becomes the roommate of the top student in his class. Rivals at first, the roommates form a bond and share a secret.	104	1987	8	3
-409	Tenkû no shiro Rapyuta	A young boy and a girl with a magic crystal must race against pirates and foreign agents in a search for a legendary floating castle.	125	1986	8	3
-410	The Terminator	A human soldier is sent from 2029 to 1984 to stop an almost indestructible cyborg killing machine, sent from the same year, which has been programmed to execute a young woman whose unborn son is the key to humanity's future salvation.	107	1984	8	2
-411	Gandhi	The life of the lawyer who became the famed leader of the Indian revolts against the British rule through his philosophy of nonviolent protest.	191	1982	8	3
-412	Kagemusha	A petty thief with an utter resemblance to a samurai warlord is hired as the lord's double. When the warlord later dies the thief is forced to take up arms in his place.	180	1980	8	3
-413	Being There	A simpleminded, sheltered gardener becomes an unlikely trusted advisor to a powerful businessman and an insider in Washington politics.	130	1979	8	7
-414	Annie Hall	Neurotic New York comedian Alvy Singer falls in love with the ditzy Annie Hall.	93	1977	8	1
-415	Jaws	When a killer shark unleashes chaos on a beach community, it's up to a local sheriff, a marine biologist, and an old seafarer to hunt the beast down.	124	1975	8	1
-416	Dog Day Afternoon	Three amateur bank robbers plan to hold up a bank. A nice simple robbery: Walk in, take the money, and run. Unfortunately, the supposedly uncomplicated heist suddenly becomes a bizarre nightmare as everything that could go wrong does.	125	1975	8	3
-417	Young Frankenstein	An American grandson of the infamous scientist, struggling to prove that his grandfather was not as insane as people believe, is invited to Transylvania, where he discovers the process that reanimates a dead body.	106	1974	8	1
-418	Papillon	A man befriends a fellow criminal as the two of them begin serving their sentence on a dreadful prison island, which inspires the man to plot his escape.	151	1973	8	5
-419	The Exorcist	When a 12-year-old girl is possessed by a mysterious entity, her mother seeks the help of two priests to save her.	122	1973	8	1
-420	Sleuth	A man who loves games and theater invites his wife's lover to meet him, setting up a battle of wits with potentially deadly results.	138	1972	8	7
-421	The Last Picture Show	In 1951, a group of high schoolers come of age in a bleak, isolated, atrophied North Texas town that is slowly dying, both culturally and economically.	118	1971	8	5
-422	Fiddler on the Roof	In prerevolutionary Russia, a Jewish peasant contends with marrying off three of his daughters while growing anti-Semitic sentiment threatens his village.	181	1971	8	8
-423	Il conformista	A weak-willed Italian man becomes a fascist flunky who goes abroad to arrange the assassination of his old teacher, now a political dissident.	113	1970	8	2
-424	Butch Cassidy and the Sundance Kid	Wyoming, early 1900s. Butch Cassidy and The Sundance Kid are the leaders of a band of outlaws. After a train robbery goes wrong they find themselves on the run with a posse hard on their heels. Their solution - escape to Bolivia.	110	1969	8	7
-425	Rosemary's Baby	A young couple trying for a baby move into a fancy apartment surrounded by peculiar neighbors.	137	1968	8	1
-426	Planet of the Apes	An astronaut crew crash-lands on a planet in the distant future where intelligent talking apes are the dominant species, and humans are the oppressed and enslaved.	112	1968	8	3
-427	The Graduate	A disillusioned college graduate finds himself torn between his older lover and her daughter.	106	1967	8	1
-428	Who's Afraid of Virginia Woolf?	A bitter, aging couple, with the help of alcohol, use their young houseguests to fuel anguish and emotional pain towards each other over the course of a distressing night.	131	1966	8	1
-429	The Sound of Music	A woman leaves an Austrian convent to become a governess to the children of a Naval officer widower.	172	1965	8	3
-430	Doctor Zhivago	The life of a Russian physician and poet who, although married to another, falls in love with a political activist's wife and experiences hardship during World War I and then the October Revolution.	197	1965	8	1
-431	Per un pugno di dollari	A wandering gunfighter plays two rival families against each other in a town torn apart by greed, pride, and revenge.	99	1964	8	1
-432	8½	A harried movie director retreats into his memories and fantasies.	138	1963	8	6
-433	Vivre sa vie: Film en douze tableaux	Twelve episodic tales in the life of a Parisian woman and her slow descent into prostitution.	80	1962	8	6
-434	The Hustler	An up-and-coming pool player plays a long-time champion in a single high-stakes match.	134	1961	8	1
-435	La dolce vita	A series of stories following a week in the life of a philandering paparazzo journalist living in Rome.	174	1960	8	1
-436	Rio Bravo	A small-town sheriff in the American West enlists the help of a cripple, a drunk, and a young gunfighter in his efforts to hold in jail the brother of the local bad guy.	141	1959	8	9
-437	Anatomy of a Murder	In a murder trial, the defendant says he suffered temporary insanity after the victim raped his wife. What is the truth, and will he win his case?	161	1959	8	6
-438	Touch of Evil	A stark, perverse story of murder, kidnapping, and police corruption in a Mexican border town.	95	1958	8	4
-439	Cat on a Hot Tin Roof	Brick is an alcoholic ex-football player who drinks his days away and resists the affections of his wife. A reunion with his terminal father jogs a host of memories and revelations for both father and son.	108	1958	8	1
-440	Sweet Smell of Success	Powerful but unethical Broadway columnist J.J. Hunsecker coerces unscrupulous press agent Sidney Falco into breaking up his sister's romance with a jazz musician.	96	1957	8	15
-441	The Killing	Crook Johnny Clay assembles a five man team to plan and execute a daring race-track robbery.	84	1956	8	15
-442	The Night of the Hunter	A religious fanatic marries a gullible widow whose young children are reluctant to tell him where their real daddy hid the $10,000 he'd stolen in a robbery.	92	1955	8	6
-443	La Strada	A care-free girl is sold to a traveling entertainer, consequently enduring physical and emotional pain along the way.	108	1954	8	6
-444	Les diaboliques	The wife and mistress of a loathed school principal plan to murder him with what they believe is the perfect alibi.	117	1955	8	6
-445	Stalag 17	When two escaping American World War II prisoners are killed, the German P.O.W. camp barracks black marketeer, J.J. Sefton, is suspected of being an informer.	120	1953	8	6
-446	Roman Holiday	A bored and sheltered princess escapes her guardians and falls in love with an American newsman in Rome.	118	1953	8	6
-447	A Streetcar Named Desire	Disturbed Blanche DuBois moves in with her sister in New Orleans and is tormented by her brutish brother-in-law while her reality crumbles around her.	122	1951	8	1
-448	In a Lonely Place	A potentially violent screenwriter is a murder suspect until his lovely neighbor clears him. However, she soon starts to have her doubts.	94	1950	8	6
-449	Kind Hearts and Coronets	A distant poor relative of the Duke D'Ascoyne plots to inherit the title by murdering the eight other heirs who stand ahead of him in the line of succession.	106	1949	8	3
-450	Rope	Two men attempt to prove they committed the perfect crime by hosting a dinner party after strangling their former classmate to death.	80	1948	8	1
-451	Out of the Past	A private eye escapes his past to run a gas station in a small town, but his past catches up with him. Now he must return to the big city world of danger, corruption, double crosses and duplicitous dames.	97	1947	8	6
-452	Brief Encounter	Meeting a stranger in a railway station, a woman is tempted to cheat on her husband.	86	1945	8	3
-453	Laura	A police detective falls in love with the woman whose murder he is investigating.	88	1944	8	9
-454	The Best Years of Our Lives	Three World War II veterans return home to small-town America to discover that they and their families have been irreparably changed.	170	1946	8	15
-455	Arsenic and Old Lace	A writer of books on the futility of marriage risks his reputation when he decides to get married. Things get even more complicated when he learns on his wedding day that his beloved maiden aunts are habitual murderers.	118	1942	8	6
-456	The Maltese Falcon	A private detective takes on a case that involves him with three eccentric criminals, a gorgeous liar, and their quest for a priceless statuette.	100	1941	8	6
-457	The Grapes of Wrath	A poor Midwest family is forced off their land. They travel to California, suffering the misfortunes of the homeless in the Great Depression.	129	1940	8	9
-458	The Wizard of Oz	Dorothy Gale is swept away from a farm in Kansas to a magical land of Oz in a tornado and embarks on a quest with her new friends to see the Wizard who can help her return home to Kansas and help her friends as well.	102	1939	8	3
-459	La règle du jeu	A bourgeois life in France at the onset of World War II, as the rich and their poor servants meet up at a French chateau.	110	1939	8	6
-460	The Thin Man	Former detective Nick Charles and his wealthy wife Nora investigate a murder case, mostly for the fun of it.	91	1934	8	16
-461	All Quiet on the Western Front	A German youth eagerly enters World War I, but his enthusiasm wanes as he gets a firsthand view of the horror.	152	1930	8	3
-462	Bronenosets Potemkin	In the midst of the Russian Revolution of 1905, the crew of the battleship Potemkin mutiny against the brutal, tyrannical regime of the vessel's officers. The resulting street demonstration in Odessa brings on a police massacre.	75	1925	8	6
-463	Knives Out	A detective investigates the death of a patriarch of an eccentric, combative family.	130	2019	7.9	2
-464	Dil Bechara	The emotional journey of two hopelessly in love youngsters, a young girl, Kizie, suffering from cancer, and a boy, Manny, whom she meets at a support group.	101	2020	7.9	2
-465	Manbiki kazoku	A family of small-time crooks take in a child they find outside in the cold.	121	2018	7.9	1
-466	Marriage Story	Noah Baumbach's incisive and compassionate look at a marriage breaking up and a family staying together.	137	2019	7.9	3
-467	Call Me by Your Name	In 1980s Italy, romance blossoms between a seventeen-year-old student and the older man hired as his father's research assistant.	132	2017	7.9	2
-468	I, Daniel Blake	After having suffered a heart-attack, a 59-year-old carpenter must fight the bureaucratic forces of the system in order to receive Employment and Support Allowance.	100	2016	7.9	2
-469	Isle of Dogs	Set in Japan, Isle of Dogs follows a boy's odyssey in search of his lost dog.	101	2018	7.9	3
-470	Hunt for the Wilderpeople	A national manhunt is ordered for a rebellious kid and his foster uncle who go missing in the wild New Zealand bush.	101	2016	7.9	2
-471	Captain Fantastic	In the forests of the Pacific Northwest, a father devoted to raising his six kids with a rigorous physical and intellectual education is forced to leave his paradise and enter the world, challenging his idea of what it means to be a parent.	118	2016	7.9	5
-472	Sing Street	A boy growing up in Dublin during the 1980s escapes his strained family life by starting a band to impress the mysterious girl he likes.	106	2016	7.9	4
-473	Thor: Ragnarok	Imprisoned on the planet Sakaar, Thor must race against time to return to Asgard and stop Ragnarök, the destruction of his world, at the hands of the powerful and ruthless villain Hela.	130	2017	7.9	2
-474	Nightcrawler	When Louis Bloom, a con man desperate for work, muscles into the world of L.A. crime journalism, he blurs the line between observer and participant to become the star of his own story.	117	2014	7.9	1
-475	Jojo Rabbit	A young boy in Hitler's army finds out his mother is hiding a Jewish girl in their home.	108	2019	7.9	2
-476	Arrival	A linguist works with the military to communicate with alien lifeforms after twelve mysterious spacecrafts appear around the world.	116	2016	7.9	2
-477	Star Wars: Episode VII - The Force Awakens	As a new threat to the galaxy rises, Rey, a desert scavenger, and Finn, an ex-stormtrooper, must join Han Solo and Chewbacca to search for the one hope of restoring peace.	138	2015	7.9	3
-478	Before Midnight	We meet Jesse and Celine nine years on in Greece. Almost two decades have passed since their first meeting on that train bound for Vienna.	109	2013	7.9	5
-479	X-Men: Days of Future Past	The X-Men send Wolverine to the past in a desperate effort to change history and prevent an event that results in doom for both humans and mutants.	132	2014	7.9	2
-480	Bir Zamanlar Anadolu'da	A group of men set out in search of a dead body in the Anatolian steppes.	157	2011	7.9	6
-481	The Artist	An egomaniacal film star develops a relationship with a young dancer against the backdrop of Hollywood's silent era.	100	2011	7.9	3
-482	Edge of Tomorrow	A soldier fighting aliens gets to relive the same day over and over again, the day restarting every time he dies.	113	2014	7.9	2
-483	Amour	Georges and Anne are an octogenarian couple. They are cultivated, retired music teachers. Their daughter, also a musician, lives in Britain with her family. One day, Anne has a stroke, and the couple's bond of love is severely tested.	127	2012	7.9	2
-484	The Irishman	An old man recalls his time painting houses for his friend, Jimmy Hoffa, through the 1950-70s.	209	2019	7.9	5
-485	Un prophète	A young Arab man is sent to a French prison.	155	2009	7.9	1
-486	Moon	Astronaut Sam Bell has a quintessentially personal encounter toward the end of his three-year stint on the Moon, where he, working alongside his computer, GERTY, sends back to Earth parcels of a resource that has helped diminish our planet's power problems.	97	2009	7.9	5
-487	Låt den rätte komma in	Oskar, an overlooked and bullied boy, finds love and revenge through Eli, a beautiful but peculiar girl.	114	2008	7.9	5
-488	District 9	Violence ensues after an extraterrestrial race forced to live in slum-like conditions on Earth finds a kindred spirit in a government agent exposed to their biotechnology.	112	2009	7.9	1
-489	The Wrestler	A faded professional wrestler must retire, but finds his quest for a new life outside the ring a dispiriting struggle.	109	2008	7.9	2
-490	Jab We Met	A depressed wealthy businessman finds his life changing after he meets a spunky and care-free young woman.	138	2007	7.9	3
-491	Boyhood	The life of Mason, from early childhood to his arrival at college.	165	2014	7.9	1
-492	4 luni, 3 saptamâni si 2 zile	A woman assists her friend in arranging an illegal abortion in 1980s Romania.	113	2007	7.9	6
-493	Star Trek	The brash James T. Kirk tries to live up to his father's legacy with Mr. Spock keeping him in check as a vengeful Romulan from the future creates black holes to destroy the Federation one planet at a time.	127	2009	7.9	2
-494	In Bruges	Guilt-stricken after a job gone wrong, hitman Ray and his partner await orders from their ruthless boss in Bruges, Belgium, the last place in the world Ray wants to be.	107	2008	7.9	5
-495	The Man from Earth	An impromptu goodbye party for Professor John Oldman becomes a mysterious interrogation after the retiring scholar reveals to his colleagues he has a longer and stranger past than they can imagine.	87	2007	7.9	6
-496	Letters from Iwo Jima	The story of the battle of Iwo Jima between the United States and Imperial Japan during World War II, as told from the perspective of the Japanese who fought it.	141	2006	7.9	2
-497	The Fall	In a hospital on the outskirts of 1920s Los Angeles, an injured stuntman begins to tell a fellow patient, a little girl with a broken arm, a fantastic story of five mythical heroes. Thanks to his fractured state of mind and her vivid imagination, the line between fiction and reality blurs as the tale advances.	117	2006	7.9	5
-498	Life of Pi	A young man who survives a disaster at sea is hurtled into an epic journey of adventure and discovery. While cast away, he forms an unexpected connection with another survivor: a fearsome Bengal tiger.	127	2012	7.9	3
-499	Fantastic Mr. Fox	An urbane fox cannot resist returning to his farm raiding ways and then must help his community survive the farmers' retaliation.	87	2009	7.9	7
-500	C.R.A.Z.Y.	A young French-Canadian, growing up in the 1960s and 1970s, struggles to reconcile his emerging homosexuality with his father's conservative values and his own Catholic beliefs.	129	2005	7.9	6
-501	Les choristes	The new teacher at a severely administered boys' boarding school works to positively affect the students' lives through music.	97	2004	7.9	4
-502	Iron Man	After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil.	126	2008	7.9	2
-503	Shaun of the Dead	A man's uneventful life is disrupted by the zombie apocalypse.	99	2004	7.9	2
-504	Gegen die Wand	With the intention to break free from the strict familial restrictions, a suicidal young woman sets up a marriage of convenience with a forty-year-old addict, an act that will lead to an outburst of envious love.	121	2004	7.9	5
-505	Mystic River	The lives of three men who were childhood friends are shattered when one of them has a family tragedy.	138	2003	7.9	1
-506	Harry Potter and the Prisoner of Azkaban	Harry Potter, Ron and Hermione return to Hogwarts School of Witchcraft and Wizardry for their third year of study, where they delve into the mystery surrounding an escaped prisoner who poses a dangerous threat to the young wizard.	142	2004	7.9	3
-507	Ying xiong	A defense officer, Nameless, was summoned by the King of Qin regarding his success of terminating three warriors.	120	2002	7.9	4
-508	Hable con ella	Two men share an odd friendship while they care for two women who are both in deep comas.	112	2002	7.9	5
-509	No Man's Land	Bosnia and Herzegovina during 1993 at the time of the heaviest fighting between the two warring sides. Two soldiers from opposing sides in the conflict, Nino and Ciki, become trapped in no man's land, whilst a third soldier becomes a living booby trap.	98	2001	7.9	5
-510	Cowboy Bebop: Tengoku no tobira	A terrorist explosion releases a deadly virus on the masses, and it's up the bounty-hunting Bebop crew to catch the cold-blooded culprit.	115	2001	7.9	3
-511	The Bourne Identity	A man is picked up by a fishing boat, bullet-riddled and suffering from amnesia, before racing to elude assassins and attempting to regain his memory.	119	2002	7.9	2
-512	Nueve reinas	Two con artists try to swindle a stamp collector by selling him a sheet of counterfeit rare stamps (the "nine queens").	114	2000	7.9	5
-513	Children of Men	In 2027, in a chaotic world in which women have become somehow infertile, a former activist agrees to help transport a miraculously pregnant woman to a sanctuary at sea.	109	2006	7.9	1
-514	Almost Famous	A high-school boy is given the chance to write a story for Rolling Stone Magazine about an up-and-coming rock band as he accompanies them on their concert tour.	122	2000	7.9	1
-515	Mulholland Dr.	After a car wreck on the winding Mulholland Drive renders a woman amnesiac, she and a perky Hollywood-hopeful search for clues and answers across Los Angeles in a twisting venture beyond dreams and reality.	147	2001	7.9	5
-516	Toy Story 2	When Woody is stolen by a toy collector, Buzz and his friends set out on a rescue mission to save Woody before he becomes a museum toy property with his roundup gang Jessie, Prospector, and Bullseye.	92	1999	7.9	3
-517	Boogie Nights	Back when sex was safe, pleasure was a business and business was booming, an idealistic porn producer aspires to elevate his craft to an art when he discovers a hot young talent.	155	1997	7.9	5
-518	Mimi wo sumaseba	A love story between a girl who loves reading books, and a boy who has previously checked out all of the library books she chooses.	111	1995	7.9	3
-519	Once Were Warriors	A family descended from Maori warriors is bedeviled by a violent father and the societal problems of being treated as outcasts.	102	1994	7.9	1
-520	True Romance	In Detroit, a lonely pop culture geek marries a call girl, steals cocaine from her pimp, and tries to sell it in Hollywood. Meanwhile, the owners of the cocaine, the Mob, track them down in an attempt to reclaim it.	119	1993	7.9	5
-521	Trois couleurs: Bleu	A woman struggles to find a way to live her life after the death of her husband and child.	94	1993	7.9	3
-522	Jûbê ninpûchô	A vagabond swordsman is aided by a beautiful ninja girl and a crafty spy in confronting a demonic clan of killers - with a ghost from his past as their leader - who are bent on overthrowing the Tokugawa Shogunate.	94	1993	7.9	1
-523	Carlito's Way	A Puerto Rican former convict, just released from prison, pledges to stay away from drugs and violence despite the pressure around him and lead on to a better life outside of N.Y.C.	144	1993	7.9	1
-524	Edward Scissorhands	An artificial man, who was incompletely constructed and has scissors for hands, leads a solitary life. Then one day, a suburban lady meets him and introduces him to her world.	105	1990	7.9	3
-525	My Left Foot: The Story of Christy Brown	Christy Brown, born with cerebral palsy, learns to paint and write with his only controllable limb - his left foot.	103	1989	7.9	3
-526	Crimes and Misdemeanors	An ophthalmologist's mistress threatens to reveal their affair to his wife while a married documentary filmmaker is infatuated with another woman.	104	1989	7.9	4
-527	The Untouchables	During the era of Prohibition in the United States, Federal Agent Eliot Ness sets out to stop ruthless Chicago gangster Al Capone and, because of rampant corruption, assembles a small, hand-picked team to help him.	119	1987	7.9	1
-528	Hannah and Her Sisters	Between two Thanksgivings two years apart, Hannah's husband falls in love with her sister Lee, while her hypochondriac ex-husband rekindles his relationship with her sister Holly.	107	1986	7.9	4
-529	Brazil	A bureaucrat in a dystopic society becomes an enemy of the state as he pursues the woman of his dreams.	132	1985	7.9	3
-530	This Is Spinal Tap	Spinal Tap, one of England's loudest bands, is chronicled by film director Marty DiBergi on what proves to be a fateful tour.	82	1984	7.9	5
-531	A Christmas Story	In the 1940s, a young boy named Ralphie attempts to convince his parents, his teacher and Santa that a Red Ryder BB gun really is the perfect Christmas gift.	93	1983	7.9	3
-532	The Blues Brothers	Jake Blues, just released from prison, puts together his old band to save the Catholic home where he and his brother Elwood were raised.	133	1980	7.9	3
-533	Manhattan	The life of a divorced television writer dating a teenage girl is further complicated when he falls in love with his best friend's mistress.	96	1979	7.9	5
-534	All That Jazz	Director/choreographer Bob Fosse tells his own life story as he details the sordid career of Joe Gideon, a womanizing, drug-using dancer.	123	1979	7.9	1
-535	Dawn of the Dead	Following an ever-growing epidemic of zombies that have risen from the dead, two Philadelphia S.W.A.T. team members, a traffic reporter, and his television executive girlfriend seek refuge in a secluded shopping mall.	127	1978	7.9	1
-536	All the President's Men	"The Washington Post" reporters Bob Woodward and Carl Bernstein uncover the details of the Watergate scandal that leads to President Richard Nixon's resignation.	138	1976	7.9	3
-537	La montaña sagrada	In a corrupt, greed-fueled world, a powerful alchemist leads a messianic character and seven materialistic figures to the Holy Mountain, where they hope to achieve enlightenment.	114	1973	7.9	5
-538	Amarcord	A series of comedic and nostalgic vignettes set in a 1930s Italian coastal town.	123	1973	7.9	5
-539	Le charme discret de la bourgeoisie	A surreal, virtually plotless series of dreams centered around six middle-class people and their consistently interrupted attempts to have a meal together.	102	1972	7.9	7
-540	Aguirre, der Zorn Gottes	In the 16th century, the ruthless and insane Don Lope de Aguirre leads a Spanish expedition in search of El Dorado.	95	1972	7.9	6
-541	Harold and Maude	Young, rich, and obsessed with death, Harold finds himself changed forever when he meets lively septuagenarian Maude at a funeral.	91	1971	7.9	7
-542	Patton	The World War II phase of the career of controversial American general George S. Patton.	172	1970	7.9	3
-543	The Wild Bunch	An aging group of outlaws look for one last big score as the "traditional" American West is disappearing around them.	145	1969	7.9	1
-544	Night of the Living Dead	A ragtag group of Pennsylvanians barricade themselves in an old farmhouse to remain safe from a horde of flesh-eating ghouls that are ravaging the East Coast of the United States.	96	1968	7.9	6
-545	The Lion in Winter	1183 A.D.: King Henry II's three sons all want to inherit the throne, but he won't commit to a choice. They and his wife variously plot to force him.	134	1968	7.9	7
-546	In the Heat of the Night	A black police detective is asked to investigate a murder in a racially hostile southern town.	110	1967	7.9	3
-547	Charade	Romance and suspense ensue in Paris as a woman is pursued by several men who want a fortune her murdered husband had stolen. Whom can she trust?	113	1963	7.9	3
-548	The Manchurian Candidate	A former prisoner of war is brainwashed as an unwitting assassin for an international Communist conspiracy.	126	1962	7.9	4
-549	Spartacus	The slave Spartacus leads a violent revolt against the decadent Roman Republic.	197	1960	7.9	1
-550	L'avventura	A woman disappears during a Mediterranean boating trip. During the search, her lover and her best friend become attracted to each other.	144	1960	7.9	3
-551	Hiroshima mon amour	A French actress filming an anti-war film in Hiroshima has an affair with a married Japanese architect as they share their differing perspectives on war.	90	1959	7.9	6
-552	The Ten Commandments	Moses, an Egyptian Prince, learns of his true heritage as a Hebrew and his divine mission as the deliverer of his people.	220	1956	7.9	3
-553	The Searchers	An American Civil War veteran embarks on a journey to rescue his niece from the Comanches.	119	1956	7.9	9
-554	East of Eden	Two brothers struggle to maintain their strict, Bible-toting father's favor.	118	1955	7.9	3
-555	High Noon	A town Marshal, despite the disagreements of his newlywed bride and the townspeople around him, must face a gang of deadly killers alone at high noon when the gang leader, an outlaw he sent up years ago, arrives on the noon train.	85	1952	7.9	7
-556	Strangers on a Train	A psychopath forces a tennis star to comply with his theory that two strangers can get away with murder.	101	1951	7.9	1
-557	Harvey	Due to his insistence that he has an invisible six foot-tall rabbit for a best friend, a whimsical middle-aged man is thought by his family to be insane - but he may be wiser than anyone knows.	104	1950	7.9	15
-558	Miracle on 34th Street	When a nice old man who claims to be Santa Claus is institutionalized as insane, a young lawyer decides to defend him by arguing in court that he is the real thing.	96	1947	7.9	6
-559	Notorious	A woman is asked to spy on a group of Nazi friends in South America. How far will she have to go to ingratiate herself with them?	102	1946	7.9	3
-560	The Big Sleep	Private detective Philip Marlowe is hired by a wealthy family. Before the complex case is over, he's seen murder, blackmail, and what might be love.	114	1946	7.9	9
-561	The Lost Weekend	The desperate life of a chronic alcoholic is followed through a four-day drinking bout.	101	1945	7.9	9
-562	The Philadelphia Story	When a rich woman's ex-husband and a tabloid-type reporter turn up just before her planned remarriage, she begins to learn the truth about herself.	112	1940	7.9	6
-563	His Girl Friday	A newspaper editor uses every trick in the book to keep his ace reporter ex-wife from remarrying.	92	1940	7.9	9
-564	The Adventures of Robin Hood	When Prince John and the Norman Lords begin oppressing the Saxon masses in King Richard's absence, a Saxon lord fights back as the outlaw leader of a rebel guerrilla army.	102	1938	7.9	7
-565	A Night at the Opera	A sly business manager and two wacky friends of two opera singers help them achieve success while humiliating their stuffy and snobbish enemies.	96	1935	7.9	9
-566	King Kong	A film crew goes to a tropical island for an exotic location shoot and discovers a colossal ape who takes a shine to their female blonde star. He is then captured and brought back to New York City for public exhibition.	100	1933	7.9	9
-567	Freaks	A circus' beautiful trapeze artist agrees to marry the leader of side-show performers, but his deformed friends discover she is only marrying him for his inheritance.	64	1932	7.9	6
-568	Nosferatu	Vampire Count Orlok expresses interest in a new residence and real estate agent Hutter's wife.	94	1922	7.9	6
-569	The Gentlemen	An American expat tries to sell off his highly profitable marijuana empire in London, triggering plots, schemes, bribery and blackmail in an attempt to steal his domain out from under him.	113	2019	7.8	1
-570	Raazi	A Kashmiri woman agrees to marry a Pakistani army officer in order to spy on Pakistan during the Indo-Pakistan War of 1971.	138	2018	7.8	2
-571	Sound of Metal	A heavy-metal drummer's life is thrown into freefall when he begins to lose his hearing.	120	2019	7.8	5
-572	Forushande	While both participating in a production of "Death of a Salesman," a teacher's wife is assaulted in her new home, which leaves him determined to find the perpetrator over his wife's traumatized objections.	124	2016	7.8	2
-573	Dunkirk	Allied soldiers from Belgium, the British Empire, and France are surrounded by the German Army and evacuated during a fierce battle in World War II.	106	2017	7.8	2
-574	Perfetti sconosciuti	Seven long-time friends get together for a dinner. When they decide to share with each other the content of every text message, email and phone call they receive, many secrets start to unveil and the equilibrium trembles.	96	2016	7.8	6
-575	Hidden Figures	The story of a team of female African-American mathematicians who served a vital role in NASA during the early years of the U.S. space program.	127	2016	7.8	2
-576	Paddington 2	Paddington (Ben Whishaw), now happily settled with the Brown family and a popular member of the local community, picks up a series of odd jobs to buy the perfect present for his Aunt Lucy's (Imelda Staunton's) 100th birthday, only for the gift to be stolen.	103	2017	7.8	3
-577	Udta Punjab	A story that revolves around drug abuse in the affluent north Indian State of Punjab and how the youth there have succumbed to it en-masse resulting in a socio-economic decline.	148	2016	7.8	1
-578	Kubo and the Two Strings	A young boy named Kubo must locate a magical suit of armour worn by his late father in order to defeat a vengeful spirit from the past.	101	2016	7.8	7
-579	M.S. Dhoni: The Untold Story	The untold story of Mahendra Singh Dhoni's journey from ticket collector to trophy collector - the world-cup-winning captain of the Indian Cricket Team.	184	2016	7.8	3
-580	Manchester by the Sea	A depressed uncle is asked to take care of his teenage nephew after the boy's father dies.	137	2016	7.8	2
-581	Under sandet	In post-World War II Denmark, a group of young German POWs are forced to clear a beach of thousands of land mines under the watch of a Danish Sergeant who slowly learns to appreciate their plight.	100	2015	7.8	5
-582	Rogue One	The daughter of an Imperial scientist joins the Rebel Alliance in a risky move to steal the plans for the Death Star.	133	2016	7.8	2
-583	Captain America: Civil War	Political involvement in the Avengers' affairs causes a rift between Captain America and Iron Man.	147	2016	7.8	2
-584	The Hateful Eight	In the dead of a Wyoming winter, a bounty hunter and his prisoner find shelter in a cabin currently inhabited by a collection of nefarious characters.	168	2015	7.8	1
-585	Little Women	Jo March reflects back and forth on her life, telling the beloved story of the March sisters - four young women, each determined to live life on her own terms.	135	2019	7.8	3
-586	Loving Vincent	In a story depicted in oil painted animation, a young man comes to the last hometown of painter Vincent van Gogh (Robert Gulaczyk) to deliver the troubled artist's final letter and ends up investigating his final days there.	94	2017	7.8	2
-587	Pride	U.K. gay activists work to help miners during their lengthy strike of the National Union of Mineworkers in the summer of 1984.	119	2014	7.8	5
-588	Le passé	An Iranian man deserts his French wife and her two children to return to his homeland. Meanwhile, his wife starts up a new relationship, a reality her husband confronts upon his wife's request for a divorce.	130	2013	7.8	4
-589	La grande bellezza	Jep Gambardella has seduced his way through the lavish nightlife of Rome for decades, but after his 65th birthday and a shock from the past, Jep looks past the nightclubs and parties to find a timeless landscape of absurd, exquisite beauty.	141	2013	7.8	6
-590	The Lunchbox	A mistaken delivery in Mumbai's famously efficient lunchbox delivery system connects a young housewife to an older man in the dusk of his life as they build a fantasy world together through notes in the lunchbox.	104	2013	7.8	3
-591	Vicky Donor	A man is brought in by an infertility doctor to supply him with his sperm, where he becomes the biggest sperm donor for his clinic.	126	2012	7.8	2
-592	Big Hero 6	A special bond develops between plus-sized inflatable robot Baymax and prodigy Hiro Hamada, who together team up with a group of friends to form a band of high-tech heroes.	102	2014	7.8	3
-593	About Time	At the age of 21, Tim discovers he can travel in time and change what happens and has happened in his own life. His decision to make his world a better place by getting a girlfriend turns out not to be as easy as you might think.	123	2013	7.8	5
-594	English Vinglish	A quiet, sweet tempered housewife endures small slights from her well-educated husband and daughter every day because of her inability to speak and understand English.	134	2012	7.8	3
-596	Toy Story 4	When a new toy called "Forky" joins Woody and the gang, a road trip alongside old and new friends reveals how big the world can be for a toy.	100	2019	7.8	3
-597	La migliore offerta	A lonely art expert working for a mysterious and reclusive heiress finds not only her art worth examining.	131	2013	7.8	5
-598	Moonrise Kingdom	A pair of young lovers flee their New England town, which causes a local search party to fan out to find them.	94	2012	7.8	1
-599	How to Train Your Dragon 2	When Hiccup and Toothless discover an ice cave that is home to hundreds of new wild dragons and the mysterious Dragon Rider, the two friends find themselves at the center of a battle to protect the peace.	102	2014	7.8	3
-600	The Big Short	In 2006-2007 a group of investors bet against the US mortgage market. In their research they discover how flawed and corrupt the market is.	130	2015	7.8	1
-601	Kokuhaku	A psychological thriller of a grieving mother turned cold-blooded avenger with a twisty master plan to pay back those who were responsible for her daughter's death.	106	2010	7.8	6
-602	Ang-ma-reul bo-at-da	A secret agent exacts revenge on a serial killer through a series of captures and releases.	144	2010	7.8	6
-603	The Girl with the Dragon Tattoo	Journalist Mikael Blomkvist is aided in his search for a woman who has been missing for forty years by Lisbeth Salander, a young computer hacker.	158	2011	7.8	5
-604	Captain Phillips	The true story of Captain Richard Phillips and the 2009 hijacking by Somali pirates of the U.S.-flagged MV Maersk Alabama, the first American cargo ship to be hijacked in two hundred years.	134	2013	7.8	2
-605	Ajeossi	A quiet pawnshop keeper with a violent past takes on a drug-and-organ trafficking ring in hope of saving the child who is his only friend.	119	2010	7.8	5
-606	Straight Outta Compton	The rap group NWA emerges from the mean streets of Compton in Los Angeles, California, in the mid-1980s and revolutionizes Hip Hop culture with their music and tales about life in the hood.	147	2015	7.8	5
-607	Madeo	A mother desperately searches for the killer who framed her son for a girl's horrific murder.	129	2009	7.8	5
-608	Chugyeokja	A disgraced ex-policeman who runs a small ring of prostitutes finds himself in a race against time when one of his women goes missing.	125	2008	7.8	6
-609	The Hobbit: The Desolation of Smaug	The dwarves, along with Bilbo Baggins and Gandalf the Grey, continue their quest to reclaim Erebor, their homeland, from Smaug. Bilbo Baggins is in possession of a mysterious and magical ring.	161	2013	7.8	2
-610	Das weiße Band - Eine deutsche Kindergeschichte	Strange events happen in a small village in the north of Germany during the years before World War I, which seem to be ritual punishment. Who is responsible?	144	2009	7.8	2
-611	Män som hatar kvinnor	A journalist is aided by a young female hacker in his search for the killer of a woman who has been dead for forty years.	152	2009	7.8	5
-612	The Trial of the Chicago 7	The story of 7 people on trial stemming from various charges surrounding the uprising at the 1968 Democratic National Convention in Chicago, Illinois.	129	2020	7.8	5
-613	Druk	Four friends, all high school teachers, test a theory that they will improve their lives by maintaining a constant level of alcohol in their blood.	117	2020	7.8	6
-614	The Fighter	Based on the story of Micky Ward, a fledgling boxer who tries to escape the shadow of his more famous but troubled older boxing brother and get his own shot at greatness.	116	2010	7.8	2
-615	Taken	A retired CIA agent travels across Europe and relies on his old skills to save his estranged daughter, who has been kidnapped while on a trip to Paris.	90	2008	7.8	1
-616	The Boy in the Striped Pyjamas	Through the innocent eyes of Bruno, the eight-year-old son of the commandant at a German concentration camp, a forbidden friendship with a Jewish boy on the other side of the camp fence has startling and unexpected consequences.	94	2008	7.8	4
-617	Once	A modern-day musical about a busker and an immigrant and their eventful week in Dublin, as they write, rehearse and record songs that tell their love story.	86	2007	7.8	5
-618	The Hobbit: An Unexpected Journey	A reluctant Hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home, and the gold within it from the dragon Smaug.	169	2012	7.8	2
-619	Auf der anderen Seite	A Turkish man travels to Istanbul to find the daughter of his father's former girlfriend.	122	2007	7.8	6
-620	Atonement	Thirteen-year-old fledgling writer Briony Tallis irrevocably changes the course of several lives when she accuses her older sister's lover of a crime he did not commit.	123	2007	7.8	5
-621	Drive	A mysterious Hollywood stuntman and mechanic moonlights as a getaway driver and finds himself in trouble when he helps out his neighbor.	100	2011	7.8	1
-622	American Gangster	An outcast New York City cop is charged with bringing down Harlem drug lord Frank Lucas, whose real life inspired this partly biographical film.	157	2007	7.8	1
-623	Avatar	A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.	162	2009	7.8	2
-624	Mr. Nobody	A boy stands on a station platform as a train is about to leave. Should he go with his mother or stay with his father? Infinite possibilities arise from this decision. As long as he doesn't choose, anything is possible.	141	2009	7.8	5
-625	Apocalypto	As the Mayan kingdom faces its decline, a young man is taken on a perilous journey to a world ruled by fear and oppression.	139	2006	7.8	1
-626	Little Miss Sunshine	A family determined to get their young daughter into the finals of a beauty pageant take a cross-country trip in their VW bus.	101	2006	7.8	2
-627	Hot Fuzz	A skilled London police officer is transferred to a small town with a dark secret.	121	2007	7.8	2
-628	The Curious Case of Benjamin Button	Tells the story of Benjamin Button, a man who starts aging backwards with consequences.	166	2008	7.8	2
-629	Veer-Zaara	Veer-Zaara is a saga of love, separation, courage and sacrifice. A love story that is an inspiration and will remain a legend forever.	192	2004	7.8	3
-630	Adams æbler	A neo-nazi sentenced to community service at a church clashes with the blindly devotional priest.	94	2005	7.8	5
-631	Pride & Prejudice	Sparks fly when spirited Elizabeth Bennet meets single, rich, and proud Mr. Darcy. But Mr. Darcy reluctantly finds himself falling in love with a woman beneath his class. Can each overcome their own pride and prejudice?	129	2005	7.8	7
-632	The World's Fastest Indian	The story of New Zealander Burt Munro, who spent years rebuilding a 1920 Indian motorcycle, which helped him set the land speed world record at Utah's Bonneville Salt Flats in 1967.	127	2005	7.8	3
-633	Tôkyô goddofâzâzu	On Christmas Eve, three homeless people living on the streets of Tokyo discover a newborn baby among the trash and set out to find its parents.	90	2003	7.8	2
-634	Serenity	The crew of the ship Serenity try to evade an assassin sent to recapture one of their members who is telepathic.	119	2005	7.8	4
-635	Walk the Line	A chronicle of country music legend Johnny Cash's life, from his early days on an Arkansas cotton farm to his rise to fame with Sun Records in Memphis, where he recorded alongside Elvis Presley, Jerry Lee Lewis, and Carl Perkins.	136	2005	7.8	4
-636	Ondskan	A teenage boy expelled from school for fighting arrives at a boarding school where the systematic bullying of younger students is encouraged as a means to maintain discipline, and decides to fight back.	113	2003	7.8	6
-637	The Notebook	A poor yet passionate young man falls in love with a rich young woman, giving her a sense of freedom, but they are soon separated because of their social differences.	123	2004	7.8	1
-638	Diarios de motocicleta	The dramatization of a motorcycle road trip Che Guevara went on in his youth that showed him his life's calling.	126	2004	7.8	3
-639	Lilja 4-ever	Sixteen-year-old Lilja and her only friend, the young boy Volodja, live in Russia, fantasizing about a better life. One day, Lilja falls in love with Andrej, who is going to Sweden, and invites Lilja to come along and start a new life.	109	2002	7.8	5
-640	Les triplettes de Belleville	When her grandson is kidnapped during the Tour de France, Madame Souza and her beloved pooch Bruno team up with the Belleville Sisters--an aged song-and-dance team from the days of Fred Astaire--to rescue him.	80	2003	7.8	4
-641	Gongdong gyeongbi guyeok JSA	After a shooting incident at the North/South Korean border/DMZ leaves 2 North Korean soldiers dead, a neutral Swiss/Swedish team investigates, what actually happened.	110	2000	7.8	6
-642	The Count of Monte Cristo	A young man, falsely imprisoned by his jealous "friend", escapes and uses a hidden treasure to exact his revenge.	131	2002	7.8	4
-643	Waking Life	A man shuffles through a dream meeting various people and discussing the meanings and purposes of the universe.	99	2001	7.8	5
-644	Remember the Titans	The true story of a newly appointed African-American coach and his high school team on their first season as a racially integrated unit.	113	2000	7.8	3
-645	Wo hu cang long	A young Chinese warrior steals a sword from a famed swordsman and then escapes into a world of romantic adventure with a mysterious man in the frontier of the nation.	120	2000	7.8	2
-646	Todo sobre mi madre	Young Esteban wants to become a writer and also to discover the identity of his second mother, a trans woman, carefully concealed by his mother Manuela.	101	1999	7.8	5
-647	Cast Away	A FedEx executive undergoes a physical and emotional transformation after crash landing on a deserted island.	143	2000	7.8	2
-648	The Boondock Saints	Two Irish Catholic brothers become vigilantes and wipe out Boston's criminal underworld in the name of God.	108	1999	7.8	5
-649	The Insider	A research chemist comes under personal and professional attack when he decides to appear in a 60 Minutes exposé on Big Tobacco.	157	1999	7.8	2
-650	October Sky	The true story of Homer Hickam, a coal miner's son who was inspired by the first Sputnik launch to take up rocketry against his father's wishes.	108	1999	7.8	7
-651	Shrek	A mean lord exiles fairytale creatures to the swamp of a grumpy ogre, who must go on a quest and rescue a princess for the lord in order to get his land back.	90	2001	7.8	3
-652	Titanic	A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.	194	1997	7.8	2
-653	Hana-bi	Nishi leaves the police in the face of harrowing personal and professional difficulties. Spiraling into depression, he makes questionable decisions.	103	1997	7.8	6
-654	Gattaca	A genetically inferior man assumes the identity of a superior one in order to pursue his lifelong dream of space travel.	106	1997	7.8	2
-655	The Game	After a wealthy banker is given an opportunity to participate in a mysterious game, his life is turned upside down when he becomes unable to distinguish between the game and reality.	129	1997	7.8	2
-656	Breaking the Waves	Oilman Jan is paralyzed in an accident. His wife, who prayed for his return, feels guilty; even more, when Jan urges her to have sex with another.	159	1996	7.8	5
-657	Ed Wood	Ambitious but troubled movie director Edward D. Wood Jr. tries his best to fulfill his dreams, despite his lack of talent.	127	1994	7.8	3
-658	What's Eating Gilbert Grape	A young man in a small Midwestern town struggles to care for his mentally-disabled younger brother and morbidly obese mother while attempting to pursue his own happiness.	118	1993	7.8	3
-659	Tombstone	A successful lawman's plans to retire anonymously in Tombstone, Arizona are disrupted by the kind of outlaws he was famous for eliminating.	130	1993	7.8	5
-660	The Sandlot	In the summer of 1962, a new kid in town is taken under the wing of a young baseball prodigy and his rowdy team, resulting in many adventures.	101	1993	7.8	3
-661	The Remains of the Day	A butler who sacrificed body and soul to service in the years leading up to World War II realizes too late how misguided his loyalty was to his lordly employer.	134	1993	7.8	3
-662	Naked	Parallel tales of two sexually obsessed men, one hurting and annoying women physically and mentally, one wandering around the city talking to strangers and experiencing dimensions of life.	132	1993	7.8	6
-663	The Fugitive	Dr. Richard Kimble, unjustly accused of murdering his wife, must find the real killer while being the target of a nationwide manhunt led by a seasoned U.S. Marshal.	130	1993	7.8	3
-664	A Bronx Tale	A father becomes worried when a local gangster befriends his son in the Bronx in the 1960s.	121	1993	7.8	5
-665	Batman: Mask of the Phantasm	Batman is wrongly implicated in a series of murders of mob bosses actually done by a new vigilante assassin.	76	1993	7.8	7
-666	Lat sau san taam	A tough-as-nails cop teams up with an undercover agent to shut down a sinister mobster and his crew.	128	1992	7.8	5
-667	Night on Earth	An anthology of 5 different cab drivers in 5 American and European cities and their remarkable fares on the same eventful night.	129	1991	7.8	5
-668	La double vie de Véronique	Two parallel stories about two identical women; one living in Poland, the other in France. They don't know each other, but their lives are nevertheless profoundly connected.	98	1991	7.8	5
-669	Boyz n the Hood	Follows the lives of three young males living in the Crenshaw ghetto of Los Angeles, dissecting questions of race, relationships, violence, and future prospects.	112	1991	7.8	1
-670	Misery	After a famous author is rescued from a car crash by a fan of his novels, he comes to realize that the care he is receiving is only the beginning of a nightmare of captivity and abuse.	107	1990	7.8	5
-671	Awakenings	The victims of an encephalitis epidemic many years ago have been catatonic ever since, but now a new drug offers the prospect of reviving them.	121	1990	7.8	3
-672	Majo no takkyûbin	A young witch, on her mandatory year of independent life, finds fitting into a new community difficult while she supports herself by running an air courier service.	103	1989	7.8	3
-673	Glory	Robert Gould Shaw leads the U.S. Civil War's first all-black volunteer company, fighting prejudices from both his own Union Army, and the Confederates.	122	1989	7.8	5
-674	Dip huet seung hung	A disillusioned assassin accepts one last hit in hopes of using his earnings to restore vision to a singer he accidentally blinded.	111	1989	7.8	5
-675	Back to the Future Part II	After visiting 2015, Marty McFly must repeat his visit to 1955 to prevent disastrous changes to 1985...without interfering with his first trip.	108	1989	7.8	3
-676	Mississippi Burning	Two F.B.I. Agents with wildly different styles arrive in Mississippi to investigate the disappearance of some civil rights activists.	128	1988	7.8	1
-677	Predator	A team of commandos on a mission in a Central American jungle find themselves hunted by an extraterrestrial warrior.	107	1987	7.8	1
-678	Evil Dead II	The lone survivor of an onslaught of flesh-possessing spirits holes up in a cabin with a group of strangers while the demons continue their attack.	84	1987	7.8	1
-679	Ferris Bueller's Day Off	A high school wise guy is determined to have a day off from school, despite what the Principal thinks of that.	103	1986	7.8	3
-680	Down by Law	Two men are framed and sent to jail, where they meet a murderer who helps them escape and leave the state.	107	1986	7.8	5
-681	The Goonies	A group of young misfits called The Goonies discover an ancient map and set out on an adventure to find a legendary pirate's long-lost treasure.	114	1985	7.8	3
-682	The Color Purple	A black Southern woman struggles to find her identity after suffering abuse from her father and others over four decades.	154	1985	7.8	3
-683	The Breakfast Club	Five high school students meet in Saturday detention and discover how they have a lot more in common than they thought.	97	1985	7.8	2
-684	The Killing Fields	A journalist is trapped in Cambodia during tyrant Pol Pot's bloody 'Year Zero' cleansing campaign, which claimed the lives of two million 'undesirable' civilians.	141	1984	7.8	2
-685	Ghostbusters	Three former parapsychology professors set up shop as a unique ghost removal service.	105	1984	7.8	2
-686	The Right Stuff	The story of the original Mercury 7 astronauts and their macho, seat-of-the-pants approach to the space program.	193	1983	7.8	7
-687	The King of Comedy	Rupert Pupkin is a passionate yet unsuccessful comic who craves nothing more than to be in the spotlight and to achieve this, he stalks and kidnaps his idol to take the spotlight for himself.	109	1982	7.8	3
-688	E.T. the Extra-Terrestrial	A troubled child summons the courage to help a friendly alien escape Earth and return to his home world.	115	1982	7.8	3
-689	Kramer vs. Kramer	Ted Kramer's wife leaves him, allowing for a lost bond to be rediscovered between Ted and his son, Billy. But a heated custody battle ensues over the divorced couple's son, deepening the wounds left by the separation.	105	1979	7.8	1
-690	Days of Heaven	A hot-tempered farm laborer convinces the woman he loves to marry their rich but dying boss so that they can have a claim to his fortune.	94	1978	7.8	7
-691	The Outlaw Josey Wales	Missouri farmer Josey Wales joins a Confederate guerrilla unit and winds up on the run from the Union soldiers who murdered his family.	135	1976	7.8	1
-692	The Man Who Would Be King	Two British former soldiers decide to set themselves up as Kings in Kafiristan, a land where no white man has set foot since Alexander the Great.	129	1975	7.8	7
-693	The Conversation	A paranoid, secretive surveillance expert has a crisis of conscience when he suspects that the couple he is spying on will be murdered.	113	1974	7.8	3
-694	La planète sauvage	On a faraway planet where blue giants rule, oppressed humanoids rebel against their machine-like leaders.	72	1973	7.8	3
-695	The Day of the Jackal	A professional assassin codenamed "Jackal" plots to kill Charles de Gaulle, the President of France.	143	1973	7.8	1
-696	Badlands	An impressionable teenage girl from a dead-end town and her older greaser boyfriend embark on a killing spree in the South Dakota badlands.	94	1973	7.8	7
-697	Cabaret	A female girlie club entertainer in Weimar Republic era Berlin romances two men while the Nazi Party rises to power around them.	124	1972	7.8	1
-698	Willy Wonka & the Chocolate Factory	A poor but hopeful boy seeks one of the five coveted golden tickets that will send him on a tour of Willy Wonka's mysterious chocolate factory.	100	1971	7.8	3
-699	Midnight Cowboy	A naive hustler travels from Texas to New York City to seek personal fortune, finding a new friend in the process.	113	1969	7.8	1
-700	Wait Until Dark	A recently blinded woman is terrorized by a trio of thugs while they search for a heroin-stuffed doll they believe is in her apartment.	108	1967	7.8	6
-701	Guess Who's Coming to Dinner	A couple's attitudes are challenged when their daughter introduces them to her African-American fiancé.	108	1967	7.8	6
-702	Bonnie and Clyde	Bored waitress Bonnie Parker falls in love with an ex-con named Clyde Barrow and together they start a violent crime spree through the country, stealing cars and robbing banks.	111	1967	7.8	1
-703	My Fair Lady	Snobbish phonetics Professor Henry Higgins agrees to a wager that he can make flower girl Eliza Doolittle presentable in high society.	170	1964	7.8	3
-704	Mary Poppins	In turn of the century London, a magical nanny employs music and adventure to help two neglected children become closer to their father.	139	1964	7.8	3
-705	The Longest Day	The events of D-Day, told on a grand scale from both the Allied and German points of view.	178	1962	7.8	8
-706	Jules et Jim	Decades of a love triangle concerning two friends and an impulsive woman.	105	1962	7.8	6
-707	The Innocents	A young governess for two children becomes convinced that the house and grounds are haunted.	100	1961	7.8	1
-708	À bout de souffle	A small-time thief steals a car and impulsively murders a motorcycle policeman. Wanted by the authorities, he reunites with a hip American journalism student and attempts to persuade her to run away with him to Italy.	90	1960	7.8	3
-709	Red River	Dunson leads a cattle drive, the culmination of over 14 years of work, to its destination in Missouri. But his tyrannical behavior along the way causes a mutiny, led by his adopted son.	133	1948	7.8	9
-710	Key Largo	A man visits his war buddy's family hotel and finds a gangster running things. As a hurricane approaches, the two end up confronting each other.	100	1948	7.8	6
-711	To Have and Have Not	During World War II, American expatriate Harry Morgan helps transport a French Resistance leader and his beautiful wife to Martinique while romancing a sensuous lounge singer.	100	1944	7.8	7
-712	Shadow of a Doubt	A young girl, overjoyed when her favorite uncle comes to visit the family, slowly begins to suspect that he is in fact the "Merry Widow" killer sought by the authorities.	108	1943	7.8	7
-713	Stagecoach	A group of people traveling on a stagecoach find their journey complicated by the threat of Geronimo and learn something about each other in the process.	96	1939	7.8	9
-714	The Lady Vanishes	While travelling in continental Europe, a rich young playgirl realizes that an elderly lady seems to have disappeared from the train.	96	1938	7.8	6
-715	Bringing Up Baby	While trying to secure a $1 million donation for his museum, a befuddled paleontologist is pursued by a flighty and often irritating heiress and her pet leopard, Baby.	102	1938	7.8	9
-716	Bride of Frankenstein	Mary Shelley reveals the main characters of her novel survived: Dr. Frankenstein, goaded by an even madder scientist, builds his monster a mate.	75	1935	7.8	6
-717	Duck Soup	Rufus T. Firefly is named president/dictator of bankrupt Freedonia and declares war on neighboring Sylvania over the love of wealthy Mrs. Teasdale.	69	1933	7.8	6
-718	Scarface: The Shame of the Nation	An ambitious and nearly insane violent gangster climbs the ladder of success in the mob, but his weaknesses prove to be his downfall.	93	1932	7.8	7
-719	Frankenstein	Dr. Frankenstein dares to tamper with life and death by creating a human monster out of lifeless body parts.	70	1931	7.8	9
-720	Roma	A year in the life of a middle-class family's maid in Mexico City in the early 1970s.	135	2018	7.7	5
-721	God's Own Country	Spring. Yorkshire. Young farmer Johnny Saxby numbs his daily frustrations with binge drinking and casual sex, until the arrival of a Romanian migrant worker for lambing season ignites an intense relationship that sets Johnny on a new path.	104	2017	7.7	6
-722	Deadpool 2	Foul-mouthed mutant mercenary Wade Wilson (a.k.a. Deadpool), brings together a team of fellow mutant rogues to protect a young boy with supernatural abilities from the brutal, time-traveling cyborg Cable.	119	2018	7.7	5
-723	Wind River	A veteran hunter helps an FBI agent investigate the murder of a young woman on a Wyoming Native American reservation.	107	2017	7.7	5
-724	Get Out	A young African-American visits his white girlfriend's parents for the weekend, where his simmering uneasiness about their reception of him eventually reaches a boiling point.	104	2017	7.7	5
-725	Mission: Impossible - Fallout	Ethan Hunt and his IMF team, along with some familiar allies, race against time after a mission gone wrong.	147	2018	7.7	2
-726	En man som heter Ove	Ove, an ill-tempered, isolated retiree who spends his days enforcing block association rules and visiting his wife's grave, has finally given up on life just as an unlikely friendship develops with his boisterous new neighbors.	116	2015	7.7	4
-727	What We Do in the Shadows	Viago, Deacon and Vladislav are vampires who are finding that modern life has them struggling with the mundane - like paying rent, keeping up with the chore wheel, trying to get into nightclubs and overcoming flatmate conflicts.	86	2014	7.7	5
-728	Omoide no Mânî	Due to 12 y.o. Anna's asthma, she's sent to stay with relatives of her guardian in the Japanese countryside. She likes to be alone, sketching. She befriends Marnie. Who is the mysterious, blonde Marnie.	103	2014	7.7	3
-729	The Theory of Everything	A look at the relationship between the famous physicist Stephen Hawking and his wife.	123	2014	7.7	3
-730	Kingsman: The Secret Service	A spy organisation recruits a promising street kid into the agency's training program, while a global threat emerges from a twisted tech genius.	129	2014	7.7	1
-731	The Fault in Our Stars	Two teenage cancer patients begin a life-affirming journey to visit a reclusive author in Amsterdam.	126	2014	7.7	2
-732	Me and Earl and the Dying Girl	High schooler Greg, who spends most of his time making parodies of classic movies with his co-worker Earl, finds his outlook forever altered after befriending a classmate who has just been diagnosed with cancer.	105	2015	7.7	4
-733	Birdman or (The Unexpected Virtue of Ignorance)	A washed-up superhero actor attempts to revive his fading career by writing, directing, and starring in a Broadway production.	119	2014	7.7	1
-734	La vie d'Adèle	Adèle's life is changed when she meets Emma, a young woman with blue hair, who will allow her to discover desire and to assert herself as a woman and as an adult. In front of others, Adèle grows, seeks herself, loses herself, and ultimately finds herself through love and loss.	180	2013	7.7	1
-735	Kai po che!	Three friends growing up in India at the turn of the millennium set out to open a training academy to produce the country's next cricket stars.	130	2013	7.7	3
-736	The Broken Circle Breakdown	Elise and Didier fall in love at first sight, in spite of their differences. He talks, she listens. He's a romantic atheist, she's a religious realist. When their daughter becomes seriously ill, their love is put on trial.	111	2012	7.7	6
-737	Captain America: The Winter Soldier	As Steve Rogers struggles to embrace his role in the modern world, he teams up with a fellow Avenger and S.H.I.E.L.D agent, Black Widow, to battle a new threat from history: an assassin known as the Winter Soldier.	136	2014	7.7	2
-738	Rockstar	Janardhan Jakhar chases his dreams of becoming a big Rock star, during which he falls in love with Heer.	159	2011	7.7	2
-739	Nebraska	An aging, booze-addled father makes the trip from Montana to Nebraska with his estranged son in order to claim a million-dollar Mega Sweepstakes Marketing prize.	115	2013	7.7	2
-740	Wreck-It Ralph	A video game villain wants to be a hero and sets out to fulfill his dream, but his quest brings havoc to the whole arcade where he lives.	101	2012	7.7	3
-741	Le Petit Prince	A little girl lives in a very grown-up world with her mother, who tries to prepare her for it. Her neighbor, the Aviator, introduces the girl to an extraordinary world where anything is possible, the world of the Little Prince.	108	2015	7.7	7
-742	Detachment	A substitute teacher who drifts from classroom to classroom finds a connection to the students and teachers during his latest assignment.	98	2011	7.7	6
-743	Midnight in Paris	While on a trip to Paris with his fiancée's family, a nostalgic screenwriter finds himself mysteriously going back to the 1920s every day at midnight.	96	2011	7.7	4
-744	The Lego Movie	An ordinary LEGO construction worker, thought to be the prophesied as "special", is recruited to join a quest to stop an evil tyrant from gluing the LEGO universe into eternal stasis.	100	2014	7.7	3
-745	Gravity	Two astronauts work together to survive after an accident leaves them stranded in space.	91	2013	7.7	2
-746	Star Trek Into Darkness	After the crew of the Enterprise find an unstoppable force of terror from within their own organization, Captain Kirk leads a manhunt to a war-zone world to capture a one-man weapon of mass destruction.	132	2013	7.7	2
-747	Beasts of No Nation	A drama based on the experiences of Agu, a child soldier fighting in the civil war of an unnamed African country.	137	2015	7.7	6
-748	The Social Network	As Harvard student Mark Zuckerberg creates the social networking site that would become known as Facebook, he is sued by the twins who claimed he stole their idea, and by the co-founder who was later squeezed out of the business.	120	2010	7.7	2
-749	X: First Class	In the 1960s, superpowered humans Charles Xavier and Erik Lensherr work together to find others like them, but Erik's vengeful pursuit of an ambitious mutant who ruined his life causes a schism to divide them.	131	2011	7.7	2
-750	The Hangover	Three buddies wake up from a bachelor party in Las Vegas, with no memory of the previous night and the bachelor missing. They make their way around the city in order to find their friend before his wedding.	100	2009	7.7	2
-751	Skyfall	James Bond's loyalty to M is tested when her past comes back to haunt her. When MI6 comes under attack, 007 must track down and destroy the threat, no matter how personal the cost.	143	2012	7.7	2
-752	Silver Linings Playbook	After a stint in a mental institution, former teacher Pat Solitano moves back in with his parents and tries to reconcile with his ex-wife. Things get more challenging when Pat meets Tiffany, a mysterious girl with problems of her own.	122	2012	7.7	1
-753	Argo	Acting under the cover of a Hollywood producer scouting a location for a science fiction film, a CIA agent launches a dangerous operation to rescue six Americans in Tehran during the U.S. hostage crisis in Iran in 1979.	120	2012	7.7	1
-754	(500) Days of Summer	An offbeat romantic comedy about a woman who doesn't believe true love exists, and the young man who falls for her.	95	2009	7.7	2
-755	Harry Potter and the Deathly Hallows: Part 1	As Harry, Ron, and Hermione race against time and evil to destroy the Horcruxes, they uncover the existence of the three most powerful objects in the wizarding world: the Deathly Hallows.	146	2010	7.7	1
-756	Gake no ue no Ponyo	A five-year-old boy develops a relationship with Ponyo, a young goldfish princess who longs to become a human after falling in love with him.	101	2008	7.7	3
-757	Frost/Nixon	A dramatic retelling of the post-Watergate television interviews between British talk-show host David Frost and former president Richard Nixon.	122	2008	7.7	5
-758	Papurika	When a machine that allows therapists to enter their patients' dreams is stolen, all Hell breaks loose. Only a young female therapist, Paprika, can stop it.	90	2006	7.7	3
-759	Changeling	Grief-stricken mother Christine Collins (Angelina Jolie) takes on the L.A.P.D. to her own detriment when it tries to pass off an obvious impostor as her missing child.	141	2008	7.7	5
-760	Flipped	Two eighth-graders start to have feelings for each other despite being total opposites.	90	2010	7.7	7
-761	Toki o kakeru shôjo	A high-school girl named Makoto acquires the power to travel back in time, and decides to use it for her own personal benefits. Little does she know that she is affecting the lives of others just as much as she is her own.	98	2006	7.7	3
-762	Death Note: Desu nôto	A battle between the world's two greatest minds begins when Light Yagami finds the Death Note, a notebook with the power to kill, and decides to rid the world of criminals.	126	2006	7.7	6
-763	This Is England	A young boy becomes friends with a gang of skinheads. Friends soon become like family, and relationships will be pushed to the very limit.	101	2006	7.7	6
-764	Ex Machina	A young programmer is selected to participate in a ground-breaking experiment in synthetic intelligence by evaluating the human qualities of a highly advanced humanoid A.I.	108	2014	7.7	2
-765	Efter brylluppet	A manager of an orphanage in India is sent to Copenhagen, Denmark, where he discovers a life-altering family secret.	120	2006	7.7	5
-766	The Last King of Scotland	Based on the events of the brutal Ugandan dictator Idi Amin's regime as seen by his personal physician during the 1970s.	123	2006	7.7	5
-767	Zodiac	In the late 1960s/early 1970s, a San Francisco cartoonist becomes an amateur detective obsessed with tracking down the Zodiac Killer, an unidentified individual who terrorizes Northern California with a killing spree.	157	2007	7.7	2
-768	Lucky Number Slevin	A case of mistaken identity lands Slevin into the middle of a war being plotted by two of the city's most rival crime bosses. Under constant surveillance by Detective Brikowski and assassin Goodkat, he must get them before they get him.	110	2006	7.7	5
-769	Joyeux Noël	In December 1914, an unofficial Christmas truce on the Western Front allows soldiers from opposing sides of the First World War to gain insight into each other's way of life.	116	2005	7.7	4
-770	Control	A profile of Ian Curtis, the enigmatic singer of Joy Division whose personal, professional, and romantic troubles led him to commit suicide at the age of 23.	122	2007	7.7	5
-771	Tangled	The magically long-haired Rapunzel has spent her entire life in a tower, but now that a runaway thief has stumbled upon her, she is about to discover the world for the first time, and who she really is.	100	2010	7.7	3
-772	Zwartboek	In the Nazi-occupied Netherlands during World War II, a Jewish singer infiltrates the regional Gestapo headquarters for the Dutch resistance.	145	2006	7.7	5
-773	Brokeback Mountain	The story of a forbidden and secretive relationship between two cowboys, and their lives over the years.	134	2005	7.7	1
-774	3:10 to Yuma	A small-time rancher agrees to hold a captured outlaw who's awaiting a train to go to court in Yuma. A battle of wills ensues as the outlaw tries to psych out the rancher.	122	2007	7.7	1
-775	Crash	Los Angeles citizens with vastly separate lives collide in interweaving stories of race, loss and redemption.	112	2004	7.7	2
-776	Kung fu	In Shanghai, China in the 1940s, a wannabe gangster aspires to join the notorious "Axe Gang" while residents of a housing complex exhibit extraordinary powers in defending their turf.	99	2004	7.7	2
-777	The Bourne Supremacy	When Jason Bourne is framed for a CIA operation gone awry, he is forced to resume his former life as a trained assassin to survive.	108	2004	7.7	1
-778	The Machinist	An industrial worker who hasn't slept in a year begins to doubt his own sanity.	101	2004	7.7	5
-779	Ray	The story of the life and career of the legendary rhythm and blues musician Ray Charles, from his humble beginnings in the South, where he went blind at age seven, to his meteoric rise to stardom during the 1950s and 1960s.	152	2004	7.7	1
-780	Lost in Translation	A faded movie star and a neglected young woman form an unlikely bond after crossing paths in Tokyo.	102	2003	7.7	2
-781	Harry Potter and the Goblet of Fire	Harry Potter finds himself competing in a hazardous tournament between rival schools of magic, but he is distracted by recurring nightmares.	157	2005	7.7	2
-782	Man on Fire	In Mexico City, a former CIA operative swears vengeance on those who committed an unspeakable act against the family he was hired to protect.	146	2004	7.7	2
-783	Coraline	An adventurous 11-year-old girl finds another world that is a strangely idealized version of her frustrating home, but it has sinister secrets.	100	2009	7.7	3
-784	The Last Samurai	An American military advisor embraces the Samurai culture he was hired to destroy after he is captured in battle.	154	2003	7.7	2
-785	The Magdalene Sisters	Three young Irish women struggle to maintain their spirits while they endure dehumanizing abuse as inmates of a Magdalene Sisters Asylum.	114	2002	7.7	5
-786	Good Bye Lenin!	In 1990, to protect his fragile mother from a fatal shock after a long coma, a young man must keep her from learning that her beloved nation of East Germany as she knew it has disappeared.	121	2003	7.7	5
-787	In America	A family of Irish immigrants adjust to life on the mean streets of Hell's Kitchen while also grieving the death of a child.	105	2002	7.7	4
-788	I Am Sam	A mentally handicapped man fights for custody of his 7-year-old daughter and in the process teaches his cold-hearted lawyer the value of love and family.	132	2001	7.7	4
-789	Adaptation.	A lovelorn screenwriter becomes desperate as he tries and fails to adapt 'The Orchid Thief' by Susan Orlean for the screen.	115	2002	7.7	5
-790	Black Hawk Down	160 elite U.S. soldiers drop into Somalia to capture two top lieutenants of a renegade warlord and find themselves in a desperate battle with a large force of heavily-armed Somalis.	144	2001	7.7	1
-791	Road to Perdition	A mob enforcer's son witnesses a murder, forcing him and his father to take to the road, and his father down a path of redemption and revenge.	117	2002	7.7	1
-792	Das Experiment	For two weeks, 20 male participants are hired to play prisoners and guards in a prison. The "prisoners" have to follow seemingly mild rules, and the "guards" are told to retain order without using physical violence.	120	2001	7.7	5
-793	Billy Elliot	A talented young boy becomes torn between his unexpected love of dance and the disintegration of his family.	110	2000	7.7	5
-794	Hedwig and the Angry Inch	A gender-queer punk-rock singer from East Berlin tours the U.S. with her band as she tells her life story and follows the former lover/band-mate who stole her songs.	95	2001	7.7	5
-795	Ocean's Eleven	Danny Ocean and his ten accomplices plan to rob three Las Vegas casinos simultaneously.	116	2001	7.7	2
-796	Vampire Hunter D: Bloodlust	When a girl is abducted by a vampire, a legendary bounty hunter is hired to bring her back.	103	2000	7.7	3
-797	O Brother, Where Art Thou?	In the deep south during the 1930s, three escaped convicts search for hidden treasure while a relentless lawman pursues them.	107	2000	7.7	3
-798	Interstate 60: Episodes of the Road	Neal Oliver, a very confused young man and an artist, takes a journey of a lifetime on a highway I60 that doesn't exist on any of the maps, going to the places he never even heard of, searching for an answer and his dreamgirl.	116	2002	7.7	5
-799	South Park: Bigger, Longer & Uncut	When Stan Marsh and his friends go see an R-rated movie, they start cursing and their parents think that Canada is to blame.	81	1999	7.7	1
-800	Office Space	Three company workers who hate their jobs decide to rebel against their greedy boss.	89	1999	7.7	5
-801	Happiness	The lives of several individuals intertwine as they go about their lives in their own unique ways, engaging in acts society as a whole might find disturbing in a desperate search for human connection.	134	1998	7.7	6
-802	Training Day	A rookie cop spends his first day as a Los Angeles narcotics officer with a rogue detective who isn't what he appears to be.	122	2001	7.7	1
-803	Rushmore	The extracurricular king of Rushmore Preparatory School is put on academic probation.	93	1998	7.7	2
-804	Abre los ojos	A very handsome man finds the love of his life, but he suffers an accident and needs to have his face rebuilt by surgery after it is severely disfigured.	119	1997	7.7	3
-805	Being John Malkovich	A puppeteer discovers a portal that leads literally into the head of movie star John Malkovich.	113	1999	7.7	5
-806	As Good as It Gets	A single mother and waitress, a misanthropic author, and a gay artist form an unlikely friendship after the artist is assaulted in a robbery.	139	1997	7.7	1
-807	The Fifth Element	In the colorful future, a cab driver unwittingly becomes the central figure in the search for a legendary cosmic weapon to keep Evil and Mr. Zorg at bay.	126	1997	7.7	2
-808	Le dîner de cons	A few friends have a weekly fools' dinner, where each brings a fool along. Pierre finds a champion fool for next dinner. Surprise.	80	1998	7.7	4
-809	Donnie Brasco	An FBI undercover agent infiltrates the mob and finds himself identifying more with the mafia life, at the expense of his regular one.	127	1997	7.7	1
-810	Shine	Pianist David Helfgott, driven by his father and teachers, has a breakdown. Years later he returns to the piano, to popular if not critical acclaim.	105	1996	7.7	3
-811	Primal Fear	An altar boy is accused of murdering a priest, and the truth is buried several layers deep.	129	1996	7.7	1
-812	Hamlet	Hamlet, Prince of Denmark, returns home to find his father murdered and his mother remarrying the murderer, his uncle. Meanwhile, war is brewing.	242	1996	7.7	4
-813	A Little Princess	A young girl is relegated to servitude at a boarding school when her father goes missing and is presumed dead.	97	1995	7.7	3
-814	Do lok tin si	This Hong Kong-set crime drama follows the lives of a hitman, hoping to get out of the business, and his elusive female partner.	99	1995	7.7	2
-815	Il postino	A simple Italian postman learns to love poetry while delivering mail to a famous poet, and then uses this to woo local beauty Beatrice.	108	1994	7.7	3
-816	Clerks	A day in the lives of two convenience clerks named Dante and Randal as they annoy customers, discuss movies, and play hockey on the store roof.	92	1994	7.7	5
-817	Short Cuts	The day-to-day lives of several suburban Los Angeles residents.	188	1993	7.7	5
-818	Philadelphia	When a man with HIV is fired by his law firm because of his condition, he hires a homophobic small time lawyer as the only willing advocate for a wrongful dismissal suit.	125	1993	7.7	2
-819	The Muppet Christmas Carol	The Muppet characters tell their version of the classic tale of an old and bitter miser's redemption on Christmas Eve.	85	1992	7.7	8
-820	Malcolm X	Biographical epic of the controversial and influential Black Nationalist leader, from his early life and career as a small-time gangster, to his ministry as a member of the Nation of Islam.	202	1992	7.7	3
-821	The Last of the Mohicans	Three trappers protect the daughters of a British Colonel in the midst of the French and Indian War.	112	1992	7.7	2
-822	Kurenai no buta	In 1930s Italy, a veteran World War I pilot is cursed to look like an anthropomorphic pig.	94	1992	7.7	3
-823	Glengarry Glen Ross	An examination of the machinations behind the scenes at a real estate office.	100	1992	7.7	5
-824	A Few Good Men	Military lawyer Lieutenant Daniel Kaffee defends Marines accused of murder. They contend they were acting under orders.	138	1992	7.7	3
-825	Fried Green Tomatoes	A housewife who is unhappy with her life befriends an old lady in a nursing home and is enthralled by the tales she tells of people she used to know.	130	1991	7.7	4
-826	Barton Fink	A renowned New York playwright is enticed to California to write for the movies and discovers the hellish truth of Hollywood.	116	1991	7.7	3
-827	Miller's Crossing	Tom Reagan, an advisor to a Prohibition-era crime boss, tries to keep the peace between warring mobs but gets caught in divided loyalties.	115	1990	7.7	5
-828	Who Framed Roger Rabbit	A toon-hating detective is a cartoon rabbit's only hope to prove his innocence when he is accused of murder.	104	1988	7.7	3
-829	Spoorloos	Rex and Saskia, a young couple in love, are on vacation. They stop at a busy service station and Saskia is abducted. After three years and no sign of Saskia, Rex begins receiving letters from the abductor.	107	1988	7.7	6
-830	Withnail & I	In 1969, two substance-abusing, unemployed actors retreat to the countryside for a holiday that proves disastrous.	107	1987	7.7	5
-831	The Last Emperor	The story of the final Emperor of China.	163	1987	7.7	3
-832	Empire of the Sun	A young English boy struggles to survive under Japanese occupation during World War II.	153	1987	7.7	3
-833	Der Name der Rose	An intellectually nonconformist friar investigates a series of mysterious deaths in an isolated abbey.	130	1986	7.7	5
-834	Blue Velvet	The discovery of a severed human ear found in a field leads a young man on an investigation related to a beautiful, mysterious nightclub singer and a group of psychopathic criminals who have kidnapped her child.	120	1986	7.7	1
-835	The Purple Rose of Cairo	In New Jersey in 1935, a movie character walks off the screen and into the real world.	82	1985	7.7	3
-836	After Hours	An ordinary word processor has the worst night of his life after he agrees to visit a girl in Soho who he met that evening at a coffee shop.	97	1985	7.7	2
-837	Zelig	"Documentary" about a man who can look and act like whoever he's around, and meets various famous people.	79	1983	7.7	7
-838	The Verdict	A lawyer sees the chance to salvage his career and self-respect by taking a medical malpractice case to trial rather than settling.	129	1982	7.7	3
-839	Star Trek II: The Wrath of Khan	With the assistance of the Enterprise crew, Admiral Kirk must stop an old nemesis, Khan Noonien Singh, from using the life-generating Genesis Device as the ultimate weapon.	113	1982	7.7	3
-840	First Blood	A veteran Green Beret is forced by a cruel Sheriff and his deputies to flee into the mountains and wage an escalating one-man war against his pursuers.	93	1982	7.7	1
-841	Ordinary People	The accidental death of the older son of an affluent family deeply strains the relationships among the bitter mother, the good-natured father, and the guilt-ridden younger son.	124	1980	7.7	3
-842	Airplane!	A man afraid to fly must ensure that a plane lands safely after the pilots become sick.	88	1980	7.7	3
-843	Rupan sansei: Kariosutoro no shiro	A dashing thief, his gang of desperadoes and an intrepid policeman struggle to free a princess from an evil count's clutches, and learn the hidden secret to a fabulous treasure that she holds part of a key to.	100	1979	7.7	3
-844	Halloween	Fifteen years after murdering his sister on Halloween night 1963, Michael Myers escapes from a mental hospital and returns to the small town of Haddonfield, Illinois to kill again.	91	1978	7.7	1
-845	Le locataire	A bureaucrat rents a Paris apartment where he finds himself drawn into a rabbit hole of dangerous paranoia.	126	1976	7.7	5
-846	Love and Death	In czarist Russia, a neurotic soldier and his distant cousin formulate a plot to assassinate Napoleon.	85	1975	7.7	7
-847	The Taking of Pelham One Two Three	In New York, armed men hijack a subway car and demand a ransom for the passengers. Even if it's paid, how could they get away?	104	1974	7.7	3
-848	Blazing Saddles	In order to ruin a western town, a corrupt politician appoints a black Sheriff, who promptly becomes his most formidable adversary.	93	1974	7.7	1
-849	Serpico	An honest New York cop named Frank Serpico blows the whistle on rampant corruption in the force only to have his comrades turn against him.	130	1973	7.7	1
-850	Enter the Dragon	A secret agent comes to an opium lord's island fortress with other fighters for a martial-arts tournament.	102	1973	7.7	1
-851	Deliverance	Intent on seeing the Cahulawassee River before it's dammed and turned into a lake, outdoor fanatic Lewis Medlock takes his friends on a canoeing trip they'll never forget into the dangerous American back-country.	109	1972	7.7	3
-852	The French Connection	A pair of NYC cops in the Narcotics Bureau stumble onto a drug smuggling job with a French connection.	104	1971	7.7	1
-853	Dirty Harry	When a madman calling himself "the Scorpio Killer" menaces the city, tough-as-nails San Francisco Police Inspector "Dirty" Harry Callahan is assigned to track down and ferret out the crazed psychopath.	102	1971	7.7	1
-854	Where Eagles Dare	Allied agents stage a daring raid on a castle where the Nazis are holding American brigadier general George Carnaby prisoner, but that's not all that's really going on.	158	1968	7.7	3
-855	The Odd Couple	Two friends try sharing an apartment, but their ideas of housekeeping and lifestyles are as different as night and day.	105	1968	7.7	8
-856	The Dirty Dozen	During World War II, a rebellious U.S. Army Major is assigned a dozen convicted murderers to train and lead them into a mass assassination mission of German officers.	150	1967	7.7	6
-857	Belle de jour	A frigid young housewife decides to spend her midweek afternoons as a prostitute.	100	1967	7.7	1
-858	A Man for All Seasons	The story of Sir Thomas More, who stood up to King Henry VIII when the King rejected the Roman Catholic Church to obtain a divorce and remarry.	120	1966	7.7	3
-859	Repulsion	A sex-repulsed woman who disapproves of her sister's boyfriend sinks into depression and has horrific visions of rape and violence.	105	1965	7.7	6
-860	Zulu	Outnumbered British soldiers do battle with Zulu warriors at Rorke's Drift.	138	1964	7.7	3
-861	Goldfinger	While investigating a gold magnate's smuggling, James Bond uncovers a plot to contaminate the Fort Knox gold reserve.	110	1964	7.7	1
-862	The Birds	A wealthy San Francisco socialite pursues a potential boyfriend to a small Northern California town that slowly takes a turn for the bizarre when birds of all kinds suddenly begin to attack people.	119	1963	7.7	1
-863	Cape Fear	A lawyer's family is stalked by a man he once helped put in jail.	106	1962	7.7	9
-864	Peeping Tom	A young man murders women, using a movie camera to film their dying expressions of terror.	101	1960	7.7	6
-865	The Magnificent Seven	Seven gunfighters are hired by Mexican peasants to liberate their village from oppressive bandits.	128	1960	7.7	15
-866	Les yeux sans visage	A surgeon causes an accident which leaves his daughter disfigured, and goes to extremes to give her a new face.	90	1960	7.7	6
-867	Invasion of the Body Snatchers	A small-town doctor learns that the population of his community is being replaced by emotionless alien duplicates.	80	1956	7.7	15
-868	Rebel Without a Cause	A rebellious young man with a troubled past comes to a new town, finding friends and enemies.	111	1955	7.7	4
-869	The Ladykillers	Five oddball criminals planning a bank robbery rent rooms on a cul-de-sac from an octogenarian widow under the pretext that they are classical musicians.	91	1955	7.7	6
-870	Sabrina	A playboy becomes interested in the daughter of his family's chauffeur, but it's his more serious brother who would be the better man for her.	113	1954	7.7	9
-871	The Quiet Man	A retired American boxer returns to the village of his birth in Ireland, where he falls for a spirited redhead whose brother is contemptuous of their union.	129	1952	7.7	9
-872	The Day the Earth Stood Still	An alien lands and tells the people of Earth that they must live peacefully or be destroyed as a danger to other planets.	92	1951	7.7	3
-873	The African Queen	In WWI Africa, a gin-swilling riverboat captain is persuaded by a strait-laced missionary to use his boat to attack an enemy warship.	105	1951	7.7	7
-874	Gilda	A small-time gambler hired to work in a Buenos Aires casino discovers his employer's new wife is his former lover.	110	1946	7.7	15
-875	Fantasia	A collection of animated interpretations of great works of Western classical music.	125	1940	7.7	8
-876	The Invisible Man	A scientist finds a way of becoming invisible, but in doing so, he becomes murderously insane.	71	1933	7.7	16
-877	Dark Waters	A corporate defense attorney takes on an environmental lawsuit against a chemical company that exposes a lengthy history of pollution.	126	2019	7.6	4
-878	Searching	After his teenage daughter goes missing, a desperate father tries to find clues on her laptop.	102	2018	7.6	17
-879	Once Upon a Time... in Hollywood	A faded television actor and his stunt double strive to achieve fame and success in the final years of Hollywood's Golden Age in 1969 Los Angeles.	161	2019	7.6	1
-880	Nelyubov	A couple going through a divorce must team up to find their son who has disappeared during one of their bitter arguments.	127	2017	7.6	5
-881	The Florida Project	Set over one summer, the film follows precocious six-year-old Moonee as she courts mischief and adventure with her ragtag playmates and bonds with her rebellious but caring mother, all while living in the shadows of Walt Disney World.	111	2017	7.6	1
-882	Just Mercy	World-renowned civil rights defense attorney Bryan Stevenson works to free a wrongly condemned death row prisoner.	137	2019	7.6	1
-883	Gifted	Frank, a single man raising his child prodigy niece Mary, is drawn into a custody battle with his mother.	101	2017	7.6	4
-884	The Peanut Butter Falcon	Zak runs away from his care home to make his dream of becoming a wrestler come true.	97	2019	7.6	4
-885	Victoria	A young Spanish woman who has recently moved to Berlin finds her flirtation with a local guy turn potentially deadly as their night out with his friends reveals a dangerous secret.	138	2015	7.6	6
-886	Mustang	When five orphan girls are seen innocently playing with boys on a beach, their scandalized conservative guardians confine them while forced marriages are arranged.	97	2015	7.6	4
-887	Guardians of the Galaxy Vol. 2	The Guardians struggle to keep together as a team while dealing with their personal family issues, notably Star-Lord's encounter with his father the ambitious celestial being Ego.	136	2017	7.6	2
-888	Baby Driver	After being coerced into working for a crime boss, a young getaway driver finds himself taking part in a heist doomed to fail.	113	2017	7.6	2
-889	Only the Brave	Based on the true story of the Granite Mountain Hotshots, a group of elite firefighters who risk everything to protect a town from a historic wildfire.	134	2017	7.6	2
-890	Bridge of Spies	During the Cold War, an American lawyer is recruited to defend an arrested Soviet spy in court, and then help the CIA facilitate an exchange of the spy for the Soviet captured American U2 spy plane pilot, Francis Gary Powers.	142	2015	7.6	2
-891	Incredibles 2	The Incredibles family takes on a new mission which involves a change in family roles: Bob Parr (Mr. Incredible) must manage the house while his wife Helen (Elastigirl) goes out to save the world.	118	2018	7.6	2
-892	Moana	In Ancient Polynesia, when a terrible curse incurred by the Demigod Maui reaches Moana's island, she answers the Ocean's call to seek out the Demigod to set things right.	107	2016	7.6	3
-893	Sicario	An idealistic FBI agent is enlisted by a government task force to aid in the escalating war against drugs at the border area between the U.S. and Mexico.	121	2015	7.6	1
-894	Creed	The former World Heavyweight Champion Rocky Balboa serves as a trainer and mentor to Adonis Johnson, the son of his late friend and former rival Apollo Creed.	133	2015	7.6	1
-895	Leviafan	In a Russian coastal town, Kolya is forced to fight the corrupt mayor when he is told that his house will be demolished. He recruits a lawyer friend to help, but the man's arrival brings further misfortune for Kolya and his family.	140	2014	7.6	5
-896	Hell or High Water	A divorced father and his ex-con older brother resort to a desperate scheme in order to save their family's ranch in West Texas.	102	2016	7.6	5
-897	Philomena	A world-weary political journalist picks up the story of a woman's search for her son, who was taken away from her decades ago after she became pregnant and was forced to live in a convent.	98	2013	7.6	4
-898	Dawn of the Planet of the Apes	A growing nation of genetically evolved apes led by Caesar is threatened by a band of human survivors of the devastating virus unleashed a decade earlier.	130	2014	7.6	2
-899	El cuerpo	A detective searches for the body of a femme fatale which has gone missing from a morgue.	112	2012	7.6	6
-900	Serbuan maut	A S.W.A.T. team becomes trapped in a tenement run by a ruthless mobster and his army of killers and thugs.	101	2011	7.6	1
-901	End of Watch	Shot documentary-style, this film follows the daily grind of two young police officers in LA who are partners and friends, and what happens when they meet criminal forces greater than themselves.	109	2012	7.6	1
-902	Kari-gurashi no Arietti	The Clock family are four-inch-tall people who live anonymously in another family's residence, borrowing simple items to make their home. Life changes for the Clocks when their teenage daughter, Arrietty, is discovered.	94	2010	7.6	3
-903	A Star Is Born	A musician helps a young singer find fame as age and alcoholism send his own career into a downward spiral.	136	2018	7.6	2
-904	True Grit	A stubborn teenager enlists the help of a tough U.S. Marshal to track down her father's murderer.	110	2010	7.6	4
-905	Hævnen	The lives of two Danish families cross each other, and an extraordinary but risky friendship comes into bud. But loneliness, frailty and sorrow lie in wait.	118	2010	7.6	5
-906	Despicable Me	When a criminal mastermind uses a trio of orphan girls as pawns for a grand scheme, he finds their love is profoundly changing him for the better.	95	2010	7.6	3
-907	50/50	Inspired by a true story, a comedy centered on a 27-year-old guy who learns of his cancer diagnosis and his subsequent struggle to beat the disease.	100	2011	7.6	5
-908	Kick-Ass	Dave Lizewski is an unnoticed high school student and comic book fan who one day decides to become a superhero, even though he has no powers, training or meaningful reason to do so.	117	2010	7.6	2
-909	Celda 211	The story of two men on different sides of a prison riot -- the inmate leading the rebellion and the young guard trapped in the revolt, who poses as a prisoner in a desperate attempt to survive the ordeal.	113	2009	7.6	6
-910	Moneyball	Oakland A's general manager Billy Beane's successful attempt to assemble a baseball team on a lean budget by employing computer-generated analysis to acquire new players.	133	2011	7.6	4
-911	La piel que habito	A brilliant plastic surgeon, haunted by past tragedies, creates a type of synthetic skin that withstands any kind of damage. His guinea pig: a mysterious and volatile woman who holds the key to his obsession.	120	2011	7.6	5
-946	Y tu mamá también	In Mexico, two teenage boys and an attractive older woman embark on a road trip and learn a thing or two about life, friendship, sex, and each other.	106	2001	7.6	1
-912	Zombieland	A shy student trying to reach his family in Ohio, a gun-toting tough guy trying to find the last Twinkie, and a pair of sisters trying to get to an amusement park join forces to travel across a zombie-filled America.	88	2009	7.6	1
-913	Die Welle	A high school teacher's experiment to demonstrate to his students what life is like under a dictatorship spins horribly out of control when he forms a social unit with a life of its own.	107	2008	7.6	6
-914	Sherlock Holmes	Detective Sherlock Holmes and his stalwart partner Watson engage in a battle of wits and brawn with a nemesis whose plot is a threat to all of England.	128	2009	7.6	4
-915	The Blind Side	The story of Michael Oher, a homeless and traumatized boy who became an All-American football player and first-round NFL draft pick with the help of a caring woman and her family.	129	2009	7.6	2
-916	The Visitor	A college professor travels to New York City to attend a conference and finds a young couple living in his apartment.	104	2007	7.6	4
-917	Seven Pounds	A man with a fateful secret embarks on an extraordinary journey of redemption by forever changing the lives of seven strangers.	123	2008	7.6	2
-918	Eastern Promises	A teenager who dies during childbirth leaves clues in her journal that could tie her child to a rape involving a violent Russian mob family.	100	2007	7.6	5
-919	Stardust	In a countryside town bordering on a magical land, a young man makes a promise to his beloved that he'll retrieve a fallen star by venturing into the magical realm.	127	2007	7.6	3
-920	The Secret of Kells	A young boy in a remote medieval outpost under siege from barbarian raids is beckoned to adventure when a celebrated master illuminator arrives with an ancient book, brimming with secret wisdom and powers.	71	2009	7.6	6
-921	Inside Man	A police detective, a bank robber, and a high-power broker enter high-stakes negotiations after the criminal's brilliant heist spirals into a hostage situation.	129	2006	7.6	5
-922	Gone Baby Gone	Two Boston area detectives investigate a little girl's kidnapping, which ultimately turns into a crisis both professionally and personally.	114	2007	7.6	5
-923	La Vie En Rose	Biopic of the iconic French singer Édith Piaf. Raised by her grandmother in a brothel, she was discovered while singing on a street corner at the age of 19. Despite her success, Piaf's life was filled with tragedy.	140	2007	7.6	4
-924	Huo Yuan Jia	A biography of Chinese Martial Arts Master Huo Yuanjia, who is the founder and spiritual guru of the Jin Wu Sports Federation.	104	2006	7.6	4
-925	The Illusionist	In turn-of-the-century Vienna, a magician uses his abilities to secure the love of a woman far above his social standing.	110	2006	7.6	3
-926	Dead Man's Shoes	A disaffected soldier returns to his hometown to get even with the thugs who brutalized his mentally-challenged brother years ago.	90	2004	7.6	6
-927	Harry Potter and the Half-Blood Prince	As Harry Potter begins his sixth year at Hogwarts, he discovers an old book marked as "the property of the Half-Blood Prince" and begins to learn more about Lord Voldemort's dark past.	153	2009	7.6	2
-928	300	King Leonidas of Sparta and a force of 300 men fight the Persians at Thermopylae in 480 B.C.	117	2006	7.6	1
-929	Match Point	At a turning point in his life, a former tennis pro falls for an actress who happens to be dating his friend and soon-to-be brother-in-law.	124	2005	7.6	5
-930	Watchmen	In 1985 where former superheroes exist, the murder of a colleague sends active vigilante Rorschach into his own sprawling investigation, uncovering something that could completely change the course of history as we know it.	162	2009	7.6	1
-931	Lord of War	An arms dealer confronts the morality of his work as he is being chased by an INTERPOL Agent.	122	2005	7.6	5
-932	Saw	Two strangers awaken in a room with no recollection of how they got there, and soon discover they're pawns in a deadly game perpetrated by a notorious serial killer.	103	2004	7.6	2
-933	Synecdoche, New York	A theatre director struggles with his work, and the women in his life, as he creates a life-size replica of New York City inside a warehouse as part of his new play.	124	2008	7.6	5
-934	Mysterious Skin	A teenage hustler and a young man obsessed with alien abductions cross paths, together discovering a horrible, liberating truth.	105	2004	7.6	5
-935	Jeux d'enfants	As adults, best friends Julien and Sophie continue the odd game they started as children -- a fearless competition to outdo one another with daring and outrageous stunts. While they often act out to relieve one another's pain, their game might be a way to avoid the fact that they are truly meant for one another.	93	2003	7.6	5
-936	Un long dimanche de fiançailles	Tells the story of a young woman's relentless search for her fiancé, who has disappeared from the trenches of the Somme during World War One.	133	2004	7.6	3
-937	The Station Agent	When his only friend dies, a man born with dwarfism moves to rural New Jersey to live a life of solitude, only to meet a chatty hot dog vendor and a woman dealing with her own personal loss.	89	2003	7.6	5
-938	21 Grams	A freak accident brings together a critically ill mathematician, a grieving mother, and a born-again ex-con.	124	2003	7.6	2
-939	Boksuneun naui geot	A recently laid off factory worker kidnaps his former boss' friend's daughter, hoping to use the ransom money to pay for his sister's kidney transplant.	129	2002	7.6	5
-940	Finding Neverland	The story of Sir J.M. Barrie's friendship with a family who inspired him to create Peter Pan.	106	2004	7.6	3
-941	25th Hour	Cornered by the DEA, convicted New York drug dealer Montgomery Brogan reevaluates his life in the 24 remaining hours before facing a seven-year jail term.	135	2002	7.6	5
-942	The Butterfly Effect	Evan Treborn suffers blackouts during significant events of his life. As he grows up, he finds a way to remember these lost memories and a supernatural way to alter his life by reading his journal.	113	2004	7.6	3
-943	28 Days Later...	Four weeks after a mysterious, incurable virus spreads throughout the UK, a handful of survivors try to find sanctuary.	113	2002	7.6	1
-944	Batoru rowaiaru	In the future, the Japanese government captures a class of ninth-grade students and forces them to kill each other under the revolutionary "Battle Royale" act.	114	2000	7.6	6
-945	The Royal Tenenbaums	The eccentric members of a dysfunctional family reluctantly gather under the same roof for various reasons.	110	2001	7.6	1
-947	Harry Potter and the Sorcerer's Stone	An orphaned boy enrolls in a school of wizardry, where he learns the truth about himself, his family and the terrible evil that haunts the magical world.	152	2001	7.6	3
-948	The Others	A woman who lives in her darkened old family house with her two photosensitive children becomes convinced that the home is haunted.	101	2001	7.6	4
-949	Blow	The story of how George Jung, along with the Medellín Cartel headed by Pablo Escobar, established the American cocaine market in the 1970s in the United States.	124	2001	7.6	5
-950	Enemy at the Gates	A Russian and a German sniper play a game of cat-and-mouse during the Battle of Stalingrad.	131	2001	7.6	1
-951	Minority Report	In a future where a special police unit is able to arrest murderers before they commit their crimes, an officer from that unit is himself accused of a future murder.	145	2002	7.6	1
-952	The Hurricane	The story of Rubin 'Hurricane' Carter, a boxer wrongly imprisoned for murder, and the people who aided in his fight to prove his innocence.	146	1999	7.6	5
-953	American Psycho	A wealthy New York City investment banking executive, Patrick Bateman, hides his alternate psychopathic ego from his co-workers and friends as he delves deeper into his violent, hedonistic fantasies.	101	2000	7.6	1
-954	Lola rennt	After a botched money delivery, Lola has 20 minutes to come up with 100,000 Deutschmarks.	81	1998	7.6	2
-955	The Thin Red Line	Adaptation of James Jones' autobiographical 1962 novel, focusing on the conflict at Guadalcanal during the second World War.	170	1998	7.6	1
-956	Mulan	To save her father from death in the army, a young maiden secretly goes in his place and becomes one of China's greatest heroines in the process.	88	1998	7.6	3
-957	Fear and Loathing in Las Vegas	An oddball journalist and his psychopathic lawyer travel to Las Vegas for a series of psychedelic escapades.	118	1998	7.6	5
-958	Funny Games	Two violent young men take a mother, father, and son hostage in their vacation cabin and force them to play sadistic "games" with one another for their own amusement.	108	1997	7.6	1
-959	Dark City	A man struggles with memories of his past, which include a wife he cannot remember and a nightmarish world no one else ever seems to wake up from.	100	1998	7.6	1
-960	Sleepers	After a prank goes disastrously wrong, a group of boys are sent to a detention center where they are brutalized. Thirteen years later, an unexpected random encounter with a former guard gives them a chance for revenge.	147	1996	7.6	2
-961	Lost Highway	Anonymous videotapes presage a musician's murder conviction, and a gangster's girlfriend leads a mechanic astray.	134	1997	7.6	1
-962	Sense and Sensibility	Rich Mr. Dashwood dies, leaving his second wife and her three daughters poor by the rules of inheritance. The two eldest daughters are the title opposites.	136	1995	7.6	3
-963	Die Hard: With a Vengeance	John McClane and a Harlem store owner are targeted by German terrorist Simon in New York City, where he plans to rob the Federal Reserve Building.	128	1995	7.6	1
-964	Dead Man	On the run after murdering a man, accountant William Blake encounters a strange aboriginal American man named Nobody who prepares him for his journey into the spiritual world.	121	1995	7.6	5
-965	The Bridges of Madison County	Photographer Robert Kincaid wanders into the life of housewife Francesca Johnson for four days in the 1960s.	135	1995	7.6	1
-966	Apollo 13	NASA must devise a strategy to return Apollo 13 to Earth safely after the spacecraft undergoes massive internal damage putting the lives of the three astronauts on board in jeopardy.	140	1995	7.6	3
-967	Trois couleurs: Blanc	After his wife divorces him, a Polish immigrant plots to get even with her.	92	1994	7.6	3
-968	Falling Down	An ordinary man frustrated with the various flaws he sees in society begins to psychotically and violently lash out against them.	113	1993	7.6	5
-969	Dazed and Confused	The adventures of high school and junior high students on the last day of school in May 1976.	102	1993	7.6	3
-970	My Cousin Vinny	Two New Yorkers accused of murder in rural Alabama while on their way back to college call in the help of one of their cousins, a loudmouth lawyer with no trial experience.	120	1992	7.6	2
-971	Omohide poro poro	A twenty-seven-year-old office worker travels to the countryside while reminiscing about her childhood in Tokyo.	118	1991	7.6	3
-972	Delicatessen	Post-apocalyptic surrealist black comedy about the landlord of an apartment building who occasionally prepares a delicacy for his odd tenants.	99	1991	7.6	5
-973	Home Alone	An eight-year-old troublemaker must protect his house from a pair of burglars when he is accidentally left home alone by his family during Christmas vacation.	103	1990	7.6	3
-974	The Godfather: Part III	Follows Michael Corleone, now in his 60s, as he seeks to free his family from crime and find a suitable successor to his empire.	162	1990	7.6	1
-975	When Harry Met Sally...	Harry and Sally have known each other for years, and are very good friends, but they fear sex would ruin the friendship.	95	1989	7.6	2
-976	The Little Mermaid	A mermaid princess makes a Faustian bargain in an attempt to become human and win a prince's love.	83	1989	7.6	3
-977	The Naked Gun: From the Files of Police Squad!	Incompetent police Detective Frank Drebin must foil an attempt to assassinate Queen Elizabeth II.	85	1988	7.6	3
-978	Planes, Trains & Automobiles	A man must struggle to travel home for Thanksgiving with a lovable oaf of a shower curtain ring salesman as his only companion.	93	1987	7.6	3
-979	Lethal Weapon	Two newly paired cops who are complete opposites must put aside their differences in order to catch a gang of drug smugglers.	109	1987	7.6	1
-980	Blood Simple	The owner of a seedy small-town Texas bar discovers that one of his employees is having an affair with his wife. A chaotic chain of misunderstandings, lies and mischief ensues after he devises a plot to have them murdered.	99	1984	7.6	1
-981	On Golden Pond	Norman is a curmudgeon with an estranged relationship with his daughter Chelsea. At Golden Pond, he and his wife nevertheless agree to care for Billy, the son of Chelsea's new boyfriend, and a most unexpected relationship blooms.	109	1981	7.6	2
-982	Mad Max 2	In the post-apocalyptic Australian wasteland, a cynical drifter agrees to help a small, gasoline-rich community escape a horde of bandits.	96	1981	7.6	1
-983	The Warriors	In the near future, a charismatic leader summons the street gangs of New York City in a bid to take it over. When he is killed, The Warriors are falsely blamed and now must fight their way home while every other gang is hunting them down.	92	1979	7.6	2
-984	The Muppet Movie	Kermit and his newfound friends trek across America to find success in Hollywood, but a frog legs merchant is after Kermit.	95	1979	7.6	3
-985	Escape from Alcatraz	Alcatraz is the most secure prison of its time. It is believed that no one can ever escape from it, until three daring men make a possible successful attempt at escaping from one of the most infamous prisons in the world.	112	1979	7.6	1
-986	Watership Down	Hoping to escape destruction by human developers and save their community, a colony of rabbits, led by Hazel and Fiver, seek out a safe place to set up a new warren.	91	1978	7.6	3
-987	Midnight Express	Billy Hayes, an American college student, is caught smuggling drugs out of Turkey and thrown into prison.	121	1978	7.6	1
-988	Close Encounters of the Third Kind	Roy Neary, an electric lineman, watches how his quiet and ordinary daily life turns upside down after a close encounter with a UFO.	138	1977	7.6	3
-989	The Long Goodbye	Private investigator Philip Marlowe helps a friend out of a jam, but in doing so gets implicated in his wife's murder.	112	1973	7.6	1
-990	Giù la testa	A low-life bandit and an I.R.A. explosives expert rebel against the government and become heroes of the Mexican Revolution.	157	1971	7.6	7
-991	Kelly's Heroes	A group of U.S. soldiers sneaks across enemy lines to get their hands on a secret stash of Nazi treasure.	144	1970	7.6	14
-992	The Jungle Book	Bagheera the Panther and Baloo the Bear have a difficult time trying to convince a boy to leave the jungle for human civilization.	78	1967	7.6	3
-993	Blowup	A fashion photographer unknowingly captures a death on film after following two lovers in a park.	111	1966	7.6	1
-994	A Hard Day's Night	Over two "typical" days in the life of The Beatles, the boys struggle to keep themselves and Sir Paul McCartney's mischievous grandfather in check while preparing for a live television performance.	87	1964	7.6	3
-995	Breakfast at Tiffany's	A young New York socialite becomes interested in a young man who has moved into her apartment building, but her past threatens to get in the way.	115	1961	7.6	1
-996	Giant	Sprawling epic covering the life of a Texas cattle rancher and his family and associates.	201	1956	7.6	8
-997	From Here to Eternity	In Hawaii in 1941, a private is cruelly punished for not boxing on his unit's team, while his captain's wife and second-in-command are falling in love.	118	1953	7.6	9
-998	Lifeboat	Several survivors of a torpedoed merchant ship in World War II find themselves in the same lifeboat with one of the crew members of the U-boat that sank their ship.	97	1944	7.6	6
-999	The 39 Steps	A man in London tries to help a counter-espionage Agent. But when the Agent is killed, and the man stands accused, he must go on the run to save himself and stop a spy ring which is trying to steal top secret information.	86	1935	7.6	6
-\.
-
-
---
--- Data for Name: tbl_ratings; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.tbl_ratings (id, description) FROM stdin;
-1	A
-2	UA
-3	U
-4	PG-13
-5	R
-6	Not Rated
-7	PG
-8	G
-9	Passed
-10	TV-14
-11	16
-12	TV-MA
-13	Unrated
-14	GP
-15	Approved
-16	TV-PG
-17	U/A
+COPY public.tbl_movies (id, title, description, duration, released_year, average) FROM stdin;
+1	The Shawshank Redemption	Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.	142	1994	9.3
+2	The Godfather	An organized crime dynasty's aging patriarch transfers control of his clandestine empire to his reluctant son.	175	1972	9.2
+3	The Dark Knight	When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.	152	2008	9
+4	The Godfather: Part II	The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.	202	1974	9
+5	12 Angry Men	A jury holdout attempts to prevent a miscarriage of justice by forcing his colleagues to reconsider the evidence.	96	1957	9
+6	The Lord of the Rings: The Return of the King	Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.	201	2003	8.9
+7	Pulp Fiction	The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.	154	1994	8.9
+8	Schindler's List	In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.	195	1993	8.9
+9	Inception	A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.	148	2010	8.8
+10	Fight Club	An insomniac office worker and a devil-may-care soapmaker form an underground fight club that evolves into something much, much more.	139	1999	8.8
+11	The Lord of the Rings: The Fellowship of the Ring	A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.	178	2001	8.8
+12	Forrest Gump	The presidencies of Kennedy and Johnson, the events of Vietnam, Watergate and other historical events unfold through the perspective of an Alabama man with an IQ of 75, whose only desire is to be reunited with his childhood sweetheart.	142	1994	8.8
+13	Il buono, il brutto, il cattivo	A bounty hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery.	161	1966	8.8
+14	The Lord of the Rings: The Two Towers	While Frodo and Sam edge closer to Mordor with the help of the shifty Gollum, the divided fellowship makes a stand against Sauron's new ally, Saruman, and his hordes of Isengard.	179	2002	8.7
+15	The Matrix	When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence.	136	1999	8.7
+16	Goodfellas	The story of Henry Hill and his life in the mob, covering his relationship with his wife Karen Hill and his mob partners Jimmy Conway and Tommy DeVito in the Italian-American crime syndicate.	146	1990	8.7
+17	Star Wars: Episode V - The Empire Strikes Back	After the Rebels are brutally overpowered by the Empire on the ice planet Hoth, Luke Skywalker begins Jedi training with Yoda, while his friends are pursued by Darth Vader and a bounty hunter named Boba Fett all over the galaxy.	124	1980	8.7
+18	One Flew Over the Cuckoo's Nest	A criminal pleads insanity and is admitted to a mental institution, where he rebels against the oppressive nurse and rallies up the scared patients.	133	1975	8.7
+19	Hamilton	The real life of one of America's foremost founding fathers and first Secretary of the Treasury, Alexander Hamilton. Captured live on Broadway from the Richard Rodgers Theater with the original Broadway cast.	160	2020	8.6
+20	Gisaengchung	Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.	132	2019	8.6
+21	Soorarai Pottru	Nedumaaran Rajangam "Maara" sets out to make the common man fly and in the process takes on the world's most capital intensive industry and several enemies who stand in his way.	153	2020	8.6
+22	Interstellar	A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.	169	2014	8.6
+23	Cidade de Deus	In the slums of Rio, two kids' paths diverge as one struggles to become a photographer and the other a kingpin.	130	2002	8.6
+24	Sen to Chihiro no kamikakushi	During her family's move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, and where humans are changed into beasts.	125	2001	8.6
+25	Saving Private Ryan	Following the Normandy Landings, a group of U.S. soldiers go behind enemy lines to retrieve a paratrooper whose brothers have been killed in action.	169	1998	8.6
+26	The Green Mile	The lives of guards on Death Row are affected by one of their charges: a black man accused of child murder and rape, yet who has a mysterious gift.	189	1999	8.6
+27	La vita è bella	When an open-minded Jewish librarian and his son become victims of the Holocaust, he uses a perfect mixture of will, humor, and imagination to protect his son from the dangers around their camp.	116	1997	8.6
+28	Se7en	Two detectives, a rookie and a veteran, hunt a serial killer who uses the seven deadly sins as his motives.	127	1995	8.6
+29	The Silence of the Lambs	A young F.B.I. cadet must receive the help of an incarcerated and manipulative cannibal killer to help catch another serial killer, a madman who skins his victims.	118	1991	8.6
+30	Star Wars	Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station, while also attempting to rescue Princess Leia from the mysterious Darth Vader.	121	1977	8.6
+31	Seppuku	When a ronin requesting seppuku at a feudal lord's palace is told of the brutal suicide of another ronin who previously visited, he reveals how their pasts are intertwined - and in doing so challenges the clan's integrity.	133	1962	8.6
+32	Shichinin no samurai	A poor village under attack by bandits recruits seven unemployed samurai to help them defend themselves.	207	1954	8.6
+33	It's a Wonderful Life	An angel is sent from Heaven to help a desperately frustrated businessman by showing him what life would have been like if he had never existed.	130	1946	8.6
+68	The Lives of Others	In 1984 East Berlin, an agent of the secret police, conducting surveillance on a writer and his lover, finds himself becoming increasingly absorbed by their lives.	137	2006	8.4
+34	Joker	In Gotham City, mentally troubled comedian Arthur Fleck is disregarded and mistreated by society. He then embarks on a downward spiral of revolution and bloody crime. This path brings him face-to-face with his alter-ego: the Joker.	122	2019	8.5
+35	Whiplash	A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential.	106	2014	8.5
+36	The Intouchables	After he becomes a quadriplegic from a paragliding accident, an aristocrat hires a young man from the projects to be his caregiver.	112	2011	8.5
+37	The Prestige	After a tragic accident, two stage magicians engage in a battle to create the ultimate illusion while sacrificing everything they have to outwit each other.	130	2006	8.5
+38	The Departed	An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.	151	2006	8.5
+39	The Pianist	A Polish Jewish musician struggles to survive the destruction of the Warsaw ghetto of World War II.	150	2002	8.5
+40	Gladiator	A former Roman General sets out to exact vengeance against the corrupt emperor who murdered his family and sent him into slavery.	155	2000	8.5
+41	American History X	A former neo-nazi skinhead tries to prevent his younger brother from going down the same wrong path that he did.	119	1998	8.5
+42	The Usual Suspects	A sole survivor tells of the twisty events leading up to a horrific gun battle on a boat, which began when five criminals met at a seemingly random police lineup.	106	1995	8.5
+43	Léon	Mathilda, a 12-year-old girl, is reluctantly taken in by Léon, a professional assassin, after her family is murdered. An unusual relationship forms as she becomes his protégée and learns the assassin's trade.	110	1994	8.5
+44	The Lion King	Lion prince Simba and his father are targeted by his bitter uncle, who wants to ascend the throne himself.	88	1994	8.5
+45	Terminator 2: Judgment Day	A cyborg, identical to the one who failed to kill Sarah Connor, must now protect her teenage son, John Connor, from a more advanced and powerful cyborg.	137	1991	8.5
+46	Nuovo Cinema Paradiso	A filmmaker recalls his childhood when falling in love with the pictures at the cinema of his home village and forms a deep friendship with the cinema's projectionist.	155	1988	8.5
+47	Hotaru no haka	A young boy and his little sister struggle to survive in Japan during World War II.	89	1988	8.5
+48	Back to the Future	Marty McFly, a 17-year-old high school student, is accidentally sent thirty years into the past in a time-traveling DeLorean invented by his close friend, the eccentric scientist Doc Brown.	116	1985	8.5
+49	Once Upon a Time in the West	A mysterious stranger with a harmonica joins forces with a notorious desperado to protect a beautiful widow from a ruthless assassin working for the railroad.	165	1968	8.5
+50	Psycho	A Phoenix secretary embezzles $40,000 from her employer's client, goes on the run, and checks into a remote motel run by a young man under the domination of his mother.	109	1960	8.5
+51	Casablanca	A cynical expatriate American cafe owner struggles to decide whether or not to help his former lover and her fugitive husband escape the Nazis in French Morocco.	102	1942	8.5
+52	Modern Times	The Tramp struggles to live in modern industrial society with the help of a young homeless woman.	87	1936	8.5
+53	City Lights	With the aid of a wealthy erratic tippler, a dewy-eyed tramp who has fallen in love with a sightless flower girl accumulates money to be able to help her medically.	87	1931	8.5
+54	Capharnaüm	While serving a five-year sentence for a violent crime, a 12-year-old boy sues his parents for neglect.	126	2018	8.4
+55	Ayla: The Daughter of War	In 1950, amid-st the ravages of the Korean War, Sergeant Süleyman stumbles upon a half-frozen little girl, with no parents and no help in sight. Frantic, scared and on the verge of death, ...                See full summary »	125	2017	8.4
+56	Vikram Vedha	Vikram, a no-nonsense police officer, accompanied by Simon, his partner, is on the hunt to capture Vedha, a smuggler and a murderer. Vedha tries to change Vikram's life, which leads to a conflict.	147	2017	8.4
+57	Kimi no na wa.	Two strangers find themselves linked in a bizarre way. When a connection forms, will distance be the only thing to keep them apart?	106	2016	8.4
+58	Dangal	Former wrestler Mahavir Singh Phogat and his two wrestler daughters struggle towards glory at the Commonwealth Games in the face of societal oppression.	161	2016	8.4
+59	Spider-Man: Into the Spider-Verse	Teen Miles Morales becomes the Spider-Man of his universe, and must join with five spider-powered individuals from other dimensions to stop a threat for all realities.	117	2018	8.4
+60	Avengers: Endgame	After the devastating events of Avengers: Infinity War (2018), the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.	181	2019	8.4
+61	Avengers: Infinity War	The Avengers and their allies must be willing to sacrifice all in an attempt to defeat the powerful Thanos before his blitz of devastation and ruin puts an end to the universe.	149	2018	8.4
+62	Coco	Aspiring musician Miguel, confronted with his family's ancestral ban on music, enters the Land of the Dead to find his great-great-grandfather, a legendary singer.	105	2017	8.4
+63	Django Unchained	With the help of a German bounty hunter, a freed slave sets out to rescue his wife from a brutal Mississippi plantation owner.	165	2012	8.4
+64	The Dark Knight Rises	Eight years after the Joker's reign of anarchy, Batman, with the help of the enigmatic Catwoman, is forced from his exile to save Gotham City from the brutal guerrilla terrorist Bane.	164	2012	8.4
+65	3 Idiots	Two friends are searching for their long lost companion. They revisit their college days and recall the memories of their friend who inspired them to think differently, even as the rest of the world called them "idiots".	170	2009	8.4
+66	Taare Zameen Par	An eight-year-old boy is thought to be a lazy trouble-maker, until the new art teacher has the patience and compassion to discover the real problem behind his struggles in school.	165	2007	8.4
+67	WALL·E	In the distant future, a small waste-collecting robot inadvertently embarks on a space journey that will ultimately decide the fate of mankind.	98	2008	8.4
+215	12 Years a Slave	In the antebellum United States, Solomon Northup, a free black man from upstate New York, is abducted and sold into slavery.	134	2013	8.1
+69	Oldeuboi	After being kidnapped and imprisoned for fifteen years, Oh Dae-Su is released, only to find that he must find his captor in five days.	101	2003	8.4
+70	Memento	A man with short-term memory loss attempts to track down his wife's murderer.	113	2000	8.4
+71	Mononoke-hime	On a journey to find the cure for a Tatarigami's curse, Ashitaka finds himself in the middle of a war between the forest gods and Tatara, a mining colony. In this quest he also meets San, the Mononoke Hime.	134	1997	8.4
+72	Once Upon a Time in America	A former Prohibition-era Jewish gangster returns to the Lower East Side of Manhattan over thirty years later, where he once again must confront the ghosts and regrets of his old life.	229	1984	8.4
+73	Raiders of the Lost Ark	In 1936, archaeologist and adventurer Indiana Jones is hired by the U.S. government to find the Ark of the Covenant before Adolf Hitler's Nazis can obtain its awesome powers.	115	1981	8.4
+74	The Shining	A family heads to an isolated hotel for the winter where a sinister presence influences the father into violence, while his psychic son sees horrific forebodings from both past and future.	146	1980	8.4
+75	Apocalypse Now	A U.S. Army officer serving in Vietnam is tasked with assassinating a renegade Special Forces Colonel who sees himself as a god.	147	1979	8.4
+76	Alien	After a space merchant vessel receives an unknown transmission as a distress call, one of the crew is attacked by a mysterious life form and they soon realize that its life cycle has merely begun.	117	1979	8.4
+77	Anand	The story of a terminally ill man who wishes to live life to the fullest before the inevitable occurs, as told by his best friend.	122	1971	8.4
+78	Tengoku to jigoku	An executive of a shoe company becomes a victim of extortion when his chauffeur's son is kidnapped and held for ransom.	143	1963	8.4
+79	Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb	An insane general triggers a path to nuclear holocaust that a War Room full of politicians and generals frantically tries to stop.	95	1964	8.4
+80	Witness for the Prosecution	A veteran British barrister must defend his client in a murder trial that has surprise after surprise.	116	1957	8.4
+81	Paths of Glory	After refusing to attack an enemy position, a general accuses the soldiers of cowardice and their commanding officer must defend them.	88	1957	8.4
+82	Rear Window	A wheelchair-bound photographer spies on his neighbors from his apartment window and becomes convinced one of them has committed murder.	112	1954	8.4
+83	Sunset Blvd.	A screenwriter develops a dangerous relationship with a faded film star determined to make a triumphant return.	110	1950	8.4
+84	The Great Dictator	Dictator Adenoid Hynkel tries to expand his empire while a poor Jewish barber tries to avoid persecution from Hynkel's regime.	125	1940	8.4
+85	1917	April 6th, 1917. As a regiment assembles to wage war deep in enemy territory, two soldiers are assigned to race against time and deliver a message that will stop 1,600 men from walking straight into a deadly trap.	119	2019	8.3
+86	Tumbbad	A mythological story about a goddess who created the entire universe. The plot revolves around the consequences when humans build a temple for her first-born.	104	2018	8.3
+87	Andhadhun	A series of mysterious events change the life of a blind pianist, who must now report a crime that he should technically know nothing of.	139	2018	8.3
+88	Drishyam	A man goes to extreme lengths to save his family from punishment after the family commits an accidental crime.	160	2013	8.3
+89	Jagten	A teacher lives a lonely life, all the while struggling over his son's custody. His life slowly gets better as he finds love and receives good news from his son, but his new luck is about to be brutally shattered by an innocent little lie.	115	2012	8.3
+90	Jodaeiye Nader az Simin	A married couple are faced with a difficult decision - to improve the life of their child by moving to another country or to stay in Iran and look after a deteriorating parent who has Alzheimer's disease.	123	2011	8.3
+91	Incendies	Twins journey to the Middle East to discover their family history and fulfill their mother's last wishes.	131	2010	8.3
+92	Miracle in cell NO.7	A story of love between a mentally-ill father who was wrongly accused of murder and his lovely six years old daughter. The prison would be their home. Based on the 2013 Korean movie 7-beon-bang-ui seon-mul (2013).	132	2019	8.3
+93	Babam ve Oglum	The family of a left-wing journalist is torn apart after the military coup of Turkey in 1980.	112	2005	8.3
+94	Inglourious Basterds	In Nazi-occupied France during World War II, a plan to assassinate Nazi leaders by a group of Jewish U.S. soldiers coincides with a theatre owner's vengeful plans for the same.	153	2009	8.3
+95	Eternal Sunshine of the Spotless Mind	When their relationship turns sour, a couple undergoes a medical procedure to have each other erased from their memories.	108	2004	8.3
+96	Amélie	Amélie is an innocent and naive girl in Paris with her own sense of justice. She decides to help those around her and, along the way, discovers love.	122	2001	8.3
+97	Snatch	Unscrupulous boxing promoters, violent bookmakers, a Russian gangster, incompetent amateur robbers and supposedly Jewish jewelers fight to track down a priceless stolen diamond.	104	2000	8.3
+98	Requiem for a Dream	The drug-induced utopias of four Coney Island people are shattered when their addictions run deep.	102	2000	8.3
+99	American Beauty	A sexually frustrated suburban father has a mid-life crisis after becoming infatuated with his daughter's best friend.	122	1999	8.3
+100	Good Will Hunting	Will Hunting, a janitor at M.I.T., has a gift for mathematics, but needs help from a psychologist to find direction in his life.	126	1997	8.3
+101	Bacheha-Ye aseman	After a boy loses his sister's pair of shoes, he goes on a series of adventures in order to find them. When he can't, he tries a new way to "win" a new pair.	89	1997	8.3
+102	Toy Story	A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy's room.	81	1995	8.3
+103	Braveheart	Scottish warrior William Wallace leads his countrymen in a rebellion to free his homeland from the tyranny of King Edward I of England.	178	1995	8.3
+104	Reservoir Dogs	When a simple jewelry heist goes horribly wrong, the surviving criminals begin to suspect that one of them is a police informant.	99	1992	8.3
+216	Rush	The merciless 1970s rivalry between Formula One rivals James Hunt and Niki Lauda.	123	2013	8.1
+105	Full Metal Jacket	A pragmatic U.S. Marine observes the dehumanizing effects the Vietnam War has on his fellow recruits from their brutal boot camp training to the bloody street fighting in Hue.	116	1987	8.3
+106	Idi i smotri	After finding an old rifle, a young boy joins the Soviet resistance movement against ruthless German forces and experiences the horrors of World War II.	142	1985	8.3
+107	Aliens	Fifty-seven years after surviving an apocalyptic attack aboard her space vessel by merciless space creatures, Officer Ripley awakens from hyper-sleep and tries to warn anyone who will listen about the predators.	137	1986	8.3
+108	Amadeus	The life, success and troubles of Wolfgang Amadeus Mozart, as told by Antonio Salieri, the contemporaneous composer who was insanely jealous of Mozart's talent and claimed to have murdered him.	160	1984	8.3
+109	Scarface	In 1980 Miami, a determined Cuban immigrant takes over a drug cartel and succumbs to greed.	170	1983	8.3
+110	Star Wars: Episode VI - Return of the Jedi	After a daring mission to rescue Han Solo from Jabba the Hutt, the Rebels dispatch to Endor to destroy the second Death Star. Meanwhile, Luke struggles to help Darth Vader back from the dark side without falling into the Emperor's trap.	131	1983	8.3
+111	Das Boot	The claustrophobic world of a WWII German U-boat; boredom, filth and sheer terror.	149	1981	8.3
+112	Taxi Driver	A mentally unstable veteran works as a nighttime taxi driver in New York City, where the perceived decadence and sleaze fuels his urge for violent action by attempting to liberate a presidential campaign worker and an underage prostitute.	114	1976	8.3
+113	The Sting	Two grifters team up to pull off the ultimate con.	129	1973	8.3
+114	A Clockwork Orange	In the future, a sadistic gang leader is imprisoned and volunteers for a conduct-aversion experiment, but it doesn't go as planned.	136	1971	8.3
+115	2001: A Space Odyssey	After discovering a mysterious artifact buried beneath the Lunar surface, mankind sets off on a quest to find its origins with help from intelligent supercomputer H.A.L. 9000.	149	1968	8.3
+116	Per qualche dollaro in più	Two bounty hunters with the same intentions team up to track down a Western outlaw.	132	1965	8.3
+117	Lawrence of Arabia	The story of T.E. Lawrence, the English officer who successfully united and led the diverse, often warring, Arab tribes during World War I in order to fight the Turks.	228	1962	8.3
+118	The Apartment	A man tries to rise in his company by letting its executives use his apartment for trysts, but complications and a romance of his own ensue.	125	1960	8.3
+119	North by Northwest	A New York City advertising executive goes on the run after being mistaken for a government agent by a group of foreign spies.	136	1959	8.3
+120	Vertigo	A former police detective juggles wrestling with his personal demons and becoming obsessed with a hauntingly beautiful woman.	128	1958	8.3
+121	Singin' in the Rain	A silent film production company and cast make a difficult transition to sound.	103	1952	8.3
+122	Ikiru	A bureaucrat tries to find a meaning in his life after he discovers he has terminal cancer.	143	1952	8.3
+123	Ladri di biciclette	In post-war Italy, a working-class man's bicycle is stolen. He and his son set out to find it.	89	1948	8.3
+124	Double Indemnity	An insurance representative lets himself be talked by a seductive housewife into a murder/insurance fraud scheme that arouses the suspicion of an insurance investigator.	107	1944	8.3
+125	Citizen Kane	Following the death of publishing tycoon Charles Foster Kane, reporters scramble to uncover the meaning of his final utterance; 'Rosebud'.	119	1941	8.3
+126	M - Eine Stadt sucht einen Mörder	When the police in a German city are unable to catch a child-murderer, other criminals join in the manhunt.	117	1931	8.3
+127	Metropolis	In a futuristic city sharply divided between the working class and the city planners, the son of the city's mastermind falls in love with a working-class prophet who predicts the coming of a savior to mediate their differences.	153	1927	8.3
+128	The Kid	The Tramp cares for an abandoned child, but events put that relationship in jeopardy.	68	1921	8.3
+129	Chhichhore	A tragic incident forces Anirudh, a middle-aged man, to take a trip down memory lane and reminisce his college days along with his friends, who were labelled as losers.	143	2019	8.2
+130	Uri: The Surgical Strike	Indian army special forces execute a covert operation, avenging the killing of fellow army men at their base by a terrorist group.	138	2018	8.2
+131	K.G.F: Chapter 1	In the 1970s, a fierce rebel rises against brutal oppression and becomes the symbol of hope to legions of downtrodden people.	156	2018	8.2
+132	Green Book	A working-class Italian-American bouncer becomes the driver of an African-American classical pianist on a tour of venues through the 1960s American South.	130	2018	8.2
+133	Three Billboards Outside Ebbing, Missouri	A mother personally challenges the local authorities to solve her daughter's murder when they fail to catch the culprit.	115	2017	8.2
+134	Talvar	An experienced investigator confronts several conflicting theories about the perpetrators of a violent double homicide.	132	2015	8.2
+135	Baahubali 2: The Conclusion	When Shiva, the son of Bahubali, learns about his heritage, he begins to look for answers. His story is juxtaposed with past events that unfolded in the Mahishmati Kingdom.	167	2017	8.2
+136	Klaus	A simple act of kindness always sparks another, even in a frozen, faraway place. When Smeerensburg's new postman, Jesper, befriends toymaker Klaus, their gifts melt an age-old feud and deliver a sleigh full of holiday traditions.	96	2019	8.2
+137	Queen	A Delhi girl from a traditional family sets out on a solo honeymoon after her marriage gets cancelled.	146	2013	8.2
+138	Mandariinid	In 1992, war rages in Abkhazia, a breakaway region of Georgia. An Estonian man Ivo has decided to stay behind and harvest his crops of tangerines. In a bloody conflict at his door, a wounded man is left behind, and Ivo takes him in.	87	2013	8.2
+139	Bhaag Milkha Bhaag	The truth behind the ascension of Milkha Singh who was scarred because of the India-Pakistan partition.	186	2013	8.2
+140	Gangs of Wasseypur	A clash between Sultan and Shahid Khan leads to the expulsion of Khan from Wasseypur, and ignites a deadly blood feud spanning three generations.	321	2012	8.2
+141	Udaan	Expelled from his school, a 16-year old boy returns home to his abusive and oppressive father.	134	2010	8.2
+142	Paan Singh Tomar	The story of Paan Singh Tomar, an Indian athlete and seven-time national steeplechase champion who becomes one of the most feared dacoits in Chambal Valley after his retirement.	135	2012	8.2
+143	El secreto de sus ojos	A retired legal counselor writes a novel hoping to find closure for one of his past unresolved homicide cases and for his unreciprocated love with his superior - both of which still haunt him decades later.	129	2009	8.2
+144	Warrior	The youngest son of an alcoholic former boxer returns home, where he's trained by his father for competition in a mixed martial arts tournament - a path that puts the fighter on a collision course with his estranged, older brother.	140	2011	8.2
+145	Shutter Island	In 1954, a U.S. Marshal investigates the disappearance of a murderer who escaped from a hospital for the criminally insane.	138	2010	8.2
+146	Up	78-year-old Carl Fredricksen travels to Paradise Falls in his house equipped with balloons, inadvertently taking a young stowaway.	96	2009	8.2
+147	The Wolf of Wall Street	Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.	180	2013	8.2
+148	Chak De! India	Kabir Khan is the coach of the Indian Women's National Hockey Team and his dream is to make his all girls team emerge victorious against all odds.	153	2007	8.2
+149	There Will Be Blood	A story of family, religion, hatred, oil and madness, focusing on a turn-of-the-century prospector in the early days of the business.	158	2007	8.2
+150	Pan's Labyrinth	In the Falangist Spain of 1944, the bookish young stepdaughter of a sadistic army officer escapes into an eerie but captivating fantasy world.	118	2006	8.2
+151	Toy Story 3	The toys are mistakenly delivered to a day-care center instead of the attic right before Andy leaves for college, and it's up to Woody to convince the other toys that they weren't abandoned and to return home.	103	2010	8.2
+152	V for Vendetta	In a future British tyranny, a shadowy freedom fighter, known only by the alias of "V", plots to overthrow it with the help of a young woman.	132	2005	8.2
+153	Rang De Basanti	The story of six young Indians who assist an English woman to film a documentary on the freedom fighters from their past, and the events that lead them to relive the long-forgotten saga of freedom.	167	2006	8.2
+154	Black	The cathartic tale of a young woman who can't see, hear or talk and the teacher who brings a ray of light into her dark world.	122	2005	8.2
+155	Batman Begins	After training with his mentor, Batman begins his fight to free crime-ridden Gotham City from corruption.	140	2005	8.2
+156	Swades: We, the People	A successful Indian scientist returns to an Indian village to take his nanny to America with him and in the process rediscovers his roots.	210	2004	8.2
+157	Der Untergang	Traudl Junge, the final secretary for Adolf Hitler, tells of the Nazi dictator's final days in his Berlin bunker at the end of WWII.	156	2004	8.2
+158	Hauru no ugoku shiro	When an unconfident young woman is cursed with an old body by a spiteful witch, her only chance of breaking the spell lies with a self-indulgent yet insecure young wizard and his companions in his legged, walking castle.	119	2004	8.2
+159	A Beautiful Mind	After John Nash, a brilliant but asocial mathematician, accepts secret work in cryptography, his life takes a turn for the nightmarish.	135	2001	8.2
+160	Hera Pheri	Three unemployed men look for answers to all their money problems - but when their opportunity arrives, will they know what to do with it?	156	2000	8.2
+161	Lock, Stock and Two Smoking Barrels	A botched card game in London triggers four friends, thugs, weed-growers, hard gangsters, loan sharks and debt collectors to collide with each other in a series of unexpected events, all for the sake of weed, cash and two antique shotguns.	107	1998	8.2
+162	L.A. Confidential	As corruption grows in 1950s Los Angeles, three policemen - one strait-laced, one brutal, and one sleazy - investigate a series of murders with their own brand of justice.	138	1997	8.2
+163	Eskiya	Baran the Bandit, released from prison after 35 years, searches for vengeance and his lover.	128	1996	8.2
+164	Heat	A group of professional bank robbers start to feel the heat from police when they unknowingly leave a clue at their latest heist.	170	1995	8.2
+165	Casino	A tale of greed, deception, money, power, and murder occur between two best friends: a mafia enforcer and a casino executive compete against each other over a gambling empire, and over a fast-living and fast-loving socialite.	178	1995	8.2
+166	Andaz Apna Apna	Two slackers competing for the affections of an heiress inadvertently become her protectors from an evil criminal.	160	1994	8.2
+167	Unforgiven	Retired Old West gunslinger William Munny reluctantly takes on one last job, with the help of his old partner Ned Logan and a young man, The "Schofield Kid."	130	1992	8.2
+168	Indiana Jones and the Last Crusade	In 1938, after his father Professor Henry Jones, Sr. goes missing while pursuing the Holy Grail, Professor Henry "Indiana" Jones, Jr. finds himself up against Adolf Hitler's Nazis again to stop them from obtaining its powers.	127	1989	8.2
+169	Dom za vesanje	In this luminous tale set in the area around Sarajevo and in Italy, Perhan, an engaging young Romany (gypsy) with telekinetic powers, is seduced by the quick-cash world of petty crime, which threatens to destroy him and those he loves.	142	1988	8.2
+170	Tonari no Totoro	When two girls move to the country to be near their ailing mother, they have adventures with the wondrous forest spirits who live nearby.	86	1988	8.2
+171	Die Hard	An NYPD officer tries to save his wife and several others taken hostage by German terrorists during a Christmas party at the Nakatomi Plaza in Los Angeles.	132	1988	8.2
+172	Ran	In Medieval Japan, an elderly warlord retires, handing over his empire to his three sons. However, he vastly underestimates how the new-found power will corrupt them and cause them to turn on each other...and him.	162	1985	8.2
+173	Raging Bull	The life of boxer Jake LaMotta, whose violence and temper that led him to the top in the ring destroyed his life outside of it.	129	1980	8.2
+174	Stalker	A guide leads two men through an area known as the Zone to find a room that grants wishes.	162	1979	8.2
+175	Höstsonaten	A married daughter who longs for her mother's love is visited by the latter, a successful concert pianist.	99	1978	8.2
+176	The Message	This epic historical drama chronicles the life and times of Prophet Muhammad and serves as an introduction to early Islamic history.	177	1976	8.2
+177	Sholay	After his family is murdered by a notorious and ruthless bandit, a former police officer enlists the services of two outlaws to capture the bandit.	204	1975	8.2
+178	Monty Python and the Holy Grail	King Arthur and his Knights of the Round Table embark on a surreal, low-budget search for the Holy Grail, encountering many, very silly obstacles.	91	1975	8.2
+179	The Great Escape	Allied prisoners of war plan for several hundred of their number to escape from a German camp during World War II.	172	1963	8.2
+180	To Kill a Mockingbird	Atticus Finch, a lawyer in the Depression-era South, defends a black man against an undeserved rape charge, and his children against prejudice.	129	1962	8.2
+181	Yôjinbô	A crafty ronin comes to a town divided by two criminal gangs and decides to play them against each other to free the town.	110	1961	8.2
+182	Judgment at Nuremberg	In 1948, an American court in occupied Germany tries four Nazis judged for war crimes.	179	1961	8.2
+183	Some Like It Hot	After two male musicians witness a mob hit, they flee the state in an all-female band disguised as women, but further complications set in.	121	1959	8.2
+184	Smultronstället	After living a life marked by coldness, an aging professor is forced to confront the emptiness of his existence.	91	1957	8.2
+185	Det sjunde inseglet	A man seeks answers about life, death, and the existence of God as he plays chess against the Grim Reaper during the Black Plague.	96	1957	8.2
+186	Du rififi chez les hommes	Four men plan a technically perfect crime, but the human element intervenes...	118	1955	8.2
+187	Dial M for Murder	A former tennis player tries to arrange his wife's murder after learning of her affair.	105	1954	8.2
+188	Tôkyô monogatari	An old couple visit their children and grandchildren in the city, but receive little attention.	136	1953	8.2
+189	Rashômon	The rape of a bride and the murder of her samurai husband are recalled from the perspectives of a bandit, the bride, the samurai's ghost and a woodcutter.	88	1950	8.2
+190	All About Eve	A seemingly timid but secretly ruthless ingénue insinuates herself into the lives of an aging Broadway star and her circle of theater friends.	138	1950	8.2
+191	The Treasure of the Sierra Madre	Two Americans searching for work in Mexico convince an old prospector to help them mine for gold in the Sierra Madre Mountains.	126	1948	8.2
+192	To Be or Not to Be	During the Nazi occupation of Poland, an acting troupe becomes embroiled in a Polish soldier's efforts to track down a German spy.	99	1942	8.2
+193	The Gold Rush	A prospector goes to the Klondike in search of gold and finds it and more.	95	1925	8.2
+194	Sherlock Jr.	A film projectionist longs to be a detective, and puts his meagre skills to work when he is framed by a rival for stealing his girlfriend's father's pocketwatch.	45	1924	8.2
+195	Portrait de la jeune fille en feu	On an isolated island in Brittany at the end of the eighteenth century, a female painter is obliged to paint a wedding portrait of a young woman.	122	2019	8.1
+196	Pink	When three young women are implicated in a crime, a retired lawyer steps forward to help them clear their names.	136	2016	8.1
+197	Koe no katachi	A young man is ostracized by his classmates after he bullies a deaf girl to the point where she moves away. Years later, he sets off on a path for redemption.	130	2016	8.1
+198	Contratiempo	A successful entrepreneur accused of murder and a witness preparation expert have less than three hours to come up with an impregnable defense.	106	2016	8.1
+199	Ah-ga-ssi	A woman is hired as a handmaiden to a Japanese heiress, but secretly she is involved in a plot to defraud her.	145	2016	8.1
+200	Mommy	A widowed single mother, raising her violent son alone, finds new hope when a mysterious neighbor inserts herself into their household.	139	2014	8.1
+201	Haider	A young man returns to Kashmir after his father's disappearance to confront his uncle, whom he suspects of playing a role in his father's fate.	160	2014	8.1
+202	Logan	In a future where mutants are nearly extinct, an elderly and weary Logan leads a quiet life. But when Laura, a mutant child pursued by scientists, comes to him for help, he must get her to safety.	137	2017	8.1
+203	Room	Held captive for 7 years in an enclosed space, a woman and her young son finally gain their freedom, allowing the boy to experience the outside world for the first time.	118	2015	8.1
+204	Relatos salvajes	Six short stories that explore the extremities of human behavior involving people in distress.	122	2014	8.1
+205	Soul	After landing the gig of a lifetime, a New York jazz pianist suddenly finds himself trapped in a strange land between Earth and the afterlife.	100	2020	8.1
+206	Kis Uykusu	A hotel owner and landlord in a remote Turkish village deals with conflicts within his family and a tenant behind on his rent.	196	2014	8.1
+207	PK	An alien on Earth loses the only device he can use to communicate with his spaceship. His innocent nature and child-like questions force the country to evaluate the impact of religion on its people.	153	2014	8.1
+208	OMG: Oh My God!	A shopkeeper takes God to court when his shop is destroyed by an earthquake.	125	2012	8.1
+209	The Grand Budapest Hotel	A writer encounters the owner of an aging high-class hotel, who tells him of his early years serving as a lobby boy in the hotel's glorious years under an exceptional concierge.	99	2014	8.1
+210	Gone Girl	With his wife's disappearance having become the focus of an intense media circus, a man sees the spotlight turned on him when it's suspected that he may not be innocent.	149	2014	8.1
+211	Ôkami kodomo no Ame to Yuki	After her werewolf lover unexpectedly dies in an accident while hunting for food for their children, a young woman must find ways to raise the werewolf son and daughter that she had with him while keeping their trait hidden from society.	117	2012	8.1
+212	Hacksaw Ridge	World War II American Army Medic Desmond T. Doss, who served during the Battle of Okinawa, refuses to kill people, and becomes the first man in American history to receive the Medal of Honor without firing a shot.	139	2016	8.1
+213	Inside Out	After young Riley is uprooted from her Midwest life and moved to San Francisco, her emotions - Joy, Fear, Anger, Disgust and Sadness - conflict on how best to navigate a new city, house, and school.	95	2015	8.1
+214	Barfi!	Three young people learn that love can neither be defined nor contained by society's definition of normal and abnormal.	151	2012	8.1
+217	Ford v Ferrari	American car designer Carroll Shelby and driver Ken Miles battle corporate interference and the laws of physics to build a revolutionary race car for Ford in order to defeat Ferrari at the 24 Hours of Le Mans in 1966.	152	2019	8.1
+218	Spotlight	The true story of how the Boston Globe uncovered the massive scandal of child molestation and cover-up within the local Catholic Archdiocese, shaking the entire Catholic Church to its core.	129	2015	8.1
+219	Song of the Sea	Ben, a young Irish boy, and his little sister Saoirse, a girl who can turn into a seal, go on an adventure to free the fairies and save the spirit world.	93	2014	8.1
+220	Kahaani	A pregnant woman's search for her missing husband takes her from London to Kolkata, but everyone she questions denies having ever met him.	122	2012	8.1
+221	Zindagi Na Milegi Dobara	Three friends decide to turn their fantasy vacation into reality after one of their friends gets engaged.	155	2011	8.1
+222	Prisoners	When Keller Dover's daughter and her friend go missing, he takes matters into his own hands as the police pursue multiple leads and the pressure mounts.	153	2013	8.1
+223	Mad Max: Fury Road	In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler in search for her homeland with the aid of a group of female prisoners, a psychotic worshiper, and a drifter named Max.	120	2015	8.1
+224	A Wednesday	A retiring police officer reminisces about the most astounding day of his career. About a case that was never filed but continues to haunt him in his memories - the case of a man and a Wednesday.	104	2008	8.1
+225	Gran Torino	Disgruntled Korean War veteran Walt Kowalski sets out to reform his neighbor, Thao Lor, a Hmong teenager who tried to steal Kowalski's prized possession: a 1972 Gran Torino.	116	2008	8.1
+226	Harry Potter and the Deathly Hallows: Part 2	Harry, Ron, and Hermione search for Voldemort's remaining Horcruxes in their effort to destroy the Dark Lord as the final battle rages on at Hogwarts.	130	2011	8.1
+227	Okuribito	A newly unemployed cellist takes a job preparing the dead for funerals.	130	2008	8.1
+228	Hachi: A Dog's Tale	A college professor bonds with an abandoned dog he takes into his home.	93	2009	8.1
+229	Mary and Max	A tale of friendship between two unlikely pen pals: Mary, a lonely, eight-year-old girl living in the suburbs of Melbourne, and Max, a forty-four-year old, severely obese man living in New York.	92	2009	8.1
+230	How to Train Your Dragon	A hapless young Viking who aspires to hunt dragons becomes the unlikely friend of a young dragon himself, and learns there may be more to the creatures than he assumed.	98	2010	8.1
+231	Into the Wild	After graduating from Emory University, top student and athlete Christopher McCandless abandons his possessions, gives his entire $24,000 savings account to charity and hitchhikes to Alaska to live in the wilderness. Along the way, Christopher encounters a series of characters that shape his life.	148	2007	8.1
+232	No Country for Old Men	Violence and mayhem ensue after a hunter stumbles upon a drug deal gone wrong and more than two million dollars in cash near the Rio Grande.	122	2007	8.1
+233	Lage Raho Munna Bhai	Munna Bhai embarks on a journey with Mahatma Gandhi in order to fight against a corrupt property dealer.	144	2006	8.1
+234	Million Dollar Baby	A determined woman works with a hardened boxing trainer to become a professional.	132	2004	8.1
+235	Hotel Rwanda	Paul Rusesabagina, a hotel manager, houses over a thousand Tutsi refugees during their struggle against the Hutu militia in Rwanda, Africa.	121	2004	8.1
+236	Taegukgi hwinalrimyeo	When two brothers are forced to fight in the Korean War, the elder decides to take the riskiest missions if it will help shield the younger from battle.	140	2004	8.1
+237	Before Sunset	Nine years after Jesse and Celine first met, they encounter each other again on the French leg of Jesse's book tour.	80	2004	8.1
+238	Munna Bhai M.B.B.S.	A gangster sets out to fulfill his father's dream of becoming a doctor.	156	2003	8.1
+239	Salinui chueok	In a small Korean province in 1986, two detectives struggle with the case of multiple young women being found raped and murdered by an unknown culprit.	131	2003	8.1
+240	Dil Chahta Hai	Three inseparable childhood friends are just out of college. Nothing comes between them - until they each fall in love, and their wildly different approaches to relationships creates tension.	183	2001	8.1
+241	Kill Bill: Vol. 1	After awakening from a four-year coma, a former assassin wreaks vengeance on the team of assassins who betrayed her.	111	2003	8.1
+242	Finding Nemo	After his son is captured in the Great Barrier Reef and taken to Sydney, a timid clownfish sets out on a journey to bring him home.	100	2003	8.1
+243	Catch Me If You Can	Barely 21 yet, Frank is a skilled forger who has passed as a doctor, lawyer and pilot. FBI agent Carl becomes obsessed with tracking down the con man, who only revels in the pursuit.	141	2002	8.1
+244	Amores perros	A horrific car accident connects three stories, each involving characters dealing with loss, regret, and life's harsh realities, all in the name of love.	154	2000	8.1
+245	Monsters, Inc.	In order to power the city, monsters have to scare children so that they scream. However, the children are toxic to the monsters, and after a child gets through, 2 monsters realize things may not be what they think.	92	2001	8.1
+246	Shin seiki Evangelion Gekijô-ban: Air/Magokoro wo, kimi ni	Concurrent theatrical ending of the TV series Shin seiki evangerion (1995).	87	1997	8.1
+247	Lagaan: Once Upon a Time in India	The people of a small village in Victorian India stake their future on a game of cricket against their ruthless British rulers.	224	2001	8.1
+248	The Sixth Sense	A boy who communicates with spirits seeks the help of a disheartened child psychologist.	107	1999	8.1
+249	La leggenda del pianista sull'oceano	A baby boy, discovered in 1900 on an ocean liner, grows into a musical prodigy, never setting foot on land.	169	1998	8.1
+250	The Truman Show	An insurance salesman discovers his whole life is actually a reality TV show.	103	1998	8.1
+251	Crna macka, beli macor	Matko and his son Zare live on the banks of the Danube river and get by through hustling and basically doing anything to make a living. In order to pay off a business debt Matko agrees to marry off Zare to the sister of a local gangster.	127	1998	8.1
+252	The Big Lebowski	Jeff "The Dude" Lebowski, mistaken for a millionaire of the same name, seeks restitution for his ruined rug and enlists his bowling buddies to help get it.	117	1998	8.1
+253	Fa yeung nin wah	Two neighbors, a woman and a man, form a strong bond after both suspect extramarital activities of their spouses. However, they agree to keep their bond platonic so as not to commit similar wrongs.	98	2000	8.1
+254	Trainspotting	Renton, deeply immersed in the Edinburgh drug scene, tries to clean up and get out, despite the allure of the drugs and influence of friends.	93	1996	8.1
+255	Fargo	Jerry Lundegaard's inept crime falls apart due to his and his henchmen's bungling and the persistent police work of the quite pregnant Marge Gunderson.	98	1996	8.1
+256	Underground	A group of Serbian socialists prepares for the war in a surreal underground filled by parties, tragedies, love and hate.	170	1995	8.1
+257	La haine	24 hours in the lives of three young men in the French suburbs the day after a violent riot.	98	1995	8.1
+258	Dilwale Dulhania Le Jayenge	When Raj meets Simran in Europe, it isn't love at first sight but when Simran moves to India for an arranged marriage, love makes its presence felt.	189	1995	8.1
+259	Before Sunrise	A young man and woman meet on a train in Europe, and wind up spending one evening together in Vienna. Unfortunately, both know that this will probably be their only night together.	101	1995	8.1
+260	Trois couleurs: Rouge	A model discovers a retired judge is keen on invading people's privacy.	99	1994	8.1
+261	Chung Hing sam lam	Two melancholy Hong Kong policemen fall in love: one with a mysterious female underworld figure, the other with a beautiful and ethereal server at a late-night restaurant he frequents.	102	1994	8.1
+262	Jurassic Park	A pragmatic paleontologist visiting an almost complete theme park is tasked with protecting a couple of kids after a power failure causes the park's cloned dinosaurs to run loose.	127	1993	8.1
+263	In the Name of the Father	A man's coerced confession to an I.R.A. bombing he did not commit results in the imprisonment of his father as well. An English lawyer fights to free them.	133	1993	8.1
+264	Ba wang bie ji	Two boys meet at an opera training school in Peking in 1924. Their resulting friendship will span nearly 70 years and will endure some of the most troublesome times in China's history.	171	1993	8.1
+265	Dà hóng denglong gaogao guà	A young woman becomes the fourth wife of a wealthy lord, and must learn to live with the strict rules and tensions within the household.	125	1991	8.1
+266	Dead Poets Society	Maverick teacher John Keating uses poetry to embolden his boarding school students to new heights of self-expression.	128	1989	8.1
+267	Stand by Me	After the death of one of his friends, a writer recounts a childhood journey with his friends to find the body of a missing boy.	89	1986	8.1
+268	Platoon	Chris Taylor, a neophyte recruit in Vietnam, finds himself caught in a battle of wills between two sergeants, one good and the other evil. A shrewd examination of the brutality of war and the duality of man in conflict.	120	1986	8.1
+269	Paris, Texas	Travis Henderson, an aimless drifter who has been missing for four years, wanders out of the desert and must reconnect with society, himself, his life, and his family.	145	1984	8.1
+270	Kaze no tani no Naushika	Warrior and pacifist Princess Nausicaä desperately struggles to prevent two warring nations from destroying themselves and their dying planet.	117	1984	8.1
+271	The Thing	A research team in Antarctica is hunted by a shape-shifting alien that assumes the appearance of its victims.	109	1982	8.1
+272	Pink Floyd: The Wall	A confined but troubled rock star descends into madness in the midst of his physical and social isolation from everyone.	95	1982	8.1
+273	Fitzcarraldo	The story of Brian Sweeney Fitzgerald, an extremely determined man who intends to build an opera house in the middle of a jungle.	158	1982	8.1
+274	Fanny och Alexander	Two young Swedish children experience the many comedies and tragedies of their family, the Ekdahls.	188	1982	8.1
+275	Blade Runner	A blade runner must pursue and terminate four replicants who stole a ship in space, and have returned to Earth to find their creator.	117	1982	8.1
+276	The Elephant Man	A Victorian surgeon rescues a heavily disfigured man who is mistreated while scraping a living as a side-show freak. Behind his monstrous façade, there is revealed a person of kindness, intelligence and sophistication.	124	1980	8.1
+277	Life of Brian	Born on the original Christmas in the stable next door to Jesus Christ, Brian of Nazareth spends his life being mistaken for a messiah.	94	1979	8.1
+278	The Deer Hunter	An in-depth examination of the ways in which the U.S. Vietnam War impacts and disrupts the lives of people in a small industrial town in Pennsylvania.	183	1978	8.1
+279	Rocky	A small-time boxer gets a supremely rare chance to fight a heavy-weight champion in a bout in which he strives to go the distance for his self-respect.	120	1976	8.1
+280	Network	A television network cynically exploits a deranged former anchor's ravings and revelations about the news media for its own profit.	121	1976	8.1
+281	Barry Lyndon	An Irish rogue wins the heart of a rich widow and assumes her dead husband's aristocratic position in 18th-century England.	185	1975	8.1
+282	Zerkalo	A dying man in his forties remembers his past. His childhood, his mother, the war, personal moments and things that tell of the recent history of all the Russian nation.	107	1975	8.1
+283	Chinatown	A private detective hired to expose an adulterer finds himself caught up in a web of deceit, corruption, and murder.	130	1974	8.1
+284	Paper Moon	During the Great Depression, a con man finds himself saddled with a young girl who may or may not be his daughter, and the two forge an unlikely partnership.	102	1973	8.1
+285	Viskningar och rop	When a woman dying of cancer in early twentieth-century Sweden is visited by her two sisters, long-repressed feelings between the siblings rise to the surface.	91	1972	8.1
+286	Solaris	A psychologist is sent to a station orbiting a distant planet in order to discover what has caused the crew to go insane.	167	1972	8.1
+287	Le samouraï	After professional hitman Jef Costello is seen by witnesses his efforts to provide himself an alibi drive him further into a corner.	105	1967	8.1
+288	Cool Hand Luke	A laid back Southern man is sentenced to two years in a rural prison, but refuses to conform.	127	1967	8.1
+289	Persona	A nurse is put in charge of a mute actress and finds that their personae are melding together.	85	1966	8.1
+290	Andrei Rublev	The life, times and afflictions of the fifteenth-century Russian iconographer St. Andrei Rublev.	205	1966	8.1
+291	La battaglia di Algeri	In the 1950s, fear and violence escalate as the people of Algiers fight for independence from the French government.	121	1966	8.1
+292	El ángel exterminador	The guests at an upper-class dinner party find themselves unable to leave.	95	1962	8.1
+293	What Ever Happened to Baby Jane?	A former child star torments her paraplegic sister in their decaying Hollywood mansion.	134	1962	8.1
+294	Sanjuro	A crafty samurai helps a young man and his fellow clansmen save his uncle, who has been framed and imprisoned by a corrupt superintendent.	96	1962	8.1
+295	The Man Who Shot Liberty Valance	A senator returns to a western town for the funeral of an old friend and tells the story of his origins.	123	1962	8.1
+296	Ivanovo detstvo	In WW2, twelve year old Soviet orphan Ivan Bondarev works for the Soviet army as a scout behind the German lines and strikes a friendship with three sympathetic Soviet officers.	95	1962	8.1
+297	Jungfrukällan	An innocent yet pampered young virgin and her family's pregnant and jealous servant set out to deliver candles to church, but only one returns from events that transpire in the woods along the way.	89	1960	8.1
+298	Inherit the Wind	Based on a real-life case in 1925, two great lawyers argue the case for and against a science teacher accused of the crime of teaching evolution.	128	1960	8.1
+299	Les quatre cents coups	A young boy, left without attention, delves into a life of petty crime.	99	1959	8.1
+300	Ben-Hur	After a Jewish prince is betrayed and sent into slavery by a Roman friend, he regains his freedom and comes back for revenge.	212	1959	8.1
+301	Kakushi-toride no san-akunin	Lured by gold, two greedy peasants unknowingly escort a princess and her general across enemy lines.	139	1958	8.1
+302	Le notti di Cabiria	A waifish prostitute wanders the streets of Rome looking for true love but finds only heartbreak.	110	1957	8.1
+303	Kumonosu-jô	A war-hardened general, egged on by his ambitious wife, works to fulfill a prophecy that he would become lord of Spider's Web Castle.	110	1957	8.1
+304	The Bridge on the River Kwai	British POWs are forced to build a railway bridge across the river Kwai for their Japanese captors, not knowing that the allied forces are planning to destroy it.	161	1957	8.1
+305	On the Waterfront	An ex-prize fighter turned longshoreman struggles to stand up to his corrupt union bosses.	108	1954	8.1
+306	Le salaire de la peur	In a decrepit South American village, four men are hired to transport an urgent nitroglycerine shipment without the equipment that would make it safe.	131	1953	8.1
+307	Ace in the Hole	A frustrated former big-city journalist now stuck working for an Albuquerque newspaper exploits a story about a man trapped in a cave to rekindle his career, but the situation quickly escalates into an out-of-control circus.	111	1951	8.1
+308	White Heat	A psychopathic criminal with a mother complex makes a daring break from prison and leads his old gang in a chemical plant payroll heist.	114	1949	8.1
+309	The Third Man	Pulp novelist Holly Martins travels to shadowy, postwar Vienna, only to find himself investigating the mysterious death of an old friend, Harry Lime.	104	1949	8.1
+310	The Red Shoes	A young ballet dancer is torn between the man she loves and her pursuit to become a prima ballerina.	135	1948	8.1
+311	The Shop Around the Corner	Two employees at a gift shop can barely stand each other, without realizing that they are falling in love through the post as each other's anonymous pen pal.	99	1940	8.1
+312	Rebecca	A self-conscious woman juggles adjusting to her new role as an aristocrat's wife and avoiding being intimidated by his first wife's spectral presence.	130	1940	8.1
+313	Mr. Smith Goes to Washington	A naive man is appointed to fill a vacancy in the United States Senate. His plans promptly collide with political corruption, but he doesn't back down.	129	1939	8.1
+314	Gone with the Wind	A manipulative woman and a roguish man conduct a turbulent romance during the American Civil War and Reconstruction periods.	238	1939	8.1
+315	La Grande Illusion	During WWI, two French soldiers are captured and imprisoned in a German P.O.W. camp. Several escape attempts follow until they are eventually sent to a seemingly inescapable fortress.	113	1937	8.1
+316	It Happened One Night	A renegade reporter and a crazy young heiress meet on a bus heading for New York, and end up stuck with each other when the bus leaves them behind at one of the stops.	105	1934	8.1
+317	La passion de Jeanne d'Arc	In 1431, Jeanne d'Arc is placed on trial on charges of heresy. The ecclesiastical jurists attempt to force Jeanne to recant her claims of holy visions.	110	1928	8.1
+318	The Circus	The Tramp finds work and the girl of his dreams at a circus.	72	1928	8.1
+319	Sunrise: A Song of Two Humans	An allegorical tale about a man fighting the good and evil within him. Both sides are made flesh - one a sophisticated woman he is attracted to and the other his wife.	94	1927	8.1
+320	The General	When Union spies steal an engineer's beloved locomotive, he pursues it single-handedly and straight through enemy lines.	67	1926	8.1
+321	Das Cabinet des Dr. Caligari	Hypnotist Dr. Caligari uses a somnambulist, Cesare, to commit murders.	76	1920	8.1
+322	Badhaai ho	A man is embarrassed when he finds out his mother is pregnant.	124	2018	8
+323	Togo	The story of Togo, the sled dog who led the 1925 serum run yet was considered by most to be too small and weak to lead such an intense race.	113	2019	8
+324	Airlift	When Iraq invades Kuwait in August 1990, a callous Indian businessman becomes the spokesperson for more than 170,000 stranded countrymen.	130	2016	8
+325	Bajrangi Bhaijaan	An Indian man with a magnanimous heart takes a young mute Pakistani girl back to her homeland to reunite her with her family.	163	2015	8
+326	Baby	An elite counter-intelligence unit learns of a plot, masterminded by a maniacal madman. With the clock ticking, it's up to them to track the terrorists' international tentacles and prevent them from striking at the heart of India.	159	2015	8
+327	La La Land	While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to reconcile their aspirations for the future.	128	2016	8
+328	Lion	A five-year-old Indian boy is adopted by an Australian couple after getting lost hundreds of kilometers from home. 25 years later, he sets out to find his lost family.	118	2016	8
+329	The Martian	An astronaut becomes stranded on Mars after his team assume him dead, and must rely on his ingenuity to find a way to signal to Earth that he is alive.	144	2015	8
+330	Zootopia	In a city of anthropomorphic animals, a rookie bunny cop and a cynical con artist fox must work together to uncover a conspiracy.	108	2016	8
+331	Bãhubali: The Beginning	In ancient India, an adventurous and daring man becomes involved in a decades-old feud between two warring peoples.	159	2015	8
+332	Kaguyahime no monogatari	Found inside a shining stalk of bamboo by an old bamboo cutter and his wife, a tiny girl grows rapidly into an exquisite young lady. The mysterious young princess enthralls all who encounter her, but ultimately she must confront her fate, the punishment for her crime.	137	2013	8
+333	Wonder	Based on the New York Times bestseller, this movie tells the incredibly inspiring and heartwarming story of August Pullman, a boy with facial differences who enters the fifth grade, attending a mainstream elementary school for the first time.	113	2017	8
+334	Gully Boy	A coming-of-age story based on the lives of street rappers in Mumbai.	154	2019	8
+335	Special Chabbis	A gang of con-men rob prominent rich businessmen and politicians by posing as C.B.I and income tax officers.	144	2013	8
+336	Short Term 12	A 20-something supervising staff member of a residential treatment facility navigates the troubled waters of that world alongside her co-worker and longtime boyfriend.	96	2013	8
+337	Serbuan maut 2: Berandal	Only a short time after the first raid, Rama goes undercover with the thugs of Jakarta and plans to bring down the syndicate and uncover the corruption within his police force.	150	2014	8
+338	The Imitation Game	During World War II, the English mathematical genius Alan Turing tries to crack the German Enigma code with help from fellow mathematicians.	114	2014	8
+339	Guardians of the Galaxy	A group of intergalactic criminals must pull together to stop a fanatical warrior with plans to purge the universe.	121	2014	8
+340	Blade Runner 2049	Young Blade Runner K's discovery of a long-buried secret leads him to track down former Blade Runner Rick Deckard, who's been missing for thirty years.	164	2017	8
+341	Her	In a near future, a lonely writer develops an unlikely relationship with an operating system designed to meet his every need.	126	2013	8
+342	Bohemian Rhapsody	The story of the legendary British rock band Queen and lead singer Freddie Mercury, leading up to their famous performance at Live Aid (1985).	134	2018	8
+343	The Revenant	A frontiersman on a fur trading expedition in the 1820s fights for survival after being mauled by a bear and left for dead by members of his own hunting team.	156	2015	8
+344	The Perks of Being a Wallflower	An introvert freshman is taken under the wings of two seniors who welcome him to the real world	103	2012	8
+345	Tropa de Elite 2: O Inimigo Agora é Outro	After a prison riot, former-Captain Nascimento, now a high ranking security officer in Rio de Janeiro, is swept into a bloody political dispute that involves government officials and paramilitary groups.	115	2010	8
+346	The King's Speech	The story of King George VI, his impromptu ascension to the throne of the British Empire in 1936, and the speech therapist who helped the unsure monarch overcome his stammer.	118	2010	8
+347	The Help	An aspiring author during the civil rights movement of the 1960s decides to write a book detailing the African American maids' point of view on the white families for which they work, and the hardships they go through on a daily basis.	146	2011	8
+348	Deadpool	A wisecracking mercenary gets experimented on and becomes immortal but ugly, and sets out to track down the man who ruined his looks.	108	2016	8
+349	Darbareye Elly	The mysterious disappearance of a kindergarten teacher during a picnic in the north of Iran is followed by a series of misadventures for her fellow travelers.	119	2009	8
+350	Dev.D	After breaking up with his childhood sweetheart, a young man finds solace in drugs. Meanwhile, a teenage girl is caught in the world of prostitution. Will they be destroyed, or will they find redemption?	144	2009	8
+351	Yip Man	During the Japanese invasion of China, a wealthy martial artist is forced to leave his home when his city is occupied. With little means of providing for themselves, Ip Man and the remaining members of the city must find a way to survive.	106	2008	8
+352	My Name Is Khan	An Indian Muslim man with Asperger's syndrome takes a challenge to speak to the President of the United States seriously and embarks on a cross-country journey.	165	2010	8
+353	Nefes: Vatan Sagolsun	Story of 40-man Turkish task force who must defend a relay station.	128	2009	8
+354	Slumdog Millionaire	A Mumbai teenager reflects on his life after being accused of cheating on the Indian version of "Who Wants to be a Millionaire?".	120	2008	8
+355	Black Swan	A committed dancer struggles to maintain her sanity after winning the lead role in a production of Tchaikovsky's "Swan Lake".	108	2010	8
+356	Tropa de Elite	In 1997 Rio de Janeiro, Captain Nascimento has to find a substitute for his position while trying to take down drug dealers and criminals before the Pope visits.	115	2007	8
+357	The Avengers	Earth's mightiest heroes must come together and learn to fight as a team if they are going to stop the mischievous Loki and his alien army from enslaving humanity.	143	2012	8
+358	Persepolis	A precocious and outspoken Iranian girl grows up during the Islamic Revolution.	96	2007	8
+359	Dallas Buyers Club	In 1985 Dallas, electrician and hustler Ron Woodroof works around the system to help AIDS patients get the medication they need after he is diagnosed with the disease.	117	2013	8
+360	The Pursuit of Happyness	A struggling salesman takes custody of his son as he's poised to begin a life-changing professional career.	117	2006	8
+361	Blood Diamond	A fisherman, a smuggler, and a syndicate of businessmen match wits over the possession of a priceless diamond.	143	2006	8
+362	The Bourne Ultimatum	Jason Bourne dodges a ruthless C.I.A. official and his Agents from a new assassination program while searching for the origins of his life as a trained killer.	115	2007	8
+363	Bin-jip	A transient young man breaks into empty homes to partake of the vacationing residents' lives for a few days.	88	2004	8
+364	Sin City	A movie that explores the dark and miserable town, Basin City, tells the story of three different people, all caught up in violent corruption.	124	2005	8
+365	Le scaphandre et le papillon	The true story of Elle editor Jean-Dominique Bauby who suffers a stroke and has to live with an almost totally paralyzed body; only his left eye isn't paralyzed.	112	2007	8
+366	G.O.R.A.	A slick young Turk kidnapped by extraterrestrials shows his great « humanitarian spirit » by outwitting the evil commander-in-chief of the planet of G.O.R.A.	127	2004	8
+367	Ratatouille	A rat who can cook makes an unusual alliance with a young kitchen worker at a famous restaurant.	111	2007	8
+368	Casino Royale	After earning 00 status and a licence to kill, Secret Agent James Bond sets out on his first mission as 007. Bond must defeat a private banker funding terrorists in a high-stakes game of poker at Casino Royale, Montenegro.	144	2006	8
+369	Kill Bill: Vol. 2	The Bride continues her quest of vengeance against her former boss and lover Bill, the reclusive bouncer Budd, and the treacherous, one-eyed Elle.	137	2004	8
+370	Vozvrashchenie	In the Russian wilderness, two brothers face a range of new, conflicting emotions when their father - a man they know only through a single photograph - resurfaces.	110	2003	8
+371	Bom Yeoareum Gaeul Gyeoul Geurigo Bom	A boy is raised by a Buddhist monk in an isolated floating temple where the years pass like the seasons.	103	2003	8
+372	Mar adentro	The factual story of Spaniard Ramon Sampedro, who fought a thirty-year campaign in favor of euthanasia and his own right to die.	126	2014	8
+373	Cinderella Man	The story of James J. Braddock, a supposedly washed-up boxer who came back to become a champion and an inspiration in the 1930s.	144	2005	8
+374	Kal Ho Naa Ho	Naina, an introverted, perpetually depressed girl's life changes when she meets Aman. But Aman has a secret of his own which changes their lives forever. Embroiled in all this is Rohit, Naina's best friend who conceals his love for her.	186	2003	8
+375	Mou gaan dou	A story between a mole in the police department and an undercover cop. Their objectives are the same: to find out who is the mole, and who is the cop.	101	2002	8
+376	Pirates of the Caribbean: The Curse of the Black Pearl	Blacksmith Will Turner teams up with eccentric pirate "Captain" Jack Sparrow to save his love, the governor's daughter, from Jack's former pirate allies, who are now undead.	143	2003	8
+377	Big Fish	A frustrated son tries to determine the fact from fiction in his dying father's life.	125	2003	8
+378	The Incredibles	A family of undercover superheroes, while trying to live the quiet suburban life, are forced into action to save the world.	115	2004	8
+379	Yeopgijeogin geunyeo	A young man sees a drunk, cute woman standing too close to the tracks at a metro station in Seoul and pulls her back. She ends up getting him into trouble repeatedly after that, starting on the train.	137	2001	8
+380	Dogville	A woman on the run from the mob is reluctantly accepted in a small Colorado community in exchange for labor, but when a search visits the town she finds out that their support has a price.	178	2003	8
+381	Vizontele	Lives of residents in a small Anatolian village change when television is introduced to them	110	2001	8
+382	Donnie Darko	After narrowly escaping a bizarre accident, a troubled teenager is plagued by visions of a man in a large rabbit suit who manipulates him to commit a series of crimes.	113	2001	8
+383	Magnolia	An epic mosaic of interrelated characters in search of love, forgiveness, and meaning in the San Fernando Valley.	188	1999	8
+384	Dancer in the Dark	An East European girl travels to the United States with her young son, expecting it to be like a Hollywood film.	140	2000	8
+385	The Straight Story	An old man makes a long journey by lawnmower to mend his relationship with an ill brother.	112	1999	8
+386	Pâfekuto burû	A pop singer gives up her career to become an actress, but she slowly goes insane when she starts being stalked by an obsessed fan and what seems to be a ghost of her past.	81	1997	8
+387	Festen	At Helge's 60th birthday party, some unpleasant family truths are revealed.	105	1998	8
+388	Central do Brasil	An emotive journey of a former school teacher, who writes letters for illiterate people, and a young boy, whose mother has just died, as they search for the father he never knew.	110	1998	8
+389	The Iron Giant	A young boy befriends a giant robot from outer space that a paranoid government agent wants to destroy.	86	1999	8
+390	Knockin' on Heaven's Door	Two terminally ill patients escape from a hospital, steal a car and rush towards the sea.	87	1997	8
+391	Sling Blade	Karl Childers, a simple man hospitalized since his childhood murder of his mother and her lover, is released to start a new life in a small town.	135	1996	8
+392	Secrets & Lies	Following the death of her adoptive parents, a successful young black optometrist establishes contact with her biological mother -- a lonely white factory worker living in poverty in East London.	136	1996	8
+393	Twelve Monkeys	In a future world devastated by disease, a convict is sent back in time to gather information about the man-made virus that wiped out most of the human population on the planet.	129	1995	8
+394	Kôkaku Kidôtai	A cyborg policewoman and her partner hunt a mysterious and powerful hacker called the Puppet Master.	83	1995	8
+395	The Nightmare Before Christmas	Jack Skellington, king of Halloween Town, discovers Christmas Town, but his attempts to bring Christmas to his home causes confusion.	76	1993	8
+396	Groundhog Day	A weatherman finds himself inexplicably living the same day over and over again.	101	1993	8
+397	Bound by Honor	Based on the true life experiences of poet Jimmy Santiago Baca, the film focuses on step-brothers Paco and Cruz, and their bi-racial cousin Miklo.	180	1993	8
+398	Scent of a Woman	A prep school student needing money agrees to "babysit" a blind man, but the job is not at all what he anticipated.	156	1992	8
+399	Aladdin	A kindhearted street urchin and a power-hungry Grand Vizier vie for a magic lamp that has the power to make their deepest wishes come true.	90	1992	8
+400	JFK	New Orleans District Attorney Jim Garrison discovers there's more to the Kennedy assassination than the official story.	189	1991	8
+401	Beauty and the Beast	A prince cursed to spend his days as a hideous monster sets out to regain his humanity by earning a young woman's love.	84	1991	8
+402	Dances with Wolves	Lieutenant John Dunbar, assigned to a remote western Civil War outpost, befriends wolves and Indians, making him an intolerable aberration in the military.	181	1990	8
+403	Do the Right Thing	On the hottest day of the year on a street in the Bedford-Stuyvesant section of Brooklyn, everyone's hate and bigotry smolders and builds until it explodes into violence.	120	1989	8
+404	Rain Man	Selfish yuppie Charlie Babbitt's father left a fortune to his savant brother Raymond and a pittance to Charlie; they travel cross-country.	133	1988	8
+405	Akira	A secret military project endangers Neo-Tokyo when it turns a biker gang member into a rampaging psychic psychopath who can only be stopped by two teenagers and a group of psychics.	124	1988	8
+406	The Princess Bride	While home sick in bed, a young boy's grandfather reads him the story of a farmboy-turned-pirate who encounters numerous obstacles, enemies and allies in his quest to be reunited with his true love.	98	1987	8
+407	Der Himmel über Berlin	An angel tires of overseeing human activity and wishes to become human when he falls in love with a mortal.	128	1987	8
+408	Au revoir les enfants	A French boarding school run by priests seems to be a haven from World War II until a new student arrives. He becomes the roommate of the top student in his class. Rivals at first, the roommates form a bond and share a secret.	104	1987	8
+409	Tenkû no shiro Rapyuta	A young boy and a girl with a magic crystal must race against pirates and foreign agents in a search for a legendary floating castle.	125	1986	8
+410	The Terminator	A human soldier is sent from 2029 to 1984 to stop an almost indestructible cyborg killing machine, sent from the same year, which has been programmed to execute a young woman whose unborn son is the key to humanity's future salvation.	107	1984	8
+411	Gandhi	The life of the lawyer who became the famed leader of the Indian revolts against the British rule through his philosophy of nonviolent protest.	191	1982	8
+412	Kagemusha	A petty thief with an utter resemblance to a samurai warlord is hired as the lord's double. When the warlord later dies the thief is forced to take up arms in his place.	180	1980	8
+413	Being There	A simpleminded, sheltered gardener becomes an unlikely trusted advisor to a powerful businessman and an insider in Washington politics.	130	1979	8
+414	Annie Hall	Neurotic New York comedian Alvy Singer falls in love with the ditzy Annie Hall.	93	1977	8
+415	Jaws	When a killer shark unleashes chaos on a beach community, it's up to a local sheriff, a marine biologist, and an old seafarer to hunt the beast down.	124	1975	8
+416	Dog Day Afternoon	Three amateur bank robbers plan to hold up a bank. A nice simple robbery: Walk in, take the money, and run. Unfortunately, the supposedly uncomplicated heist suddenly becomes a bizarre nightmare as everything that could go wrong does.	125	1975	8
+417	Young Frankenstein	An American grandson of the infamous scientist, struggling to prove that his grandfather was not as insane as people believe, is invited to Transylvania, where he discovers the process that reanimates a dead body.	106	1974	8
+418	Papillon	A man befriends a fellow criminal as the two of them begin serving their sentence on a dreadful prison island, which inspires the man to plot his escape.	151	1973	8
+419	The Exorcist	When a 12-year-old girl is possessed by a mysterious entity, her mother seeks the help of two priests to save her.	122	1973	8
+420	Sleuth	A man who loves games and theater invites his wife's lover to meet him, setting up a battle of wits with potentially deadly results.	138	1972	8
+421	The Last Picture Show	In 1951, a group of high schoolers come of age in a bleak, isolated, atrophied North Texas town that is slowly dying, both culturally and economically.	118	1971	8
+422	Fiddler on the Roof	In prerevolutionary Russia, a Jewish peasant contends with marrying off three of his daughters while growing anti-Semitic sentiment threatens his village.	181	1971	8
+423	Il conformista	A weak-willed Italian man becomes a fascist flunky who goes abroad to arrange the assassination of his old teacher, now a political dissident.	113	1970	8
+424	Butch Cassidy and the Sundance Kid	Wyoming, early 1900s. Butch Cassidy and The Sundance Kid are the leaders of a band of outlaws. After a train robbery goes wrong they find themselves on the run with a posse hard on their heels. Their solution - escape to Bolivia.	110	1969	8
+425	Rosemary's Baby	A young couple trying for a baby move into a fancy apartment surrounded by peculiar neighbors.	137	1968	8
+426	Planet of the Apes	An astronaut crew crash-lands on a planet in the distant future where intelligent talking apes are the dominant species, and humans are the oppressed and enslaved.	112	1968	8
+427	The Graduate	A disillusioned college graduate finds himself torn between his older lover and her daughter.	106	1967	8
+428	Who's Afraid of Virginia Woolf?	A bitter, aging couple, with the help of alcohol, use their young houseguests to fuel anguish and emotional pain towards each other over the course of a distressing night.	131	1966	8
+429	The Sound of Music	A woman leaves an Austrian convent to become a governess to the children of a Naval officer widower.	172	1965	8
+430	Doctor Zhivago	The life of a Russian physician and poet who, although married to another, falls in love with a political activist's wife and experiences hardship during World War I and then the October Revolution.	197	1965	8
+431	Per un pugno di dollari	A wandering gunfighter plays two rival families against each other in a town torn apart by greed, pride, and revenge.	99	1964	8
+432	8½	A harried movie director retreats into his memories and fantasies.	138	1963	8
+433	Vivre sa vie: Film en douze tableaux	Twelve episodic tales in the life of a Parisian woman and her slow descent into prostitution.	80	1962	8
+434	The Hustler	An up-and-coming pool player plays a long-time champion in a single high-stakes match.	134	1961	8
+435	La dolce vita	A series of stories following a week in the life of a philandering paparazzo journalist living in Rome.	174	1960	8
+436	Rio Bravo	A small-town sheriff in the American West enlists the help of a cripple, a drunk, and a young gunfighter in his efforts to hold in jail the brother of the local bad guy.	141	1959	8
+437	Anatomy of a Murder	In a murder trial, the defendant says he suffered temporary insanity after the victim raped his wife. What is the truth, and will he win his case?	161	1959	8
+438	Touch of Evil	A stark, perverse story of murder, kidnapping, and police corruption in a Mexican border town.	95	1958	8
+439	Cat on a Hot Tin Roof	Brick is an alcoholic ex-football player who drinks his days away and resists the affections of his wife. A reunion with his terminal father jogs a host of memories and revelations for both father and son.	108	1958	8
+440	Sweet Smell of Success	Powerful but unethical Broadway columnist J.J. Hunsecker coerces unscrupulous press agent Sidney Falco into breaking up his sister's romance with a jazz musician.	96	1957	8
+441	The Killing	Crook Johnny Clay assembles a five man team to plan and execute a daring race-track robbery.	84	1956	8
+442	The Night of the Hunter	A religious fanatic marries a gullible widow whose young children are reluctant to tell him where their real daddy hid the $10,000 he'd stolen in a robbery.	92	1955	8
+443	La Strada	A care-free girl is sold to a traveling entertainer, consequently enduring physical and emotional pain along the way.	108	1954	8
+444	Les diaboliques	The wife and mistress of a loathed school principal plan to murder him with what they believe is the perfect alibi.	117	1955	8
+445	Stalag 17	When two escaping American World War II prisoners are killed, the German P.O.W. camp barracks black marketeer, J.J. Sefton, is suspected of being an informer.	120	1953	8
+446	Roman Holiday	A bored and sheltered princess escapes her guardians and falls in love with an American newsman in Rome.	118	1953	8
+447	A Streetcar Named Desire	Disturbed Blanche DuBois moves in with her sister in New Orleans and is tormented by her brutish brother-in-law while her reality crumbles around her.	122	1951	8
+448	In a Lonely Place	A potentially violent screenwriter is a murder suspect until his lovely neighbor clears him. However, she soon starts to have her doubts.	94	1950	8
+449	Kind Hearts and Coronets	A distant poor relative of the Duke D'Ascoyne plots to inherit the title by murdering the eight other heirs who stand ahead of him in the line of succession.	106	1949	8
+450	Rope	Two men attempt to prove they committed the perfect crime by hosting a dinner party after strangling their former classmate to death.	80	1948	8
+451	Out of the Past	A private eye escapes his past to run a gas station in a small town, but his past catches up with him. Now he must return to the big city world of danger, corruption, double crosses and duplicitous dames.	97	1947	8
+452	Brief Encounter	Meeting a stranger in a railway station, a woman is tempted to cheat on her husband.	86	1945	8
+453	Laura	A police detective falls in love with the woman whose murder he is investigating.	88	1944	8
+454	The Best Years of Our Lives	Three World War II veterans return home to small-town America to discover that they and their families have been irreparably changed.	170	1946	8
+455	Arsenic and Old Lace	A writer of books on the futility of marriage risks his reputation when he decides to get married. Things get even more complicated when he learns on his wedding day that his beloved maiden aunts are habitual murderers.	118	1942	8
+456	The Maltese Falcon	A private detective takes on a case that involves him with three eccentric criminals, a gorgeous liar, and their quest for a priceless statuette.	100	1941	8
+457	The Grapes of Wrath	A poor Midwest family is forced off their land. They travel to California, suffering the misfortunes of the homeless in the Great Depression.	129	1940	8
+458	The Wizard of Oz	Dorothy Gale is swept away from a farm in Kansas to a magical land of Oz in a tornado and embarks on a quest with her new friends to see the Wizard who can help her return home to Kansas and help her friends as well.	102	1939	8
+459	La règle du jeu	A bourgeois life in France at the onset of World War II, as the rich and their poor servants meet up at a French chateau.	110	1939	8
+460	The Thin Man	Former detective Nick Charles and his wealthy wife Nora investigate a murder case, mostly for the fun of it.	91	1934	8
+461	All Quiet on the Western Front	A German youth eagerly enters World War I, but his enthusiasm wanes as he gets a firsthand view of the horror.	152	1930	8
+462	Bronenosets Potemkin	In the midst of the Russian Revolution of 1905, the crew of the battleship Potemkin mutiny against the brutal, tyrannical regime of the vessel's officers. The resulting street demonstration in Odessa brings on a police massacre.	75	1925	8
+463	Knives Out	A detective investigates the death of a patriarch of an eccentric, combative family.	130	2019	7.9
+464	Dil Bechara	The emotional journey of two hopelessly in love youngsters, a young girl, Kizie, suffering from cancer, and a boy, Manny, whom she meets at a support group.	101	2020	7.9
+465	Manbiki kazoku	A family of small-time crooks take in a child they find outside in the cold.	121	2018	7.9
+466	Marriage Story	Noah Baumbach's incisive and compassionate look at a marriage breaking up and a family staying together.	137	2019	7.9
+467	Call Me by Your Name	In 1980s Italy, romance blossoms between a seventeen-year-old student and the older man hired as his father's research assistant.	132	2017	7.9
+468	I, Daniel Blake	After having suffered a heart-attack, a 59-year-old carpenter must fight the bureaucratic forces of the system in order to receive Employment and Support Allowance.	100	2016	7.9
+469	Isle of Dogs	Set in Japan, Isle of Dogs follows a boy's odyssey in search of his lost dog.	101	2018	7.9
+470	Hunt for the Wilderpeople	A national manhunt is ordered for a rebellious kid and his foster uncle who go missing in the wild New Zealand bush.	101	2016	7.9
+471	Captain Fantastic	In the forests of the Pacific Northwest, a father devoted to raising his six kids with a rigorous physical and intellectual education is forced to leave his paradise and enter the world, challenging his idea of what it means to be a parent.	118	2016	7.9
+472	Sing Street	A boy growing up in Dublin during the 1980s escapes his strained family life by starting a band to impress the mysterious girl he likes.	106	2016	7.9
+473	Thor: Ragnarok	Imprisoned on the planet Sakaar, Thor must race against time to return to Asgard and stop Ragnarök, the destruction of his world, at the hands of the powerful and ruthless villain Hela.	130	2017	7.9
+474	Nightcrawler	When Louis Bloom, a con man desperate for work, muscles into the world of L.A. crime journalism, he blurs the line between observer and participant to become the star of his own story.	117	2014	7.9
+475	Jojo Rabbit	A young boy in Hitler's army finds out his mother is hiding a Jewish girl in their home.	108	2019	7.9
+760	Flipped	Two eighth-graders start to have feelings for each other despite being total opposites.	90	2010	7.7
+476	Arrival	A linguist works with the military to communicate with alien lifeforms after twelve mysterious spacecrafts appear around the world.	116	2016	7.9
+477	Star Wars: Episode VII - The Force Awakens	As a new threat to the galaxy rises, Rey, a desert scavenger, and Finn, an ex-stormtrooper, must join Han Solo and Chewbacca to search for the one hope of restoring peace.	138	2015	7.9
+478	Before Midnight	We meet Jesse and Celine nine years on in Greece. Almost two decades have passed since their first meeting on that train bound for Vienna.	109	2013	7.9
+479	X-Men: Days of Future Past	The X-Men send Wolverine to the past in a desperate effort to change history and prevent an event that results in doom for both humans and mutants.	132	2014	7.9
+480	Bir Zamanlar Anadolu'da	A group of men set out in search of a dead body in the Anatolian steppes.	157	2011	7.9
+481	The Artist	An egomaniacal film star develops a relationship with a young dancer against the backdrop of Hollywood's silent era.	100	2011	7.9
+482	Edge of Tomorrow	A soldier fighting aliens gets to relive the same day over and over again, the day restarting every time he dies.	113	2014	7.9
+483	Amour	Georges and Anne are an octogenarian couple. They are cultivated, retired music teachers. Their daughter, also a musician, lives in Britain with her family. One day, Anne has a stroke, and the couple's bond of love is severely tested.	127	2012	7.9
+484	The Irishman	An old man recalls his time painting houses for his friend, Jimmy Hoffa, through the 1950-70s.	209	2019	7.9
+485	Un prophète	A young Arab man is sent to a French prison.	155	2009	7.9
+486	Moon	Astronaut Sam Bell has a quintessentially personal encounter toward the end of his three-year stint on the Moon, where he, working alongside his computer, GERTY, sends back to Earth parcels of a resource that has helped diminish our planet's power problems.	97	2009	7.9
+487	Låt den rätte komma in	Oskar, an overlooked and bullied boy, finds love and revenge through Eli, a beautiful but peculiar girl.	114	2008	7.9
+488	District 9	Violence ensues after an extraterrestrial race forced to live in slum-like conditions on Earth finds a kindred spirit in a government agent exposed to their biotechnology.	112	2009	7.9
+489	The Wrestler	A faded professional wrestler must retire, but finds his quest for a new life outside the ring a dispiriting struggle.	109	2008	7.9
+490	Jab We Met	A depressed wealthy businessman finds his life changing after he meets a spunky and care-free young woman.	138	2007	7.9
+491	Boyhood	The life of Mason, from early childhood to his arrival at college.	165	2014	7.9
+492	4 luni, 3 saptamâni si 2 zile	A woman assists her friend in arranging an illegal abortion in 1980s Romania.	113	2007	7.9
+493	Star Trek	The brash James T. Kirk tries to live up to his father's legacy with Mr. Spock keeping him in check as a vengeful Romulan from the future creates black holes to destroy the Federation one planet at a time.	127	2009	7.9
+494	In Bruges	Guilt-stricken after a job gone wrong, hitman Ray and his partner await orders from their ruthless boss in Bruges, Belgium, the last place in the world Ray wants to be.	107	2008	7.9
+495	The Man from Earth	An impromptu goodbye party for Professor John Oldman becomes a mysterious interrogation after the retiring scholar reveals to his colleagues he has a longer and stranger past than they can imagine.	87	2007	7.9
+496	Letters from Iwo Jima	The story of the battle of Iwo Jima between the United States and Imperial Japan during World War II, as told from the perspective of the Japanese who fought it.	141	2006	7.9
+497	The Fall	In a hospital on the outskirts of 1920s Los Angeles, an injured stuntman begins to tell a fellow patient, a little girl with a broken arm, a fantastic story of five mythical heroes. Thanks to his fractured state of mind and her vivid imagination, the line between fiction and reality blurs as the tale advances.	117	2006	7.9
+498	Life of Pi	A young man who survives a disaster at sea is hurtled into an epic journey of adventure and discovery. While cast away, he forms an unexpected connection with another survivor: a fearsome Bengal tiger.	127	2012	7.9
+499	Fantastic Mr. Fox	An urbane fox cannot resist returning to his farm raiding ways and then must help his community survive the farmers' retaliation.	87	2009	7.9
+500	C.R.A.Z.Y.	A young French-Canadian, growing up in the 1960s and 1970s, struggles to reconcile his emerging homosexuality with his father's conservative values and his own Catholic beliefs.	129	2005	7.9
+501	Les choristes	The new teacher at a severely administered boys' boarding school works to positively affect the students' lives through music.	97	2004	7.9
+502	Iron Man	After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil.	126	2008	7.9
+503	Shaun of the Dead	A man's uneventful life is disrupted by the zombie apocalypse.	99	2004	7.9
+504	Gegen die Wand	With the intention to break free from the strict familial restrictions, a suicidal young woman sets up a marriage of convenience with a forty-year-old addict, an act that will lead to an outburst of envious love.	121	2004	7.9
+505	Mystic River	The lives of three men who were childhood friends are shattered when one of them has a family tragedy.	138	2003	7.9
+506	Harry Potter and the Prisoner of Azkaban	Harry Potter, Ron and Hermione return to Hogwarts School of Witchcraft and Wizardry for their third year of study, where they delve into the mystery surrounding an escaped prisoner who poses a dangerous threat to the young wizard.	142	2004	7.9
+507	Ying xiong	A defense officer, Nameless, was summoned by the King of Qin regarding his success of terminating three warriors.	120	2002	7.9
+508	Hable con ella	Two men share an odd friendship while they care for two women who are both in deep comas.	112	2002	7.9
+509	No Man's Land	Bosnia and Herzegovina during 1993 at the time of the heaviest fighting between the two warring sides. Two soldiers from opposing sides in the conflict, Nino and Ciki, become trapped in no man's land, whilst a third soldier becomes a living booby trap.	98	2001	7.9
+510	Cowboy Bebop: Tengoku no tobira	A terrorist explosion releases a deadly virus on the masses, and it's up the bounty-hunting Bebop crew to catch the cold-blooded culprit.	115	2001	7.9
+511	The Bourne Identity	A man is picked up by a fishing boat, bullet-riddled and suffering from amnesia, before racing to elude assassins and attempting to regain his memory.	119	2002	7.9
+512	Nueve reinas	Two con artists try to swindle a stamp collector by selling him a sheet of counterfeit rare stamps (the "nine queens").	114	2000	7.9
+513	Children of Men	In 2027, in a chaotic world in which women have become somehow infertile, a former activist agrees to help transport a miraculously pregnant woman to a sanctuary at sea.	109	2006	7.9
+514	Almost Famous	A high-school boy is given the chance to write a story for Rolling Stone Magazine about an up-and-coming rock band as he accompanies them on their concert tour.	122	2000	7.9
+515	Mulholland Dr.	After a car wreck on the winding Mulholland Drive renders a woman amnesiac, she and a perky Hollywood-hopeful search for clues and answers across Los Angeles in a twisting venture beyond dreams and reality.	147	2001	7.9
+516	Toy Story 2	When Woody is stolen by a toy collector, Buzz and his friends set out on a rescue mission to save Woody before he becomes a museum toy property with his roundup gang Jessie, Prospector, and Bullseye.	92	1999	7.9
+517	Boogie Nights	Back when sex was safe, pleasure was a business and business was booming, an idealistic porn producer aspires to elevate his craft to an art when he discovers a hot young talent.	155	1997	7.9
+518	Mimi wo sumaseba	A love story between a girl who loves reading books, and a boy who has previously checked out all of the library books she chooses.	111	1995	7.9
+519	Once Were Warriors	A family descended from Maori warriors is bedeviled by a violent father and the societal problems of being treated as outcasts.	102	1994	7.9
+520	True Romance	In Detroit, a lonely pop culture geek marries a call girl, steals cocaine from her pimp, and tries to sell it in Hollywood. Meanwhile, the owners of the cocaine, the Mob, track them down in an attempt to reclaim it.	119	1993	7.9
+521	Trois couleurs: Bleu	A woman struggles to find a way to live her life after the death of her husband and child.	94	1993	7.9
+522	Jûbê ninpûchô	A vagabond swordsman is aided by a beautiful ninja girl and a crafty spy in confronting a demonic clan of killers - with a ghost from his past as their leader - who are bent on overthrowing the Tokugawa Shogunate.	94	1993	7.9
+523	Carlito's Way	A Puerto Rican former convict, just released from prison, pledges to stay away from drugs and violence despite the pressure around him and lead on to a better life outside of N.Y.C.	144	1993	7.9
+524	Edward Scissorhands	An artificial man, who was incompletely constructed and has scissors for hands, leads a solitary life. Then one day, a suburban lady meets him and introduces him to her world.	105	1990	7.9
+525	My Left Foot: The Story of Christy Brown	Christy Brown, born with cerebral palsy, learns to paint and write with his only controllable limb - his left foot.	103	1989	7.9
+526	Crimes and Misdemeanors	An ophthalmologist's mistress threatens to reveal their affair to his wife while a married documentary filmmaker is infatuated with another woman.	104	1989	7.9
+527	The Untouchables	During the era of Prohibition in the United States, Federal Agent Eliot Ness sets out to stop ruthless Chicago gangster Al Capone and, because of rampant corruption, assembles a small, hand-picked team to help him.	119	1987	7.9
+528	Hannah and Her Sisters	Between two Thanksgivings two years apart, Hannah's husband falls in love with her sister Lee, while her hypochondriac ex-husband rekindles his relationship with her sister Holly.	107	1986	7.9
+529	Brazil	A bureaucrat in a dystopic society becomes an enemy of the state as he pursues the woman of his dreams.	132	1985	7.9
+530	This Is Spinal Tap	Spinal Tap, one of England's loudest bands, is chronicled by film director Marty DiBergi on what proves to be a fateful tour.	82	1984	7.9
+531	A Christmas Story	In the 1940s, a young boy named Ralphie attempts to convince his parents, his teacher and Santa that a Red Ryder BB gun really is the perfect Christmas gift.	93	1983	7.9
+532	The Blues Brothers	Jake Blues, just released from prison, puts together his old band to save the Catholic home where he and his brother Elwood were raised.	133	1980	7.9
+533	Manhattan	The life of a divorced television writer dating a teenage girl is further complicated when he falls in love with his best friend's mistress.	96	1979	7.9
+534	All That Jazz	Director/choreographer Bob Fosse tells his own life story as he details the sordid career of Joe Gideon, a womanizing, drug-using dancer.	123	1979	7.9
+535	Dawn of the Dead	Following an ever-growing epidemic of zombies that have risen from the dead, two Philadelphia S.W.A.T. team members, a traffic reporter, and his television executive girlfriend seek refuge in a secluded shopping mall.	127	1978	7.9
+536	All the President's Men	"The Washington Post" reporters Bob Woodward and Carl Bernstein uncover the details of the Watergate scandal that leads to President Richard Nixon's resignation.	138	1976	7.9
+537	La montaña sagrada	In a corrupt, greed-fueled world, a powerful alchemist leads a messianic character and seven materialistic figures to the Holy Mountain, where they hope to achieve enlightenment.	114	1973	7.9
+538	Amarcord	A series of comedic and nostalgic vignettes set in a 1930s Italian coastal town.	123	1973	7.9
+539	Le charme discret de la bourgeoisie	A surreal, virtually plotless series of dreams centered around six middle-class people and their consistently interrupted attempts to have a meal together.	102	1972	7.9
+540	Aguirre, der Zorn Gottes	In the 16th century, the ruthless and insane Don Lope de Aguirre leads a Spanish expedition in search of El Dorado.	95	1972	7.9
+541	Harold and Maude	Young, rich, and obsessed with death, Harold finds himself changed forever when he meets lively septuagenarian Maude at a funeral.	91	1971	7.9
+542	Patton	The World War II phase of the career of controversial American general George S. Patton.	172	1970	7.9
+543	The Wild Bunch	An aging group of outlaws look for one last big score as the "traditional" American West is disappearing around them.	145	1969	7.9
+544	Night of the Living Dead	A ragtag group of Pennsylvanians barricade themselves in an old farmhouse to remain safe from a horde of flesh-eating ghouls that are ravaging the East Coast of the United States.	96	1968	7.9
+545	The Lion in Winter	1183 A.D.: King Henry II's three sons all want to inherit the throne, but he won't commit to a choice. They and his wife variously plot to force him.	134	1968	7.9
+546	In the Heat of the Night	A black police detective is asked to investigate a murder in a racially hostile southern town.	110	1967	7.9
+837	Zelig	"Documentary" about a man who can look and act like whoever he's around, and meets various famous people.	79	1983	7.7
+547	Charade	Romance and suspense ensue in Paris as a woman is pursued by several men who want a fortune her murdered husband had stolen. Whom can she trust?	113	1963	7.9
+548	The Manchurian Candidate	A former prisoner of war is brainwashed as an unwitting assassin for an international Communist conspiracy.	126	1962	7.9
+549	Spartacus	The slave Spartacus leads a violent revolt against the decadent Roman Republic.	197	1960	7.9
+550	L'avventura	A woman disappears during a Mediterranean boating trip. During the search, her lover and her best friend become attracted to each other.	144	1960	7.9
+551	Hiroshima mon amour	A French actress filming an anti-war film in Hiroshima has an affair with a married Japanese architect as they share their differing perspectives on war.	90	1959	7.9
+552	The Ten Commandments	Moses, an Egyptian Prince, learns of his true heritage as a Hebrew and his divine mission as the deliverer of his people.	220	1956	7.9
+553	The Searchers	An American Civil War veteran embarks on a journey to rescue his niece from the Comanches.	119	1956	7.9
+554	East of Eden	Two brothers struggle to maintain their strict, Bible-toting father's favor.	118	1955	7.9
+555	High Noon	A town Marshal, despite the disagreements of his newlywed bride and the townspeople around him, must face a gang of deadly killers alone at high noon when the gang leader, an outlaw he sent up years ago, arrives on the noon train.	85	1952	7.9
+556	Strangers on a Train	A psychopath forces a tennis star to comply with his theory that two strangers can get away with murder.	101	1951	7.9
+557	Harvey	Due to his insistence that he has an invisible six foot-tall rabbit for a best friend, a whimsical middle-aged man is thought by his family to be insane - but he may be wiser than anyone knows.	104	1950	7.9
+558	Miracle on 34th Street	When a nice old man who claims to be Santa Claus is institutionalized as insane, a young lawyer decides to defend him by arguing in court that he is the real thing.	96	1947	7.9
+559	Notorious	A woman is asked to spy on a group of Nazi friends in South America. How far will she have to go to ingratiate herself with them?	102	1946	7.9
+560	The Big Sleep	Private detective Philip Marlowe is hired by a wealthy family. Before the complex case is over, he's seen murder, blackmail, and what might be love.	114	1946	7.9
+561	The Lost Weekend	The desperate life of a chronic alcoholic is followed through a four-day drinking bout.	101	1945	7.9
+562	The Philadelphia Story	When a rich woman's ex-husband and a tabloid-type reporter turn up just before her planned remarriage, she begins to learn the truth about herself.	112	1940	7.9
+563	His Girl Friday	A newspaper editor uses every trick in the book to keep his ace reporter ex-wife from remarrying.	92	1940	7.9
+564	The Adventures of Robin Hood	When Prince John and the Norman Lords begin oppressing the Saxon masses in King Richard's absence, a Saxon lord fights back as the outlaw leader of a rebel guerrilla army.	102	1938	7.9
+565	A Night at the Opera	A sly business manager and two wacky friends of two opera singers help them achieve success while humiliating their stuffy and snobbish enemies.	96	1935	7.9
+566	King Kong	A film crew goes to a tropical island for an exotic location shoot and discovers a colossal ape who takes a shine to their female blonde star. He is then captured and brought back to New York City for public exhibition.	100	1933	7.9
+567	Freaks	A circus' beautiful trapeze artist agrees to marry the leader of side-show performers, but his deformed friends discover she is only marrying him for his inheritance.	64	1932	7.9
+568	Nosferatu	Vampire Count Orlok expresses interest in a new residence and real estate agent Hutter's wife.	94	1922	7.9
+569	The Gentlemen	An American expat tries to sell off his highly profitable marijuana empire in London, triggering plots, schemes, bribery and blackmail in an attempt to steal his domain out from under him.	113	2019	7.8
+570	Raazi	A Kashmiri woman agrees to marry a Pakistani army officer in order to spy on Pakistan during the Indo-Pakistan War of 1971.	138	2018	7.8
+571	Sound of Metal	A heavy-metal drummer's life is thrown into freefall when he begins to lose his hearing.	120	2019	7.8
+572	Forushande	While both participating in a production of "Death of a Salesman," a teacher's wife is assaulted in her new home, which leaves him determined to find the perpetrator over his wife's traumatized objections.	124	2016	7.8
+573	Dunkirk	Allied soldiers from Belgium, the British Empire, and France are surrounded by the German Army and evacuated during a fierce battle in World War II.	106	2017	7.8
+574	Perfetti sconosciuti	Seven long-time friends get together for a dinner. When they decide to share with each other the content of every text message, email and phone call they receive, many secrets start to unveil and the equilibrium trembles.	96	2016	7.8
+575	Hidden Figures	The story of a team of female African-American mathematicians who served a vital role in NASA during the early years of the U.S. space program.	127	2016	7.8
+576	Paddington 2	Paddington (Ben Whishaw), now happily settled with the Brown family and a popular member of the local community, picks up a series of odd jobs to buy the perfect present for his Aunt Lucy's (Imelda Staunton's) 100th birthday, only for the gift to be stolen.	103	2017	7.8
+577	Udta Punjab	A story that revolves around drug abuse in the affluent north Indian State of Punjab and how the youth there have succumbed to it en-masse resulting in a socio-economic decline.	148	2016	7.8
+578	Kubo and the Two Strings	A young boy named Kubo must locate a magical suit of armour worn by his late father in order to defeat a vengeful spirit from the past.	101	2016	7.8
+579	M.S. Dhoni: The Untold Story	The untold story of Mahendra Singh Dhoni's journey from ticket collector to trophy collector - the world-cup-winning captain of the Indian Cricket Team.	184	2016	7.8
+580	Manchester by the Sea	A depressed uncle is asked to take care of his teenage nephew after the boy's father dies.	137	2016	7.8
+581	Under sandet	In post-World War II Denmark, a group of young German POWs are forced to clear a beach of thousands of land mines under the watch of a Danish Sergeant who slowly learns to appreciate their plight.	100	2015	7.8
+582	Rogue One	The daughter of an Imperial scientist joins the Rebel Alliance in a risky move to steal the plans for the Death Star.	133	2016	7.8
+583	Captain America: Civil War	Political involvement in the Avengers' affairs causes a rift between Captain America and Iron Man.	147	2016	7.8
+584	The Hateful Eight	In the dead of a Wyoming winter, a bounty hunter and his prisoner find shelter in a cabin currently inhabited by a collection of nefarious characters.	168	2015	7.8
+585	Little Women	Jo March reflects back and forth on her life, telling the beloved story of the March sisters - four young women, each determined to live life on her own terms.	135	2019	7.8
+586	Loving Vincent	In a story depicted in oil painted animation, a young man comes to the last hometown of painter Vincent van Gogh (Robert Gulaczyk) to deliver the troubled artist's final letter and ends up investigating his final days there.	94	2017	7.8
+587	Pride	U.K. gay activists work to help miners during their lengthy strike of the National Union of Mineworkers in the summer of 1984.	119	2014	7.8
+588	Le passé	An Iranian man deserts his French wife and her two children to return to his homeland. Meanwhile, his wife starts up a new relationship, a reality her husband confronts upon his wife's request for a divorce.	130	2013	7.8
+589	La grande bellezza	Jep Gambardella has seduced his way through the lavish nightlife of Rome for decades, but after his 65th birthday and a shock from the past, Jep looks past the nightclubs and parties to find a timeless landscape of absurd, exquisite beauty.	141	2013	7.8
+590	The Lunchbox	A mistaken delivery in Mumbai's famously efficient lunchbox delivery system connects a young housewife to an older man in the dusk of his life as they build a fantasy world together through notes in the lunchbox.	104	2013	7.8
+591	Vicky Donor	A man is brought in by an infertility doctor to supply him with his sperm, where he becomes the biggest sperm donor for his clinic.	126	2012	7.8
+592	Big Hero 6	A special bond develops between plus-sized inflatable robot Baymax and prodigy Hiro Hamada, who together team up with a group of friends to form a band of high-tech heroes.	102	2014	7.8
+593	About Time	At the age of 21, Tim discovers he can travel in time and change what happens and has happened in his own life. His decision to make his world a better place by getting a girlfriend turns out not to be as easy as you might think.	123	2013	7.8
+594	English Vinglish	A quiet, sweet tempered housewife endures small slights from her well-educated husband and daughter every day because of her inability to speak and understand English.	134	2012	7.8
+595	Kaze tachinu	A look at the life of Jiro Horikoshi, the man who designed Japanese fighter planes during World War II.	126	2013	7.8
+596	Toy Story 4	When a new toy called "Forky" joins Woody and the gang, a road trip alongside old and new friends reveals how big the world can be for a toy.	100	2019	7.8
+597	La migliore offerta	A lonely art expert working for a mysterious and reclusive heiress finds not only her art worth examining.	131	2013	7.8
+598	Moonrise Kingdom	A pair of young lovers flee their New England town, which causes a local search party to fan out to find them.	94	2012	7.8
+599	How to Train Your Dragon 2	When Hiccup and Toothless discover an ice cave that is home to hundreds of new wild dragons and the mysterious Dragon Rider, the two friends find themselves at the center of a battle to protect the peace.	102	2014	7.8
+600	The Big Short	In 2006-2007 a group of investors bet against the US mortgage market. In their research they discover how flawed and corrupt the market is.	130	2015	7.8
+601	Kokuhaku	A psychological thriller of a grieving mother turned cold-blooded avenger with a twisty master plan to pay back those who were responsible for her daughter's death.	106	2010	7.8
+602	Ang-ma-reul bo-at-da	A secret agent exacts revenge on a serial killer through a series of captures and releases.	144	2010	7.8
+603	The Girl with the Dragon Tattoo	Journalist Mikael Blomkvist is aided in his search for a woman who has been missing for forty years by Lisbeth Salander, a young computer hacker.	158	2011	7.8
+604	Captain Phillips	The true story of Captain Richard Phillips and the 2009 hijacking by Somali pirates of the U.S.-flagged MV Maersk Alabama, the first American cargo ship to be hijacked in two hundred years.	134	2013	7.8
+605	Ajeossi	A quiet pawnshop keeper with a violent past takes on a drug-and-organ trafficking ring in hope of saving the child who is his only friend.	119	2010	7.8
+606	Straight Outta Compton	The rap group NWA emerges from the mean streets of Compton in Los Angeles, California, in the mid-1980s and revolutionizes Hip Hop culture with their music and tales about life in the hood.	147	2015	7.8
+607	Madeo	A mother desperately searches for the killer who framed her son for a girl's horrific murder.	129	2009	7.8
+608	Chugyeokja	A disgraced ex-policeman who runs a small ring of prostitutes finds himself in a race against time when one of his women goes missing.	125	2008	7.8
+609	The Hobbit: The Desolation of Smaug	The dwarves, along with Bilbo Baggins and Gandalf the Grey, continue their quest to reclaim Erebor, their homeland, from Smaug. Bilbo Baggins is in possession of a mysterious and magical ring.	161	2013	7.8
+610	Das weiße Band - Eine deutsche Kindergeschichte	Strange events happen in a small village in the north of Germany during the years before World War I, which seem to be ritual punishment. Who is responsible?	144	2009	7.8
+611	Män som hatar kvinnor	A journalist is aided by a young female hacker in his search for the killer of a woman who has been dead for forty years.	152	2009	7.8
+612	The Trial of the Chicago 7	The story of 7 people on trial stemming from various charges surrounding the uprising at the 1968 Democratic National Convention in Chicago, Illinois.	129	2020	7.8
+613	Druk	Four friends, all high school teachers, test a theory that they will improve their lives by maintaining a constant level of alcohol in their blood.	117	2020	7.8
+614	The Fighter	Based on the story of Micky Ward, a fledgling boxer who tries to escape the shadow of his more famous but troubled older boxing brother and get his own shot at greatness.	116	2010	7.8
+615	Taken	A retired CIA agent travels across Europe and relies on his old skills to save his estranged daughter, who has been kidnapped while on a trip to Paris.	90	2008	7.8
+616	The Boy in the Striped Pyjamas	Through the innocent eyes of Bruno, the eight-year-old son of the commandant at a German concentration camp, a forbidden friendship with a Jewish boy on the other side of the camp fence has startling and unexpected consequences.	94	2008	7.8
+617	Once	A modern-day musical about a busker and an immigrant and their eventful week in Dublin, as they write, rehearse and record songs that tell their love story.	86	2007	7.8
+618	The Hobbit: An Unexpected Journey	A reluctant Hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home, and the gold within it from the dragon Smaug.	169	2012	7.8
+619	Auf der anderen Seite	A Turkish man travels to Istanbul to find the daughter of his father's former girlfriend.	122	2007	7.8
+620	Atonement	Thirteen-year-old fledgling writer Briony Tallis irrevocably changes the course of several lives when she accuses her older sister's lover of a crime he did not commit.	123	2007	7.8
+621	Drive	A mysterious Hollywood stuntman and mechanic moonlights as a getaway driver and finds himself in trouble when he helps out his neighbor.	100	2011	7.8
+622	American Gangster	An outcast New York City cop is charged with bringing down Harlem drug lord Frank Lucas, whose real life inspired this partly biographical film.	157	2007	7.8
+623	Avatar	A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.	162	2009	7.8
+624	Mr. Nobody	A boy stands on a station platform as a train is about to leave. Should he go with his mother or stay with his father? Infinite possibilities arise from this decision. As long as he doesn't choose, anything is possible.	141	2009	7.8
+625	Apocalypto	As the Mayan kingdom faces its decline, a young man is taken on a perilous journey to a world ruled by fear and oppression.	139	2006	7.8
+626	Little Miss Sunshine	A family determined to get their young daughter into the finals of a beauty pageant take a cross-country trip in their VW bus.	101	2006	7.8
+627	Hot Fuzz	A skilled London police officer is transferred to a small town with a dark secret.	121	2007	7.8
+628	The Curious Case of Benjamin Button	Tells the story of Benjamin Button, a man who starts aging backwards with consequences.	166	2008	7.8
+629	Veer-Zaara	Veer-Zaara is a saga of love, separation, courage and sacrifice. A love story that is an inspiration and will remain a legend forever.	192	2004	7.8
+630	Adams æbler	A neo-nazi sentenced to community service at a church clashes with the blindly devotional priest.	94	2005	7.8
+631	Pride & Prejudice	Sparks fly when spirited Elizabeth Bennet meets single, rich, and proud Mr. Darcy. But Mr. Darcy reluctantly finds himself falling in love with a woman beneath his class. Can each overcome their own pride and prejudice?	129	2005	7.8
+632	The World's Fastest Indian	The story of New Zealander Burt Munro, who spent years rebuilding a 1920 Indian motorcycle, which helped him set the land speed world record at Utah's Bonneville Salt Flats in 1967.	127	2005	7.8
+633	Tôkyô goddofâzâzu	On Christmas Eve, three homeless people living on the streets of Tokyo discover a newborn baby among the trash and set out to find its parents.	90	2003	7.8
+634	Serenity	The crew of the ship Serenity try to evade an assassin sent to recapture one of their members who is telepathic.	119	2005	7.8
+635	Walk the Line	A chronicle of country music legend Johnny Cash's life, from his early days on an Arkansas cotton farm to his rise to fame with Sun Records in Memphis, where he recorded alongside Elvis Presley, Jerry Lee Lewis, and Carl Perkins.	136	2005	7.8
+636	Ondskan	A teenage boy expelled from school for fighting arrives at a boarding school where the systematic bullying of younger students is encouraged as a means to maintain discipline, and decides to fight back.	113	2003	7.8
+637	The Notebook	A poor yet passionate young man falls in love with a rich young woman, giving her a sense of freedom, but they are soon separated because of their social differences.	123	2004	7.8
+638	Diarios de motocicleta	The dramatization of a motorcycle road trip Che Guevara went on in his youth that showed him his life's calling.	126	2004	7.8
+639	Lilja 4-ever	Sixteen-year-old Lilja and her only friend, the young boy Volodja, live in Russia, fantasizing about a better life. One day, Lilja falls in love with Andrej, who is going to Sweden, and invites Lilja to come along and start a new life.	109	2002	7.8
+640	Les triplettes de Belleville	When her grandson is kidnapped during the Tour de France, Madame Souza and her beloved pooch Bruno team up with the Belleville Sisters--an aged song-and-dance team from the days of Fred Astaire--to rescue him.	80	2003	7.8
+641	Gongdong gyeongbi guyeok JSA	After a shooting incident at the North/South Korean border/DMZ leaves 2 North Korean soldiers dead, a neutral Swiss/Swedish team investigates, what actually happened.	110	2000	7.8
+642	The Count of Monte Cristo	A young man, falsely imprisoned by his jealous "friend", escapes and uses a hidden treasure to exact his revenge.	131	2002	7.8
+643	Waking Life	A man shuffles through a dream meeting various people and discussing the meanings and purposes of the universe.	99	2001	7.8
+644	Remember the Titans	The true story of a newly appointed African-American coach and his high school team on their first season as a racially integrated unit.	113	2000	7.8
+645	Wo hu cang long	A young Chinese warrior steals a sword from a famed swordsman and then escapes into a world of romantic adventure with a mysterious man in the frontier of the nation.	120	2000	7.8
+646	Todo sobre mi madre	Young Esteban wants to become a writer and also to discover the identity of his second mother, a trans woman, carefully concealed by his mother Manuela.	101	1999	7.8
+647	Cast Away	A FedEx executive undergoes a physical and emotional transformation after crash landing on a deserted island.	143	2000	7.8
+648	The Boondock Saints	Two Irish Catholic brothers become vigilantes and wipe out Boston's criminal underworld in the name of God.	108	1999	7.8
+649	The Insider	A research chemist comes under personal and professional attack when he decides to appear in a 60 Minutes exposé on Big Tobacco.	157	1999	7.8
+650	October Sky	The true story of Homer Hickam, a coal miner's son who was inspired by the first Sputnik launch to take up rocketry against his father's wishes.	108	1999	7.8
+651	Shrek	A mean lord exiles fairytale creatures to the swamp of a grumpy ogre, who must go on a quest and rescue a princess for the lord in order to get his land back.	90	2001	7.8
+652	Titanic	A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.	194	1997	7.8
+653	Hana-bi	Nishi leaves the police in the face of harrowing personal and professional difficulties. Spiraling into depression, he makes questionable decisions.	103	1997	7.8
+654	Gattaca	A genetically inferior man assumes the identity of a superior one in order to pursue his lifelong dream of space travel.	106	1997	7.8
+655	The Game	After a wealthy banker is given an opportunity to participate in a mysterious game, his life is turned upside down when he becomes unable to distinguish between the game and reality.	129	1997	7.8
+656	Breaking the Waves	Oilman Jan is paralyzed in an accident. His wife, who prayed for his return, feels guilty; even more, when Jan urges her to have sex with another.	159	1996	7.8
+657	Ed Wood	Ambitious but troubled movie director Edward D. Wood Jr. tries his best to fulfill his dreams, despite his lack of talent.	127	1994	7.8
+658	What's Eating Gilbert Grape	A young man in a small Midwestern town struggles to care for his mentally-disabled younger brother and morbidly obese mother while attempting to pursue his own happiness.	118	1993	7.8
+659	Tombstone	A successful lawman's plans to retire anonymously in Tombstone, Arizona are disrupted by the kind of outlaws he was famous for eliminating.	130	1993	7.8
+660	The Sandlot	In the summer of 1962, a new kid in town is taken under the wing of a young baseball prodigy and his rowdy team, resulting in many adventures.	101	1993	7.8
+661	The Remains of the Day	A butler who sacrificed body and soul to service in the years leading up to World War II realizes too late how misguided his loyalty was to his lordly employer.	134	1993	7.8
+662	Naked	Parallel tales of two sexually obsessed men, one hurting and annoying women physically and mentally, one wandering around the city talking to strangers and experiencing dimensions of life.	132	1993	7.8
+663	The Fugitive	Dr. Richard Kimble, unjustly accused of murdering his wife, must find the real killer while being the target of a nationwide manhunt led by a seasoned U.S. Marshal.	130	1993	7.8
+664	A Bronx Tale	A father becomes worried when a local gangster befriends his son in the Bronx in the 1960s.	121	1993	7.8
+665	Batman: Mask of the Phantasm	Batman is wrongly implicated in a series of murders of mob bosses actually done by a new vigilante assassin.	76	1993	7.8
+666	Lat sau san taam	A tough-as-nails cop teams up with an undercover agent to shut down a sinister mobster and his crew.	128	1992	7.8
+667	Night on Earth	An anthology of 5 different cab drivers in 5 American and European cities and their remarkable fares on the same eventful night.	129	1991	7.8
+668	La double vie de Véronique	Two parallel stories about two identical women; one living in Poland, the other in France. They don't know each other, but their lives are nevertheless profoundly connected.	98	1991	7.8
+669	Boyz n the Hood	Follows the lives of three young males living in the Crenshaw ghetto of Los Angeles, dissecting questions of race, relationships, violence, and future prospects.	112	1991	7.8
+670	Misery	After a famous author is rescued from a car crash by a fan of his novels, he comes to realize that the care he is receiving is only the beginning of a nightmare of captivity and abuse.	107	1990	7.8
+671	Awakenings	The victims of an encephalitis epidemic many years ago have been catatonic ever since, but now a new drug offers the prospect of reviving them.	121	1990	7.8
+672	Majo no takkyûbin	A young witch, on her mandatory year of independent life, finds fitting into a new community difficult while she supports herself by running an air courier service.	103	1989	7.8
+673	Glory	Robert Gould Shaw leads the U.S. Civil War's first all-black volunteer company, fighting prejudices from both his own Union Army, and the Confederates.	122	1989	7.8
+674	Dip huet seung hung	A disillusioned assassin accepts one last hit in hopes of using his earnings to restore vision to a singer he accidentally blinded.	111	1989	7.8
+675	Back to the Future Part II	After visiting 2015, Marty McFly must repeat his visit to 1955 to prevent disastrous changes to 1985...without interfering with his first trip.	108	1989	7.8
+676	Mississippi Burning	Two F.B.I. Agents with wildly different styles arrive in Mississippi to investigate the disappearance of some civil rights activists.	128	1988	7.8
+677	Predator	A team of commandos on a mission in a Central American jungle find themselves hunted by an extraterrestrial warrior.	107	1987	7.8
+678	Evil Dead II	The lone survivor of an onslaught of flesh-possessing spirits holes up in a cabin with a group of strangers while the demons continue their attack.	84	1987	7.8
+679	Ferris Bueller's Day Off	A high school wise guy is determined to have a day off from school, despite what the Principal thinks of that.	103	1986	7.8
+680	Down by Law	Two men are framed and sent to jail, where they meet a murderer who helps them escape and leave the state.	107	1986	7.8
+681	The Goonies	A group of young misfits called The Goonies discover an ancient map and set out on an adventure to find a legendary pirate's long-lost treasure.	114	1985	7.8
+682	The Color Purple	A black Southern woman struggles to find her identity after suffering abuse from her father and others over four decades.	154	1985	7.8
+683	The Breakfast Club	Five high school students meet in Saturday detention and discover how they have a lot more in common than they thought.	97	1985	7.8
+684	The Killing Fields	A journalist is trapped in Cambodia during tyrant Pol Pot's bloody 'Year Zero' cleansing campaign, which claimed the lives of two million 'undesirable' civilians.	141	1984	7.8
+685	Ghostbusters	Three former parapsychology professors set up shop as a unique ghost removal service.	105	1984	7.8
+686	The Right Stuff	The story of the original Mercury 7 astronauts and their macho, seat-of-the-pants approach to the space program.	193	1983	7.8
+687	The King of Comedy	Rupert Pupkin is a passionate yet unsuccessful comic who craves nothing more than to be in the spotlight and to achieve this, he stalks and kidnaps his idol to take the spotlight for himself.	109	1982	7.8
+688	E.T. the Extra-Terrestrial	A troubled child summons the courage to help a friendly alien escape Earth and return to his home world.	115	1982	7.8
+689	Kramer vs. Kramer	Ted Kramer's wife leaves him, allowing for a lost bond to be rediscovered between Ted and his son, Billy. But a heated custody battle ensues over the divorced couple's son, deepening the wounds left by the separation.	105	1979	7.8
+690	Days of Heaven	A hot-tempered farm laborer convinces the woman he loves to marry their rich but dying boss so that they can have a claim to his fortune.	94	1978	7.8
+691	The Outlaw Josey Wales	Missouri farmer Josey Wales joins a Confederate guerrilla unit and winds up on the run from the Union soldiers who murdered his family.	135	1976	7.8
+692	The Man Who Would Be King	Two British former soldiers decide to set themselves up as Kings in Kafiristan, a land where no white man has set foot since Alexander the Great.	129	1975	7.8
+693	The Conversation	A paranoid, secretive surveillance expert has a crisis of conscience when he suspects that the couple he is spying on will be murdered.	113	1974	7.8
+694	La planète sauvage	On a faraway planet where blue giants rule, oppressed humanoids rebel against their machine-like leaders.	72	1973	7.8
+695	The Day of the Jackal	A professional assassin codenamed "Jackal" plots to kill Charles de Gaulle, the President of France.	143	1973	7.8
+696	Badlands	An impressionable teenage girl from a dead-end town and her older greaser boyfriend embark on a killing spree in the South Dakota badlands.	94	1973	7.8
+697	Cabaret	A female girlie club entertainer in Weimar Republic era Berlin romances two men while the Nazi Party rises to power around them.	124	1972	7.8
+698	Willy Wonka & the Chocolate Factory	A poor but hopeful boy seeks one of the five coveted golden tickets that will send him on a tour of Willy Wonka's mysterious chocolate factory.	100	1971	7.8
+699	Midnight Cowboy	A naive hustler travels from Texas to New York City to seek personal fortune, finding a new friend in the process.	113	1969	7.8
+700	Wait Until Dark	A recently blinded woman is terrorized by a trio of thugs while they search for a heroin-stuffed doll they believe is in her apartment.	108	1967	7.8
+701	Guess Who's Coming to Dinner	A couple's attitudes are challenged when their daughter introduces them to her African-American fiancé.	108	1967	7.8
+702	Bonnie and Clyde	Bored waitress Bonnie Parker falls in love with an ex-con named Clyde Barrow and together they start a violent crime spree through the country, stealing cars and robbing banks.	111	1967	7.8
+703	My Fair Lady	Snobbish phonetics Professor Henry Higgins agrees to a wager that he can make flower girl Eliza Doolittle presentable in high society.	170	1964	7.8
+704	Mary Poppins	In turn of the century London, a magical nanny employs music and adventure to help two neglected children become closer to their father.	139	1964	7.8
+705	The Longest Day	The events of D-Day, told on a grand scale from both the Allied and German points of view.	178	1962	7.8
+706	Jules et Jim	Decades of a love triangle concerning two friends and an impulsive woman.	105	1962	7.8
+707	The Innocents	A young governess for two children becomes convinced that the house and grounds are haunted.	100	1961	7.8
+708	À bout de souffle	A small-time thief steals a car and impulsively murders a motorcycle policeman. Wanted by the authorities, he reunites with a hip American journalism student and attempts to persuade her to run away with him to Italy.	90	1960	7.8
+709	Red River	Dunson leads a cattle drive, the culmination of over 14 years of work, to its destination in Missouri. But his tyrannical behavior along the way causes a mutiny, led by his adopted son.	133	1948	7.8
+710	Key Largo	A man visits his war buddy's family hotel and finds a gangster running things. As a hurricane approaches, the two end up confronting each other.	100	1948	7.8
+711	To Have and Have Not	During World War II, American expatriate Harry Morgan helps transport a French Resistance leader and his beautiful wife to Martinique while romancing a sensuous lounge singer.	100	1944	7.8
+712	Shadow of a Doubt	A young girl, overjoyed when her favorite uncle comes to visit the family, slowly begins to suspect that he is in fact the "Merry Widow" killer sought by the authorities.	108	1943	7.8
+713	Stagecoach	A group of people traveling on a stagecoach find their journey complicated by the threat of Geronimo and learn something about each other in the process.	96	1939	7.8
+714	The Lady Vanishes	While travelling in continental Europe, a rich young playgirl realizes that an elderly lady seems to have disappeared from the train.	96	1938	7.8
+715	Bringing Up Baby	While trying to secure a $1 million donation for his museum, a befuddled paleontologist is pursued by a flighty and often irritating heiress and her pet leopard, Baby.	102	1938	7.8
+716	Bride of Frankenstein	Mary Shelley reveals the main characters of her novel survived: Dr. Frankenstein, goaded by an even madder scientist, builds his monster a mate.	75	1935	7.8
+717	Duck Soup	Rufus T. Firefly is named president/dictator of bankrupt Freedonia and declares war on neighboring Sylvania over the love of wealthy Mrs. Teasdale.	69	1933	7.8
+718	Scarface: The Shame of the Nation	An ambitious and nearly insane violent gangster climbs the ladder of success in the mob, but his weaknesses prove to be his downfall.	93	1932	7.8
+719	Frankenstein	Dr. Frankenstein dares to tamper with life and death by creating a human monster out of lifeless body parts.	70	1931	7.8
+720	Roma	A year in the life of a middle-class family's maid in Mexico City in the early 1970s.	135	2018	7.7
+721	God's Own Country	Spring. Yorkshire. Young farmer Johnny Saxby numbs his daily frustrations with binge drinking and casual sex, until the arrival of a Romanian migrant worker for lambing season ignites an intense relationship that sets Johnny on a new path.	104	2017	7.7
+722	Deadpool 2	Foul-mouthed mutant mercenary Wade Wilson (a.k.a. Deadpool), brings together a team of fellow mutant rogues to protect a young boy with supernatural abilities from the brutal, time-traveling cyborg Cable.	119	2018	7.7
+723	Wind River	A veteran hunter helps an FBI agent investigate the murder of a young woman on a Wyoming Native American reservation.	107	2017	7.7
+724	Get Out	A young African-American visits his white girlfriend's parents for the weekend, where his simmering uneasiness about their reception of him eventually reaches a boiling point.	104	2017	7.7
+725	Mission: Impossible - Fallout	Ethan Hunt and his IMF team, along with some familiar allies, race against time after a mission gone wrong.	147	2018	7.7
+726	En man som heter Ove	Ove, an ill-tempered, isolated retiree who spends his days enforcing block association rules and visiting his wife's grave, has finally given up on life just as an unlikely friendship develops with his boisterous new neighbors.	116	2015	7.7
+759	Changeling	Grief-stricken mother Christine Collins (Angelina Jolie) takes on the L.A.P.D. to her own detriment when it tries to pass off an obvious impostor as her missing child.	141	2008	7.7
+727	What We Do in the Shadows	Viago, Deacon and Vladislav are vampires who are finding that modern life has them struggling with the mundane - like paying rent, keeping up with the chore wheel, trying to get into nightclubs and overcoming flatmate conflicts.	86	2014	7.7
+728	Omoide no Mânî	Due to 12 y.o. Anna's asthma, she's sent to stay with relatives of her guardian in the Japanese countryside. She likes to be alone, sketching. She befriends Marnie. Who is the mysterious, blonde Marnie.	103	2014	7.7
+729	The Theory of Everything	A look at the relationship between the famous physicist Stephen Hawking and his wife.	123	2014	7.7
+730	Kingsman: The Secret Service	A spy organisation recruits a promising street kid into the agency's training program, while a global threat emerges from a twisted tech genius.	129	2014	7.7
+731	The Fault in Our Stars	Two teenage cancer patients begin a life-affirming journey to visit a reclusive author in Amsterdam.	126	2014	7.7
+732	Me and Earl and the Dying Girl	High schooler Greg, who spends most of his time making parodies of classic movies with his co-worker Earl, finds his outlook forever altered after befriending a classmate who has just been diagnosed with cancer.	105	2015	7.7
+733	Birdman or (The Unexpected Virtue of Ignorance)	A washed-up superhero actor attempts to revive his fading career by writing, directing, and starring in a Broadway production.	119	2014	7.7
+734	La vie d'Adèle	Adèle's life is changed when she meets Emma, a young woman with blue hair, who will allow her to discover desire and to assert herself as a woman and as an adult. In front of others, Adèle grows, seeks herself, loses herself, and ultimately finds herself through love and loss.	180	2013	7.7
+735	Kai po che!	Three friends growing up in India at the turn of the millennium set out to open a training academy to produce the country's next cricket stars.	130	2013	7.7
+736	The Broken Circle Breakdown	Elise and Didier fall in love at first sight, in spite of their differences. He talks, she listens. He's a romantic atheist, she's a religious realist. When their daughter becomes seriously ill, their love is put on trial.	111	2012	7.7
+737	Captain America: The Winter Soldier	As Steve Rogers struggles to embrace his role in the modern world, he teams up with a fellow Avenger and S.H.I.E.L.D agent, Black Widow, to battle a new threat from history: an assassin known as the Winter Soldier.	136	2014	7.7
+738	Rockstar	Janardhan Jakhar chases his dreams of becoming a big Rock star, during which he falls in love with Heer.	159	2011	7.7
+739	Nebraska	An aging, booze-addled father makes the trip from Montana to Nebraska with his estranged son in order to claim a million-dollar Mega Sweepstakes Marketing prize.	115	2013	7.7
+740	Wreck-It Ralph	A video game villain wants to be a hero and sets out to fulfill his dream, but his quest brings havoc to the whole arcade where he lives.	101	2012	7.7
+741	Le Petit Prince	A little girl lives in a very grown-up world with her mother, who tries to prepare her for it. Her neighbor, the Aviator, introduces the girl to an extraordinary world where anything is possible, the world of the Little Prince.	108	2015	7.7
+742	Detachment	A substitute teacher who drifts from classroom to classroom finds a connection to the students and teachers during his latest assignment.	98	2011	7.7
+743	Midnight in Paris	While on a trip to Paris with his fiancée's family, a nostalgic screenwriter finds himself mysteriously going back to the 1920s every day at midnight.	96	2011	7.7
+744	The Lego Movie	An ordinary LEGO construction worker, thought to be the prophesied as "special", is recruited to join a quest to stop an evil tyrant from gluing the LEGO universe into eternal stasis.	100	2014	7.7
+745	Gravity	Two astronauts work together to survive after an accident leaves them stranded in space.	91	2013	7.7
+746	Star Trek Into Darkness	After the crew of the Enterprise find an unstoppable force of terror from within their own organization, Captain Kirk leads a manhunt to a war-zone world to capture a one-man weapon of mass destruction.	132	2013	7.7
+747	Beasts of No Nation	A drama based on the experiences of Agu, a child soldier fighting in the civil war of an unnamed African country.	137	2015	7.7
+748	The Social Network	As Harvard student Mark Zuckerberg creates the social networking site that would become known as Facebook, he is sued by the twins who claimed he stole their idea, and by the co-founder who was later squeezed out of the business.	120	2010	7.7
+749	X: First Class	In the 1960s, superpowered humans Charles Xavier and Erik Lensherr work together to find others like them, but Erik's vengeful pursuit of an ambitious mutant who ruined his life causes a schism to divide them.	131	2011	7.7
+750	The Hangover	Three buddies wake up from a bachelor party in Las Vegas, with no memory of the previous night and the bachelor missing. They make their way around the city in order to find their friend before his wedding.	100	2009	7.7
+751	Skyfall	James Bond's loyalty to M is tested when her past comes back to haunt her. When MI6 comes under attack, 007 must track down and destroy the threat, no matter how personal the cost.	143	2012	7.7
+752	Silver Linings Playbook	After a stint in a mental institution, former teacher Pat Solitano moves back in with his parents and tries to reconcile with his ex-wife. Things get more challenging when Pat meets Tiffany, a mysterious girl with problems of her own.	122	2012	7.7
+753	Argo	Acting under the cover of a Hollywood producer scouting a location for a science fiction film, a CIA agent launches a dangerous operation to rescue six Americans in Tehran during the U.S. hostage crisis in Iran in 1979.	120	2012	7.7
+754	(500) Days of Summer	An offbeat romantic comedy about a woman who doesn't believe true love exists, and the young man who falls for her.	95	2009	7.7
+755	Harry Potter and the Deathly Hallows: Part 1	As Harry, Ron, and Hermione race against time and evil to destroy the Horcruxes, they uncover the existence of the three most powerful objects in the wizarding world: the Deathly Hallows.	146	2010	7.7
+756	Gake no ue no Ponyo	A five-year-old boy develops a relationship with Ponyo, a young goldfish princess who longs to become a human after falling in love with him.	101	2008	7.7
+757	Frost/Nixon	A dramatic retelling of the post-Watergate television interviews between British talk-show host David Frost and former president Richard Nixon.	122	2008	7.7
+758	Papurika	When a machine that allows therapists to enter their patients' dreams is stolen, all Hell breaks loose. Only a young female therapist, Paprika, can stop it.	90	2006	7.7
+761	Toki o kakeru shôjo	A high-school girl named Makoto acquires the power to travel back in time, and decides to use it for her own personal benefits. Little does she know that she is affecting the lives of others just as much as she is her own.	98	2006	7.7
+762	Death Note: Desu nôto	A battle between the world's two greatest minds begins when Light Yagami finds the Death Note, a notebook with the power to kill, and decides to rid the world of criminals.	126	2006	7.7
+763	This Is England	A young boy becomes friends with a gang of skinheads. Friends soon become like family, and relationships will be pushed to the very limit.	101	2006	7.7
+764	Ex Machina	A young programmer is selected to participate in a ground-breaking experiment in synthetic intelligence by evaluating the human qualities of a highly advanced humanoid A.I.	108	2014	7.7
+765	Efter brylluppet	A manager of an orphanage in India is sent to Copenhagen, Denmark, where he discovers a life-altering family secret.	120	2006	7.7
+766	The Last King of Scotland	Based on the events of the brutal Ugandan dictator Idi Amin's regime as seen by his personal physician during the 1970s.	123	2006	7.7
+767	Zodiac	In the late 1960s/early 1970s, a San Francisco cartoonist becomes an amateur detective obsessed with tracking down the Zodiac Killer, an unidentified individual who terrorizes Northern California with a killing spree.	157	2007	7.7
+768	Lucky Number Slevin	A case of mistaken identity lands Slevin into the middle of a war being plotted by two of the city's most rival crime bosses. Under constant surveillance by Detective Brikowski and assassin Goodkat, he must get them before they get him.	110	2006	7.7
+769	Joyeux Noël	In December 1914, an unofficial Christmas truce on the Western Front allows soldiers from opposing sides of the First World War to gain insight into each other's way of life.	116	2005	7.7
+770	Control	A profile of Ian Curtis, the enigmatic singer of Joy Division whose personal, professional, and romantic troubles led him to commit suicide at the age of 23.	122	2007	7.7
+771	Tangled	The magically long-haired Rapunzel has spent her entire life in a tower, but now that a runaway thief has stumbled upon her, she is about to discover the world for the first time, and who she really is.	100	2010	7.7
+772	Zwartboek	In the Nazi-occupied Netherlands during World War II, a Jewish singer infiltrates the regional Gestapo headquarters for the Dutch resistance.	145	2006	7.7
+773	Brokeback Mountain	The story of a forbidden and secretive relationship between two cowboys, and their lives over the years.	134	2005	7.7
+774	3:10 to Yuma	A small-time rancher agrees to hold a captured outlaw who's awaiting a train to go to court in Yuma. A battle of wills ensues as the outlaw tries to psych out the rancher.	122	2007	7.7
+775	Crash	Los Angeles citizens with vastly separate lives collide in interweaving stories of race, loss and redemption.	112	2004	7.7
+776	Kung fu	In Shanghai, China in the 1940s, a wannabe gangster aspires to join the notorious "Axe Gang" while residents of a housing complex exhibit extraordinary powers in defending their turf.	99	2004	7.7
+777	The Bourne Supremacy	When Jason Bourne is framed for a CIA operation gone awry, he is forced to resume his former life as a trained assassin to survive.	108	2004	7.7
+778	The Machinist	An industrial worker who hasn't slept in a year begins to doubt his own sanity.	101	2004	7.7
+779	Ray	The story of the life and career of the legendary rhythm and blues musician Ray Charles, from his humble beginnings in the South, where he went blind at age seven, to his meteoric rise to stardom during the 1950s and 1960s.	152	2004	7.7
+780	Lost in Translation	A faded movie star and a neglected young woman form an unlikely bond after crossing paths in Tokyo.	102	2003	7.7
+781	Harry Potter and the Goblet of Fire	Harry Potter finds himself competing in a hazardous tournament between rival schools of magic, but he is distracted by recurring nightmares.	157	2005	7.7
+782	Man on Fire	In Mexico City, a former CIA operative swears vengeance on those who committed an unspeakable act against the family he was hired to protect.	146	2004	7.7
+783	Coraline	An adventurous 11-year-old girl finds another world that is a strangely idealized version of her frustrating home, but it has sinister secrets.	100	2009	7.7
+784	The Last Samurai	An American military advisor embraces the Samurai culture he was hired to destroy after he is captured in battle.	154	2003	7.7
+785	The Magdalene Sisters	Three young Irish women struggle to maintain their spirits while they endure dehumanizing abuse as inmates of a Magdalene Sisters Asylum.	114	2002	7.7
+786	Good Bye Lenin!	In 1990, to protect his fragile mother from a fatal shock after a long coma, a young man must keep her from learning that her beloved nation of East Germany as she knew it has disappeared.	121	2003	7.7
+787	In America	A family of Irish immigrants adjust to life on the mean streets of Hell's Kitchen while also grieving the death of a child.	105	2002	7.7
+788	I Am Sam	A mentally handicapped man fights for custody of his 7-year-old daughter and in the process teaches his cold-hearted lawyer the value of love and family.	132	2001	7.7
+789	Adaptation.	A lovelorn screenwriter becomes desperate as he tries and fails to adapt 'The Orchid Thief' by Susan Orlean for the screen.	115	2002	7.7
+790	Black Hawk Down	160 elite U.S. soldiers drop into Somalia to capture two top lieutenants of a renegade warlord and find themselves in a desperate battle with a large force of heavily-armed Somalis.	144	2001	7.7
+791	Road to Perdition	A mob enforcer's son witnesses a murder, forcing him and his father to take to the road, and his father down a path of redemption and revenge.	117	2002	7.7
+792	Das Experiment	For two weeks, 20 male participants are hired to play prisoners and guards in a prison. The "prisoners" have to follow seemingly mild rules, and the "guards" are told to retain order without using physical violence.	120	2001	7.7
+793	Billy Elliot	A talented young boy becomes torn between his unexpected love of dance and the disintegration of his family.	110	2000	7.7
+794	Hedwig and the Angry Inch	A gender-queer punk-rock singer from East Berlin tours the U.S. with her band as she tells her life story and follows the former lover/band-mate who stole her songs.	95	2001	7.7
+795	Ocean's Eleven	Danny Ocean and his ten accomplices plan to rob three Las Vegas casinos simultaneously.	116	2001	7.7
+796	Vampire Hunter D: Bloodlust	When a girl is abducted by a vampire, a legendary bounty hunter is hired to bring her back.	103	2000	7.7
+797	O Brother, Where Art Thou?	In the deep south during the 1930s, three escaped convicts search for hidden treasure while a relentless lawman pursues them.	107	2000	7.7
+798	Interstate 60: Episodes of the Road	Neal Oliver, a very confused young man and an artist, takes a journey of a lifetime on a highway I60 that doesn't exist on any of the maps, going to the places he never even heard of, searching for an answer and his dreamgirl.	116	2002	7.7
+799	South Park: Bigger, Longer & Uncut	When Stan Marsh and his friends go see an R-rated movie, they start cursing and their parents think that Canada is to blame.	81	1999	7.7
+800	Office Space	Three company workers who hate their jobs decide to rebel against their greedy boss.	89	1999	7.7
+801	Happiness	The lives of several individuals intertwine as they go about their lives in their own unique ways, engaging in acts society as a whole might find disturbing in a desperate search for human connection.	134	1998	7.7
+802	Training Day	A rookie cop spends his first day as a Los Angeles narcotics officer with a rogue detective who isn't what he appears to be.	122	2001	7.7
+803	Rushmore	The extracurricular king of Rushmore Preparatory School is put on academic probation.	93	1998	7.7
+804	Abre los ojos	A very handsome man finds the love of his life, but he suffers an accident and needs to have his face rebuilt by surgery after it is severely disfigured.	119	1997	7.7
+805	Being John Malkovich	A puppeteer discovers a portal that leads literally into the head of movie star John Malkovich.	113	1999	7.7
+806	As Good as It Gets	A single mother and waitress, a misanthropic author, and a gay artist form an unlikely friendship after the artist is assaulted in a robbery.	139	1997	7.7
+807	The Fifth Element	In the colorful future, a cab driver unwittingly becomes the central figure in the search for a legendary cosmic weapon to keep Evil and Mr. Zorg at bay.	126	1997	7.7
+808	Le dîner de cons	A few friends have a weekly fools' dinner, where each brings a fool along. Pierre finds a champion fool for next dinner. Surprise.	80	1998	7.7
+809	Donnie Brasco	An FBI undercover agent infiltrates the mob and finds himself identifying more with the mafia life, at the expense of his regular one.	127	1997	7.7
+810	Shine	Pianist David Helfgott, driven by his father and teachers, has a breakdown. Years later he returns to the piano, to popular if not critical acclaim.	105	1996	7.7
+811	Primal Fear	An altar boy is accused of murdering a priest, and the truth is buried several layers deep.	129	1996	7.7
+812	Hamlet	Hamlet, Prince of Denmark, returns home to find his father murdered and his mother remarrying the murderer, his uncle. Meanwhile, war is brewing.	242	1996	7.7
+813	A Little Princess	A young girl is relegated to servitude at a boarding school when her father goes missing and is presumed dead.	97	1995	7.7
+814	Do lok tin si	This Hong Kong-set crime drama follows the lives of a hitman, hoping to get out of the business, and his elusive female partner.	99	1995	7.7
+815	Il postino	A simple Italian postman learns to love poetry while delivering mail to a famous poet, and then uses this to woo local beauty Beatrice.	108	1994	7.7
+816	Clerks	A day in the lives of two convenience clerks named Dante and Randal as they annoy customers, discuss movies, and play hockey on the store roof.	92	1994	7.7
+817	Short Cuts	The day-to-day lives of several suburban Los Angeles residents.	188	1993	7.7
+818	Philadelphia	When a man with HIV is fired by his law firm because of his condition, he hires a homophobic small time lawyer as the only willing advocate for a wrongful dismissal suit.	125	1993	7.7
+819	The Muppet Christmas Carol	The Muppet characters tell their version of the classic tale of an old and bitter miser's redemption on Christmas Eve.	85	1992	7.7
+820	Malcolm X	Biographical epic of the controversial and influential Black Nationalist leader, from his early life and career as a small-time gangster, to his ministry as a member of the Nation of Islam.	202	1992	7.7
+821	The Last of the Mohicans	Three trappers protect the daughters of a British Colonel in the midst of the French and Indian War.	112	1992	7.7
+822	Kurenai no buta	In 1930s Italy, a veteran World War I pilot is cursed to look like an anthropomorphic pig.	94	1992	7.7
+823	Glengarry Glen Ross	An examination of the machinations behind the scenes at a real estate office.	100	1992	7.7
+824	A Few Good Men	Military lawyer Lieutenant Daniel Kaffee defends Marines accused of murder. They contend they were acting under orders.	138	1992	7.7
+825	Fried Green Tomatoes	A housewife who is unhappy with her life befriends an old lady in a nursing home and is enthralled by the tales she tells of people she used to know.	130	1991	7.7
+826	Barton Fink	A renowned New York playwright is enticed to California to write for the movies and discovers the hellish truth of Hollywood.	116	1991	7.7
+827	Miller's Crossing	Tom Reagan, an advisor to a Prohibition-era crime boss, tries to keep the peace between warring mobs but gets caught in divided loyalties.	115	1990	7.7
+828	Who Framed Roger Rabbit	A toon-hating detective is a cartoon rabbit's only hope to prove his innocence when he is accused of murder.	104	1988	7.7
+829	Spoorloos	Rex and Saskia, a young couple in love, are on vacation. They stop at a busy service station and Saskia is abducted. After three years and no sign of Saskia, Rex begins receiving letters from the abductor.	107	1988	7.7
+830	Withnail & I	In 1969, two substance-abusing, unemployed actors retreat to the countryside for a holiday that proves disastrous.	107	1987	7.7
+831	The Last Emperor	The story of the final Emperor of China.	163	1987	7.7
+832	Empire of the Sun	A young English boy struggles to survive under Japanese occupation during World War II.	153	1987	7.7
+833	Der Name der Rose	An intellectually nonconformist friar investigates a series of mysterious deaths in an isolated abbey.	130	1986	7.7
+834	Blue Velvet	The discovery of a severed human ear found in a field leads a young man on an investigation related to a beautiful, mysterious nightclub singer and a group of psychopathic criminals who have kidnapped her child.	120	1986	7.7
+835	The Purple Rose of Cairo	In New Jersey in 1935, a movie character walks off the screen and into the real world.	82	1985	7.7
+836	After Hours	An ordinary word processor has the worst night of his life after he agrees to visit a girl in Soho who he met that evening at a coffee shop.	97	1985	7.7
+838	The Verdict	A lawyer sees the chance to salvage his career and self-respect by taking a medical malpractice case to trial rather than settling.	129	1982	7.7
+839	Star Trek II: The Wrath of Khan	With the assistance of the Enterprise crew, Admiral Kirk must stop an old nemesis, Khan Noonien Singh, from using the life-generating Genesis Device as the ultimate weapon.	113	1982	7.7
+840	First Blood	A veteran Green Beret is forced by a cruel Sheriff and his deputies to flee into the mountains and wage an escalating one-man war against his pursuers.	93	1982	7.7
+841	Ordinary People	The accidental death of the older son of an affluent family deeply strains the relationships among the bitter mother, the good-natured father, and the guilt-ridden younger son.	124	1980	7.7
+842	Airplane!	A man afraid to fly must ensure that a plane lands safely after the pilots become sick.	88	1980	7.7
+843	Rupan sansei: Kariosutoro no shiro	A dashing thief, his gang of desperadoes and an intrepid policeman struggle to free a princess from an evil count's clutches, and learn the hidden secret to a fabulous treasure that she holds part of a key to.	100	1979	7.7
+844	Halloween	Fifteen years after murdering his sister on Halloween night 1963, Michael Myers escapes from a mental hospital and returns to the small town of Haddonfield, Illinois to kill again.	91	1978	7.7
+845	Le locataire	A bureaucrat rents a Paris apartment where he finds himself drawn into a rabbit hole of dangerous paranoia.	126	1976	7.7
+846	Love and Death	In czarist Russia, a neurotic soldier and his distant cousin formulate a plot to assassinate Napoleon.	85	1975	7.7
+847	The Taking of Pelham One Two Three	In New York, armed men hijack a subway car and demand a ransom for the passengers. Even if it's paid, how could they get away?	104	1974	7.7
+848	Blazing Saddles	In order to ruin a western town, a corrupt politician appoints a black Sheriff, who promptly becomes his most formidable adversary.	93	1974	7.7
+849	Serpico	An honest New York cop named Frank Serpico blows the whistle on rampant corruption in the force only to have his comrades turn against him.	130	1973	7.7
+850	Enter the Dragon	A secret agent comes to an opium lord's island fortress with other fighters for a martial-arts tournament.	102	1973	7.7
+851	Deliverance	Intent on seeing the Cahulawassee River before it's dammed and turned into a lake, outdoor fanatic Lewis Medlock takes his friends on a canoeing trip they'll never forget into the dangerous American back-country.	109	1972	7.7
+852	The French Connection	A pair of NYC cops in the Narcotics Bureau stumble onto a drug smuggling job with a French connection.	104	1971	7.7
+853	Dirty Harry	When a madman calling himself "the Scorpio Killer" menaces the city, tough-as-nails San Francisco Police Inspector "Dirty" Harry Callahan is assigned to track down and ferret out the crazed psychopath.	102	1971	7.7
+854	Where Eagles Dare	Allied agents stage a daring raid on a castle where the Nazis are holding American brigadier general George Carnaby prisoner, but that's not all that's really going on.	158	1968	7.7
+855	The Odd Couple	Two friends try sharing an apartment, but their ideas of housekeeping and lifestyles are as different as night and day.	105	1968	7.7
+856	The Dirty Dozen	During World War II, a rebellious U.S. Army Major is assigned a dozen convicted murderers to train and lead them into a mass assassination mission of German officers.	150	1967	7.7
+857	Belle de jour	A frigid young housewife decides to spend her midweek afternoons as a prostitute.	100	1967	7.7
+858	A Man for All Seasons	The story of Sir Thomas More, who stood up to King Henry VIII when the King rejected the Roman Catholic Church to obtain a divorce and remarry.	120	1966	7.7
+859	Repulsion	A sex-repulsed woman who disapproves of her sister's boyfriend sinks into depression and has horrific visions of rape and violence.	105	1965	7.7
+860	Zulu	Outnumbered British soldiers do battle with Zulu warriors at Rorke's Drift.	138	1964	7.7
+861	Goldfinger	While investigating a gold magnate's smuggling, James Bond uncovers a plot to contaminate the Fort Knox gold reserve.	110	1964	7.7
+862	The Birds	A wealthy San Francisco socialite pursues a potential boyfriend to a small Northern California town that slowly takes a turn for the bizarre when birds of all kinds suddenly begin to attack people.	119	1963	7.7
+863	Cape Fear	A lawyer's family is stalked by a man he once helped put in jail.	106	1962	7.7
+864	Peeping Tom	A young man murders women, using a movie camera to film their dying expressions of terror.	101	1960	7.7
+865	The Magnificent Seven	Seven gunfighters are hired by Mexican peasants to liberate their village from oppressive bandits.	128	1960	7.7
+866	Les yeux sans visage	A surgeon causes an accident which leaves his daughter disfigured, and goes to extremes to give her a new face.	90	1960	7.7
+867	Invasion of the Body Snatchers	A small-town doctor learns that the population of his community is being replaced by emotionless alien duplicates.	80	1956	7.7
+868	Rebel Without a Cause	A rebellious young man with a troubled past comes to a new town, finding friends and enemies.	111	1955	7.7
+869	The Ladykillers	Five oddball criminals planning a bank robbery rent rooms on a cul-de-sac from an octogenarian widow under the pretext that they are classical musicians.	91	1955	7.7
+870	Sabrina	A playboy becomes interested in the daughter of his family's chauffeur, but it's his more serious brother who would be the better man for her.	113	1954	7.7
+871	The Quiet Man	A retired American boxer returns to the village of his birth in Ireland, where he falls for a spirited redhead whose brother is contemptuous of their union.	129	1952	7.7
+872	The Day the Earth Stood Still	An alien lands and tells the people of Earth that they must live peacefully or be destroyed as a danger to other planets.	92	1951	7.7
+873	The African Queen	In WWI Africa, a gin-swilling riverboat captain is persuaded by a strait-laced missionary to use his boat to attack an enemy warship.	105	1951	7.7
+874	Gilda	A small-time gambler hired to work in a Buenos Aires casino discovers his employer's new wife is his former lover.	110	1946	7.7
+875	Fantasia	A collection of animated interpretations of great works of Western classical music.	125	1940	7.7
+876	The Invisible Man	A scientist finds a way of becoming invisible, but in doing so, he becomes murderously insane.	71	1933	7.7
+877	Dark Waters	A corporate defense attorney takes on an environmental lawsuit against a chemical company that exposes a lengthy history of pollution.	126	2019	7.6
+878	Searching	After his teenage daughter goes missing, a desperate father tries to find clues on her laptop.	102	2018	7.6
+879	Once Upon a Time... in Hollywood	A faded television actor and his stunt double strive to achieve fame and success in the final years of Hollywood's Golden Age in 1969 Los Angeles.	161	2019	7.6
+880	Nelyubov	A couple going through a divorce must team up to find their son who has disappeared during one of their bitter arguments.	127	2017	7.6
+881	The Florida Project	Set over one summer, the film follows precocious six-year-old Moonee as she courts mischief and adventure with her ragtag playmates and bonds with her rebellious but caring mother, all while living in the shadows of Walt Disney World.	111	2017	7.6
+882	Just Mercy	World-renowned civil rights defense attorney Bryan Stevenson works to free a wrongly condemned death row prisoner.	137	2019	7.6
+883	Gifted	Frank, a single man raising his child prodigy niece Mary, is drawn into a custody battle with his mother.	101	2017	7.6
+884	The Peanut Butter Falcon	Zak runs away from his care home to make his dream of becoming a wrestler come true.	97	2019	7.6
+885	Victoria	A young Spanish woman who has recently moved to Berlin finds her flirtation with a local guy turn potentially deadly as their night out with his friends reveals a dangerous secret.	138	2015	7.6
+886	Mustang	When five orphan girls are seen innocently playing with boys on a beach, their scandalized conservative guardians confine them while forced marriages are arranged.	97	2015	7.6
+887	Guardians of the Galaxy Vol. 2	The Guardians struggle to keep together as a team while dealing with their personal family issues, notably Star-Lord's encounter with his father the ambitious celestial being Ego.	136	2017	7.6
+888	Baby Driver	After being coerced into working for a crime boss, a young getaway driver finds himself taking part in a heist doomed to fail.	113	2017	7.6
+889	Only the Brave	Based on the true story of the Granite Mountain Hotshots, a group of elite firefighters who risk everything to protect a town from a historic wildfire.	134	2017	7.6
+890	Bridge of Spies	During the Cold War, an American lawyer is recruited to defend an arrested Soviet spy in court, and then help the CIA facilitate an exchange of the spy for the Soviet captured American U2 spy plane pilot, Francis Gary Powers.	142	2015	7.6
+891	Incredibles 2	The Incredibles family takes on a new mission which involves a change in family roles: Bob Parr (Mr. Incredible) must manage the house while his wife Helen (Elastigirl) goes out to save the world.	118	2018	7.6
+892	Moana	In Ancient Polynesia, when a terrible curse incurred by the Demigod Maui reaches Moana's island, she answers the Ocean's call to seek out the Demigod to set things right.	107	2016	7.6
+893	Sicario	An idealistic FBI agent is enlisted by a government task force to aid in the escalating war against drugs at the border area between the U.S. and Mexico.	121	2015	7.6
+894	Creed	The former World Heavyweight Champion Rocky Balboa serves as a trainer and mentor to Adonis Johnson, the son of his late friend and former rival Apollo Creed.	133	2015	7.6
+895	Leviafan	In a Russian coastal town, Kolya is forced to fight the corrupt mayor when he is told that his house will be demolished. He recruits a lawyer friend to help, but the man's arrival brings further misfortune for Kolya and his family.	140	2014	7.6
+896	Hell or High Water	A divorced father and his ex-con older brother resort to a desperate scheme in order to save their family's ranch in West Texas.	102	2016	7.6
+897	Philomena	A world-weary political journalist picks up the story of a woman's search for her son, who was taken away from her decades ago after she became pregnant and was forced to live in a convent.	98	2013	7.6
+898	Dawn of the Planet of the Apes	A growing nation of genetically evolved apes led by Caesar is threatened by a band of human survivors of the devastating virus unleashed a decade earlier.	130	2014	7.6
+899	El cuerpo	A detective searches for the body of a femme fatale which has gone missing from a morgue.	112	2012	7.6
+900	Serbuan maut	A S.W.A.T. team becomes trapped in a tenement run by a ruthless mobster and his army of killers and thugs.	101	2011	7.6
+901	End of Watch	Shot documentary-style, this film follows the daily grind of two young police officers in LA who are partners and friends, and what happens when they meet criminal forces greater than themselves.	109	2012	7.6
+902	Kari-gurashi no Arietti	The Clock family are four-inch-tall people who live anonymously in another family's residence, borrowing simple items to make their home. Life changes for the Clocks when their teenage daughter, Arrietty, is discovered.	94	2010	7.6
+903	A Star Is Born	A musician helps a young singer find fame as age and alcoholism send his own career into a downward spiral.	136	2018	7.6
+904	True Grit	A stubborn teenager enlists the help of a tough U.S. Marshal to track down her father's murderer.	110	2010	7.6
+905	Hævnen	The lives of two Danish families cross each other, and an extraordinary but risky friendship comes into bud. But loneliness, frailty and sorrow lie in wait.	118	2010	7.6
+906	Despicable Me	When a criminal mastermind uses a trio of orphan girls as pawns for a grand scheme, he finds their love is profoundly changing him for the better.	95	2010	7.6
+907	50/50	Inspired by a true story, a comedy centered on a 27-year-old guy who learns of his cancer diagnosis and his subsequent struggle to beat the disease.	100	2011	7.6
+908	Kick-Ass	Dave Lizewski is an unnoticed high school student and comic book fan who one day decides to become a superhero, even though he has no powers, training or meaningful reason to do so.	117	2010	7.6
+909	Celda 211	The story of two men on different sides of a prison riot -- the inmate leading the rebellion and the young guard trapped in the revolt, who poses as a prisoner in a desperate attempt to survive the ordeal.	113	2009	7.6
+910	Moneyball	Oakland A's general manager Billy Beane's successful attempt to assemble a baseball team on a lean budget by employing computer-generated analysis to acquire new players.	133	2011	7.6
+911	La piel que habito	A brilliant plastic surgeon, haunted by past tragedies, creates a type of synthetic skin that withstands any kind of damage. His guinea pig: a mysterious and volatile woman who holds the key to his obsession.	120	2011	7.6
+912	Zombieland	A shy student trying to reach his family in Ohio, a gun-toting tough guy trying to find the last Twinkie, and a pair of sisters trying to get to an amusement park join forces to travel across a zombie-filled America.	88	2009	7.6
+913	Die Welle	A high school teacher's experiment to demonstrate to his students what life is like under a dictatorship spins horribly out of control when he forms a social unit with a life of its own.	107	2008	7.6
+914	Sherlock Holmes	Detective Sherlock Holmes and his stalwart partner Watson engage in a battle of wits and brawn with a nemesis whose plot is a threat to all of England.	128	2009	7.6
+915	The Blind Side	The story of Michael Oher, a homeless and traumatized boy who became an All-American football player and first-round NFL draft pick with the help of a caring woman and her family.	129	2009	7.6
+916	The Visitor	A college professor travels to New York City to attend a conference and finds a young couple living in his apartment.	104	2007	7.6
+917	Seven Pounds	A man with a fateful secret embarks on an extraordinary journey of redemption by forever changing the lives of seven strangers.	123	2008	7.6
+918	Eastern Promises	A teenager who dies during childbirth leaves clues in her journal that could tie her child to a rape involving a violent Russian mob family.	100	2007	7.6
+919	Stardust	In a countryside town bordering on a magical land, a young man makes a promise to his beloved that he'll retrieve a fallen star by venturing into the magical realm.	127	2007	7.6
+920	The Secret of Kells	A young boy in a remote medieval outpost under siege from barbarian raids is beckoned to adventure when a celebrated master illuminator arrives with an ancient book, brimming with secret wisdom and powers.	71	2009	7.6
+921	Inside Man	A police detective, a bank robber, and a high-power broker enter high-stakes negotiations after the criminal's brilliant heist spirals into a hostage situation.	129	2006	7.6
+922	Gone Baby Gone	Two Boston area detectives investigate a little girl's kidnapping, which ultimately turns into a crisis both professionally and personally.	114	2007	7.6
+923	La Vie En Rose	Biopic of the iconic French singer Édith Piaf. Raised by her grandmother in a brothel, she was discovered while singing on a street corner at the age of 19. Despite her success, Piaf's life was filled with tragedy.	140	2007	7.6
+924	Huo Yuan Jia	A biography of Chinese Martial Arts Master Huo Yuanjia, who is the founder and spiritual guru of the Jin Wu Sports Federation.	104	2006	7.6
+925	The Illusionist	In turn-of-the-century Vienna, a magician uses his abilities to secure the love of a woman far above his social standing.	110	2006	7.6
+926	Dead Man's Shoes	A disaffected soldier returns to his hometown to get even with the thugs who brutalized his mentally-challenged brother years ago.	90	2004	7.6
+927	Harry Potter and the Half-Blood Prince	As Harry Potter begins his sixth year at Hogwarts, he discovers an old book marked as "the property of the Half-Blood Prince" and begins to learn more about Lord Voldemort's dark past.	153	2009	7.6
+928	300	King Leonidas of Sparta and a force of 300 men fight the Persians at Thermopylae in 480 B.C.	117	2006	7.6
+929	Match Point	At a turning point in his life, a former tennis pro falls for an actress who happens to be dating his friend and soon-to-be brother-in-law.	124	2005	7.6
+930	Watchmen	In 1985 where former superheroes exist, the murder of a colleague sends active vigilante Rorschach into his own sprawling investigation, uncovering something that could completely change the course of history as we know it.	162	2009	7.6
+931	Lord of War	An arms dealer confronts the morality of his work as he is being chased by an INTERPOL Agent.	122	2005	7.6
+932	Saw	Two strangers awaken in a room with no recollection of how they got there, and soon discover they're pawns in a deadly game perpetrated by a notorious serial killer.	103	2004	7.6
+933	Synecdoche, New York	A theatre director struggles with his work, and the women in his life, as he creates a life-size replica of New York City inside a warehouse as part of his new play.	124	2008	7.6
+934	Mysterious Skin	A teenage hustler and a young man obsessed with alien abductions cross paths, together discovering a horrible, liberating truth.	105	2004	7.6
+935	Jeux d'enfants	As adults, best friends Julien and Sophie continue the odd game they started as children -- a fearless competition to outdo one another with daring and outrageous stunts. While they often act out to relieve one another's pain, their game might be a way to avoid the fact that they are truly meant for one another.	93	2003	7.6
+936	Un long dimanche de fiançailles	Tells the story of a young woman's relentless search for her fiancé, who has disappeared from the trenches of the Somme during World War One.	133	2004	7.6
+937	The Station Agent	When his only friend dies, a man born with dwarfism moves to rural New Jersey to live a life of solitude, only to meet a chatty hot dog vendor and a woman dealing with her own personal loss.	89	2003	7.6
+938	21 Grams	A freak accident brings together a critically ill mathematician, a grieving mother, and a born-again ex-con.	124	2003	7.6
+939	Boksuneun naui geot	A recently laid off factory worker kidnaps his former boss' friend's daughter, hoping to use the ransom money to pay for his sister's kidney transplant.	129	2002	7.6
+940	Finding Neverland	The story of Sir J.M. Barrie's friendship with a family who inspired him to create Peter Pan.	106	2004	7.6
+941	25th Hour	Cornered by the DEA, convicted New York drug dealer Montgomery Brogan reevaluates his life in the 24 remaining hours before facing a seven-year jail term.	135	2002	7.6
+942	The Butterfly Effect	Evan Treborn suffers blackouts during significant events of his life. As he grows up, he finds a way to remember these lost memories and a supernatural way to alter his life by reading his journal.	113	2004	7.6
+943	28 Days Later...	Four weeks after a mysterious, incurable virus spreads throughout the UK, a handful of survivors try to find sanctuary.	113	2002	7.6
+944	Batoru rowaiaru	In the future, the Japanese government captures a class of ninth-grade students and forces them to kill each other under the revolutionary "Battle Royale" act.	114	2000	7.6
+945	The Royal Tenenbaums	The eccentric members of a dysfunctional family reluctantly gather under the same roof for various reasons.	110	2001	7.6
+946	Y tu mamá también	In Mexico, two teenage boys and an attractive older woman embark on a road trip and learn a thing or two about life, friendship, sex, and each other.	106	2001	7.6
+947	Harry Potter and the Sorcerer's Stone	An orphaned boy enrolls in a school of wizardry, where he learns the truth about himself, his family and the terrible evil that haunts the magical world.	152	2001	7.6
+948	The Others	A woman who lives in her darkened old family house with her two photosensitive children becomes convinced that the home is haunted.	101	2001	7.6
+949	Blow	The story of how George Jung, along with the Medellín Cartel headed by Pablo Escobar, established the American cocaine market in the 1970s in the United States.	124	2001	7.6
+950	Enemy at the Gates	A Russian and a German sniper play a game of cat-and-mouse during the Battle of Stalingrad.	131	2001	7.6
+951	Minority Report	In a future where a special police unit is able to arrest murderers before they commit their crimes, an officer from that unit is himself accused of a future murder.	145	2002	7.6
+952	The Hurricane	The story of Rubin 'Hurricane' Carter, a boxer wrongly imprisoned for murder, and the people who aided in his fight to prove his innocence.	146	1999	7.6
+953	American Psycho	A wealthy New York City investment banking executive, Patrick Bateman, hides his alternate psychopathic ego from his co-workers and friends as he delves deeper into his violent, hedonistic fantasies.	101	2000	7.6
+954	Lola rennt	After a botched money delivery, Lola has 20 minutes to come up with 100,000 Deutschmarks.	81	1998	7.6
+955	The Thin Red Line	Adaptation of James Jones' autobiographical 1962 novel, focusing on the conflict at Guadalcanal during the second World War.	170	1998	7.6
+956	Mulan	To save her father from death in the army, a young maiden secretly goes in his place and becomes one of China's greatest heroines in the process.	88	1998	7.6
+957	Fear and Loathing in Las Vegas	An oddball journalist and his psychopathic lawyer travel to Las Vegas for a series of psychedelic escapades.	118	1998	7.6
+958	Funny Games	Two violent young men take a mother, father, and son hostage in their vacation cabin and force them to play sadistic "games" with one another for their own amusement.	108	1997	7.6
+959	Dark City	A man struggles with memories of his past, which include a wife he cannot remember and a nightmarish world no one else ever seems to wake up from.	100	1998	7.6
+960	Sleepers	After a prank goes disastrously wrong, a group of boys are sent to a detention center where they are brutalized. Thirteen years later, an unexpected random encounter with a former guard gives them a chance for revenge.	147	1996	7.6
+961	Lost Highway	Anonymous videotapes presage a musician's murder conviction, and a gangster's girlfriend leads a mechanic astray.	134	1997	7.6
+962	Sense and Sensibility	Rich Mr. Dashwood dies, leaving his second wife and her three daughters poor by the rules of inheritance. The two eldest daughters are the title opposites.	136	1995	7.6
+963	Die Hard: With a Vengeance	John McClane and a Harlem store owner are targeted by German terrorist Simon in New York City, where he plans to rob the Federal Reserve Building.	128	1995	7.6
+964	Dead Man	On the run after murdering a man, accountant William Blake encounters a strange aboriginal American man named Nobody who prepares him for his journey into the spiritual world.	121	1995	7.6
+965	The Bridges of Madison County	Photographer Robert Kincaid wanders into the life of housewife Francesca Johnson for four days in the 1960s.	135	1995	7.6
+966	Apollo 13	NASA must devise a strategy to return Apollo 13 to Earth safely after the spacecraft undergoes massive internal damage putting the lives of the three astronauts on board in jeopardy.	140	1995	7.6
+967	Trois couleurs: Blanc	After his wife divorces him, a Polish immigrant plots to get even with her.	92	1994	7.6
+968	Falling Down	An ordinary man frustrated with the various flaws he sees in society begins to psychotically and violently lash out against them.	113	1993	7.6
+969	Dazed and Confused	The adventures of high school and junior high students on the last day of school in May 1976.	102	1993	7.6
+970	My Cousin Vinny	Two New Yorkers accused of murder in rural Alabama while on their way back to college call in the help of one of their cousins, a loudmouth lawyer with no trial experience.	120	1992	7.6
+971	Omohide poro poro	A twenty-seven-year-old office worker travels to the countryside while reminiscing about her childhood in Tokyo.	118	1991	7.6
+972	Delicatessen	Post-apocalyptic surrealist black comedy about the landlord of an apartment building who occasionally prepares a delicacy for his odd tenants.	99	1991	7.6
+973	Home Alone	An eight-year-old troublemaker must protect his house from a pair of burglars when he is accidentally left home alone by his family during Christmas vacation.	103	1990	7.6
+974	The Godfather: Part III	Follows Michael Corleone, now in his 60s, as he seeks to free his family from crime and find a suitable successor to his empire.	162	1990	7.6
+975	When Harry Met Sally...	Harry and Sally have known each other for years, and are very good friends, but they fear sex would ruin the friendship.	95	1989	7.6
+976	The Little Mermaid	A mermaid princess makes a Faustian bargain in an attempt to become human and win a prince's love.	83	1989	7.6
+977	The Naked Gun: From the Files of Police Squad!	Incompetent police Detective Frank Drebin must foil an attempt to assassinate Queen Elizabeth II.	85	1988	7.6
+978	Planes, Trains & Automobiles	A man must struggle to travel home for Thanksgiving with a lovable oaf of a shower curtain ring salesman as his only companion.	93	1987	7.6
+979	Lethal Weapon	Two newly paired cops who are complete opposites must put aside their differences in order to catch a gang of drug smugglers.	109	1987	7.6
+980	Blood Simple	The owner of a seedy small-town Texas bar discovers that one of his employees is having an affair with his wife. A chaotic chain of misunderstandings, lies and mischief ensues after he devises a plot to have them murdered.	99	1984	7.6
+981	On Golden Pond	Norman is a curmudgeon with an estranged relationship with his daughter Chelsea. At Golden Pond, he and his wife nevertheless agree to care for Billy, the son of Chelsea's new boyfriend, and a most unexpected relationship blooms.	109	1981	7.6
+982	Mad Max 2	In the post-apocalyptic Australian wasteland, a cynical drifter agrees to help a small, gasoline-rich community escape a horde of bandits.	96	1981	7.6
+983	The Warriors	In the near future, a charismatic leader summons the street gangs of New York City in a bid to take it over. When he is killed, The Warriors are falsely blamed and now must fight their way home while every other gang is hunting them down.	92	1979	7.6
+984	The Muppet Movie	Kermit and his newfound friends trek across America to find success in Hollywood, but a frog legs merchant is after Kermit.	95	1979	7.6
+985	Escape from Alcatraz	Alcatraz is the most secure prison of its time. It is believed that no one can ever escape from it, until three daring men make a possible successful attempt at escaping from one of the most infamous prisons in the world.	112	1979	7.6
+986	Watership Down	Hoping to escape destruction by human developers and save their community, a colony of rabbits, led by Hazel and Fiver, seek out a safe place to set up a new warren.	91	1978	7.6
+987	Midnight Express	Billy Hayes, an American college student, is caught smuggling drugs out of Turkey and thrown into prison.	121	1978	7.6
+988	Close Encounters of the Third Kind	Roy Neary, an electric lineman, watches how his quiet and ordinary daily life turns upside down after a close encounter with a UFO.	138	1977	7.6
+989	The Long Goodbye	Private investigator Philip Marlowe helps a friend out of a jam, but in doing so gets implicated in his wife's murder.	112	1973	7.6
+990	Giù la testa	A low-life bandit and an I.R.A. explosives expert rebel against the government and become heroes of the Mexican Revolution.	157	1971	7.6
+991	Kelly's Heroes	A group of U.S. soldiers sneaks across enemy lines to get their hands on a secret stash of Nazi treasure.	144	1970	7.6
+992	The Jungle Book	Bagheera the Panther and Baloo the Bear have a difficult time trying to convince a boy to leave the jungle for human civilization.	78	1967	7.6
+993	Blowup	A fashion photographer unknowingly captures a death on film after following two lovers in a park.	111	1966	7.6
+994	A Hard Day's Night	Over two "typical" days in the life of The Beatles, the boys struggle to keep themselves and Sir Paul McCartney's mischievous grandfather in check while preparing for a live television performance.	87	1964	7.6
+995	Breakfast at Tiffany's	A young New York socialite becomes interested in a young man who has moved into her apartment building, but her past threatens to get in the way.	115	1961	7.6
+996	Giant	Sprawling epic covering the life of a Texas cattle rancher and his family and associates.	201	1956	7.6
+997	From Here to Eternity	In Hawaii in 1941, a private is cruelly punished for not boxing on his unit's team, while his captain's wife and second-in-command are falling in love.	118	1953	7.6
+998	Lifeboat	Several survivors of a torpedoed merchant ship in World War II find themselves in the same lifeboat with one of the crew members of the U-boat that sank their ship.	97	1944	7.6
+999	The 39 Steps	A man in London tries to help a counter-espionage Agent. But when the Agent is killed, and the man stands accused, he must go on the run to save himself and stop a spy ring which is trying to steal top secret information.	86	1935	7.6
 \.
 
 
@@ -8122,9 +8092,7 @@ COPY public.tbl_ratings (id, description) FROM stdin;
 --
 
 COPY public.tbl_recommendations (user_id, movie_id, recommendation_score) FROM stdin;
-1	65	80
-2	64	0
-1	64	93.33
+1	64	84.32
 \.
 
 
@@ -8133,8 +8101,12 @@ COPY public.tbl_recommendations (user_id, movie_id, recommendation_score) FROM s
 --
 
 COPY public.tbl_users (id, name, favorite_actor_id, favorite_director_id, favorite_gender_id, created_at) FROM stdin;
-1	Guilherme	5	3	3	2026-06-17 20:17:51.909841
-2	João	2	1	20	2026-06-17 22:07:02.530752
+1	Guilherme	5	3	3	2026-07-03 16:36:59.858039
+2	Ana	5	3	3	2026-07-03 17:00:10.003617
+3	Carlos	18	6	3	2026-07-03 17:00:10.003617
+4	Beatriz	5	8	14	2026-07-03 17:00:10.003617
+5	Diego	21	7	1	2026-07-03 17:00:10.003617
+6	Elena	21	1	6	2026-07-03 17:00:10.003617
 \.
 
 
@@ -8167,17 +8139,10 @@ SELECT pg_catalog.setval('public.tbl_movies_id_seq', 999, true);
 
 
 --
--- Name: tbl_ratings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.tbl_ratings_id_seq', 17, true);
-
-
---
 -- Name: tbl_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.tbl_users_id_seq', 2, true);
+SELECT pg_catalog.setval('public.tbl_users_id_seq', 6, true);
 
 
 --
@@ -8245,14 +8210,6 @@ ALTER TABLE ONLY public.tbl_movies
 
 
 --
--- Name: tbl_ratings tbl_ratings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.tbl_ratings
-    ADD CONSTRAINT tbl_ratings_pkey PRIMARY KEY (id);
-
-
---
 -- Name: tbl_recommendations tbl_recommendations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8301,13 +8258,6 @@ CREATE INDEX idx_movie_director_director_id ON public.tbl_movie_director USING b
 --
 
 CREATE INDEX idx_movie_gender_gender_id ON public.tbl_movie_gender USING btree (gender_id);
-
-
---
--- Name: idx_movies_rating_id; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE INDEX idx_movies_rating_id ON public.tbl_movies USING btree (rating_id);
 
 
 --
@@ -8382,14 +8332,6 @@ ALTER TABLE ONLY public.tbl_movie_gender
 
 
 --
--- Name: tbl_movies fk_movies_rating; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.tbl_movies
-    ADD CONSTRAINT fk_movies_rating FOREIGN KEY (rating_id) REFERENCES public.tbl_ratings(id);
-
-
---
 -- Name: tbl_recommendations fk_recommendations_movie; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -8432,6 +8374,4 @@ ALTER TABLE ONLY public.tbl_users
 --
 -- PostgreSQL database dump complete
 --
-
-\unrestrict DghNUhACGMQgmgdOxfuHngdQzz4efxg3apmJpt8zBBUTOLfkun1JlwF2Q8yaqZp
 

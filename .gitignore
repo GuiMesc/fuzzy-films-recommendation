@@ -13,6 +13,3 @@ __pycache__/
 
 # Gráficos
 fuzzy_plots/*.png
-
-# Pasta .claude
-.claude/

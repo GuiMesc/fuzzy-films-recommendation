@@ -7,6 +7,15 @@ import psycopg2.extras
 import os
 import sys
 
+from queries import (
+    GET_USER_ID_BY_NAME,
+    GET_USER_PROFILE,
+    GET_HISTORY,
+    GET_MOVIE_BY_ID,
+    GET_MOVIES,
+    SAVE_RECOMMENDATION,
+)
+
 DB_CONFIG = {
     "host": "localhost",
     "port": 5432,
@@ -15,69 +24,27 @@ DB_CONFIG = {
     "password": "root"
 }
 
-query_get_movies = """
-SELECT
-    m.id,
-    m.title,
-    m.description,
-    m.duration,
-    m.released_year,
-    m.average,
-    COALESCE(
-        (
-            SELECT json_agg(json_build_object('name', g.name))
-            FROM tbl_movie_gender mg
-            INNER JOIN tbl_genders g
-                ON mg.gender_id = g.id
-            WHERE mg.movie_id = m.id
-        ),
-        '[]'::json
-    ) AS genders,
-    COALESCE(
-        (
-            SELECT json_agg(json_build_object('name', a.name))
-            FROM tbl_movie_actor ma
-            INNER JOIN tbl_actors a
-                ON ma.actor_id = a.id
-            WHERE ma.movie_id = m.id
-        ),
-        '[]'::json
-    ) AS actors,
-    COALESCE(
-        (
-            SELECT json_agg(json_build_object('name', d.name))
-            FROM tbl_movie_director md
-            INNER JOIN tbl_directors d
-                ON md.director_id = d.id
-            WHERE md.movie_id = m.id
-        ),
-        '[]'::json
-    ) AS directors
-FROM tbl_movies m
-WHERE m.id = 280;
-"""
-
 CLASSES_RECOMENDACAO = ['baixa', 'media', 'alta', 'muito_alta']
 
 CENARIOS_TESTE = [
-    # The Dark Knight (id=4)
-    {'usuario': 'Ana',     'movie_id': 4,  'esperado': 'muito_alta'},
-    {'usuario': 'Carlos',  'movie_id': 4,  'esperado': 'alta'},
-    {'usuario': 'Beatriz', 'movie_id': 4,  'esperado': 'alta'},
-    {'usuario': 'Diego',   'movie_id': 4,  'esperado': 'media'},
-    {'usuario': 'Elena',   'movie_id': 4,  'esperado': 'baixa'},
-    # The Green Mile (id=27)
-    {'usuario': 'Ana',     'movie_id': 27, 'esperado': 'media'},
-    {'usuario': 'Carlos',  'movie_id': 27, 'esperado': 'media'},
-    {'usuario': 'Beatriz', 'movie_id': 27, 'esperado': 'media'},
-    {'usuario': 'Diego',   'movie_id': 27, 'esperado': 'muito_alta'},
-    {'usuario': 'Elena',   'movie_id': 27, 'esperado': 'alta'},
-    # The Usual Suspects (id=43)
-    {'usuario': 'Ana',     'movie_id': 43, 'esperado': 'media'},
-    {'usuario': 'Carlos',  'movie_id': 43, 'esperado': 'media'},
-    {'usuario': 'Beatriz', 'movie_id': 43, 'esperado': 'alta'},
-    {'usuario': 'Diego',   'movie_id': 43, 'esperado': 'media'},
-    {'usuario': 'Elena',   'movie_id': 43, 'esperado': 'baixa'},
+    # The Dark Knight (id=3)
+    {'usuario': 'Ana',     'movie_id': 3,  'esperado': 'muito_alta'},
+    {'usuario': 'Carlos',  'movie_id': 3,  'esperado': 'alta'},
+    {'usuario': 'Beatriz', 'movie_id': 3,  'esperado': 'alta'},
+    {'usuario': 'Diego',   'movie_id': 3,  'esperado': 'media'},
+    {'usuario': 'Elena',   'movie_id': 3,  'esperado': 'baixa'},
+    # The Green Mile (id=26)
+    {'usuario': 'Ana',     'movie_id': 26, 'esperado': 'media'},
+    {'usuario': 'Carlos',  'movie_id': 26, 'esperado': 'media'},
+    {'usuario': 'Beatriz', 'movie_id': 26, 'esperado': 'media'},
+    {'usuario': 'Diego',   'movie_id': 26, 'esperado': 'muito_alta'},
+    {'usuario': 'Elena',   'movie_id': 26, 'esperado': 'alta'},
+    # The Usual Suspects (id=42)
+    {'usuario': 'Ana',     'movie_id': 42, 'esperado': 'media'},
+    {'usuario': 'Carlos',  'movie_id': 42, 'esperado': 'media'},
+    {'usuario': 'Beatriz', 'movie_id': 42, 'esperado': 'alta'},
+    {'usuario': 'Diego',   'movie_id': 42, 'esperado': 'media'},
+    {'usuario': 'Elena',   'movie_id': 42, 'esperado': 'baixa'},
 ]
 
 
@@ -88,7 +55,7 @@ def get_user_id_by_name(name="Guilherme"):
     conn = get_db_connection()
     try:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT id FROM tbl_users WHERE name = %s LIMIT 1;", (name,))
+            cursor.execute(GET_USER_ID_BY_NAME, (name,))
             row = cursor.fetchone()
             return row[0] if row else None
     except Exception as e:
@@ -101,40 +68,7 @@ def get_history(user_id):
     conn = get_db_connection()
     try:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
-            cursor.execute(
-                """
-                SELECT
-                    h.user_average,
-                    h.minutes_watched,
-                    h.liked,
-                    m.duration,
-                    COALESCE(
-                        (SELECT json_agg(json_build_object('name', g.name))
-                         FROM tbl_movie_gender mg
-                         JOIN tbl_genders g ON mg.gender_id = g.id
-                         WHERE mg.movie_id = m.id),
-                        '[]'::json
-                    ) as genders,
-                    COALESCE(
-                        (SELECT json_agg(json_build_object('name', a.name))
-                         FROM tbl_movie_actor ma
-                         JOIN tbl_actors a ON ma.actor_id = a.id
-                         WHERE ma.movie_id = m.id),
-                        '[]'::json
-                    ) as actors,
-                    COALESCE(
-                        (SELECT json_agg(json_build_object('name', d.name))
-                         FROM tbl_movie_director md
-                         JOIN tbl_directors d ON md.director_id = d.id
-                         WHERE md.movie_id = m.id),
-                        '[]'::json
-                    ) as directors
-                FROM tbl_historic h
-                JOIN tbl_movies m ON h.movie_id = m.id
-                WHERE h.user_id = %s;
-                """,
-                (user_id,)
-            )
+            cursor.execute(GET_HISTORY, (user_id,))
             rows = cursor.fetchall()
 
             history_data = []
@@ -175,12 +109,7 @@ def save_recommendations(user_id, recommendations):
         with conn.cursor() as cursor:
             for rec in recommendations:
                 cursor.execute(
-                    """
-                    INSERT INTO tbl_recommendations (user_id, movie_id, recommendation_score)
-                    VALUES (%s, %s, %s)
-                    ON CONFLICT (user_id, movie_id)
-                    DO UPDATE SET recommendation_score = EXCLUDED.recommendation_score;
-                    """,
+                    SAVE_RECOMMENDATION,
                     (user_id, rec['movieId'], rec['recommendation_score'])
                 )
         conn.commit()
@@ -195,20 +124,7 @@ def get_user_profile(user_id):
     conn = get_db_connection()
     try:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
-            cursor.execute(
-                """
-                SELECT
-                    g.name  AS favorite_gender,
-                    a.name  AS favorite_actor,
-                    d.name  AS favorite_director
-                FROM tbl_users u
-                LEFT JOIN tbl_genders   g ON g.id = u.favorite_gender_id
-                LEFT JOIN tbl_actors    a ON a.id = u.favorite_actor_id
-                LEFT JOIN tbl_directors d ON d.id = u.favorite_director_id
-                WHERE u.id = %s;
-                """,
-                (user_id,)
-            )
+            cursor.execute(GET_USER_PROFILE, (user_id,))
             row = cursor.fetchone()
             return dict(row) if row else {}
     except Exception as e:
@@ -221,34 +137,7 @@ def get_movie_by_id(movie_id):
     conn = get_db_connection()
     try:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
-            cursor.execute(
-                """
-                SELECT
-                    m.id, m.title, m.description, m.duration,
-                    m.released_year, m.average,
-                    COALESCE(
-                        (SELECT json_agg(json_build_object('name', g.name))
-                         FROM tbl_movie_gender mg
-                         JOIN tbl_genders g ON mg.gender_id = g.id
-                         WHERE mg.movie_id = m.id), '[]'::json
-                    ) AS genders,
-                    COALESCE(
-                        (SELECT json_agg(json_build_object('name', a.name))
-                         FROM tbl_movie_actor ma
-                         JOIN tbl_actors a ON ma.actor_id = a.id
-                         WHERE ma.movie_id = m.id), '[]'::json
-                    ) AS actors,
-                    COALESCE(
-                        (SELECT json_agg(json_build_object('name', d.name))
-                         FROM tbl_movie_director md
-                         JOIN tbl_directors d ON md.director_id = d.id
-                         WHERE md.movie_id = m.id), '[]'::json
-                    ) AS directors
-                FROM tbl_movies m
-                WHERE m.id = %s;
-                """,
-                (movie_id,)
-            )
+            cursor.execute(GET_MOVIE_BY_ID, (movie_id,))
             return cursor.fetchone()
     except Exception as e:
         print(f"Erro ao buscar filme: {e}")
@@ -257,14 +146,7 @@ def get_movie_by_id(movie_id):
         conn.close()
 
 
-def calcular_input_com_perfil(score_historico, nome_favorito, lista_itens_filme,
-                              peso_historico=0.6, peso_perfil=0.4):
-    """
-    Combina o score do histórico (0-10) com o sinal do perfil declarado.
-    Quando o favorito do usuário está no filme, o sinal de perfil vale 10;
-    caso contrário, vale 0. A média ponderada garante que o match de perfil
-    sempre eleva o input para a zona correta das funções de pertinência fuzzy.
-    """
+def calcular_input_com_perfil(score_historico, nome_favorito, lista_itens_filme, peso_historico=0.6, peso_perfil=0.4):
     perfil_score = 10.0 if (nome_favorito and any(
         item['name'] == nome_favorito for item in lista_itens_filme
     )) else 0.0
@@ -322,11 +204,7 @@ def calcular_afinidade(historico_filmes, chave, valores_alvo, verbose=True):
 def plotar_pertinencia(variaveis_entrada, consequente, valores_entrada, valor_saida, titulo, output_dir="fuzzy_plots"):
     """
     Gera e salva um PNG com os conjuntos fuzzy de todas as variáveis
-    e as operações realizadas na inferência:
-      - Funções de pertinência de cada antecedente e do consequente
-      - Valor de entrada de cada antecedente (linha vertical tracejada)
-      - Grau de pertinência em cada conjunto para o valor de entrada
-      - Valor defuzzificado de saída destacado no consequente
+    e as operações realizadas na inferência
     """
     os.makedirs(output_dir, exist_ok=True)
 
@@ -366,7 +244,7 @@ def plotar_pertinencia(variaveis_entrada, consequente, valores_entrada, valor_sa
         ax.legend(fontsize=8)
         ax.grid(True, alpha=0.3)
 
-    # ── Consequente (saída) ─────────────────────────────────────────────────
+    # ── Consequente (saída)
     ax_out = axes[-1]
     universo_saida = consequente.universe
 
@@ -385,7 +263,7 @@ def plotar_pertinencia(variaveis_entrada, consequente, valores_entrada, valor_sa
     ax_out.legend(fontsize=8)
     ax_out.grid(True, alpha=0.3)
 
-    # ── Título geral e salvamento ────────────────────────────────────────────
+    # ── Título geral e salvamento
     fig.suptitle(titulo, fontsize=13, fontweight='bold')
     plt.tight_layout()
 
@@ -403,7 +281,6 @@ def plotar_pertinencia(variaveis_entrada, consequente, valores_entrada, valor_sa
 
 
 def construir_sistema_fuzzy():
-    """Constrói e retorna as variáveis fuzzy, regras e sistema de controle."""
     genero       = ctrl.Antecedent(np.arange(0, 11, 1), 'genero')
     diretor      = ctrl.Antecedent(np.arange(0, 11, 1), 'diretor')
     ator         = ctrl.Antecedent(np.arange(0, 11, 1), 'ator')
@@ -424,13 +301,13 @@ def construir_sistema_fuzzy():
     recomendacao['alta']       = fuzz.trimf(recomendacao.universe, [60, 80, 100])
     recomendacao['muito_alta'] = fuzz.trimf(recomendacao.universe, [80, 100, 100])
 
-    # ── MUITO ALTA ────────────────────────────────────────────────────────────
+    # ── MUITO ALTA ──
     regra1  = ctrl.Rule(genero['alta'] & diretor['alta'] & ator['alta'], recomendacao['muito_alta'])
     regra2  = ctrl.Rule(genero['alta'] & diretor['alta'] & nota['excelente'], recomendacao['muito_alta'])
     regra3  = ctrl.Rule(genero['alta'] & ator['alta'] & nota['excelente'], recomendacao['muito_alta'])
     regra4  = ctrl.Rule(diretor['alta'] & ator['alta'] & nota['excelente'], recomendacao['muito_alta'])
 
-    # ── ALTA ──────────────────────────────────────────────────────────────────
+    # ── ALTA ──
     regra5  = ctrl.Rule((genero['alta'] | diretor['alta'] | ator['alta']) & nota['excelente'], recomendacao['alta'])
     regra6  = ctrl.Rule(genero['alta'] & nota['boa'], recomendacao['alta'])
     regra7  = ctrl.Rule(diretor['alta'] & nota['boa'], recomendacao['alta'])
@@ -438,14 +315,14 @@ def construir_sistema_fuzzy():
     regra9  = ctrl.Rule(genero['alta'] & (diretor['media'] | ator['media']) & nota['boa'], recomendacao['alta'])
     regra10 = ctrl.Rule(genero['media'] & (diretor['alta'] | ator['alta']) & nota['boa'], recomendacao['alta'])
 
-    # ── MEDIA ─────────────────────────────────────────────────────────────────
+    # ── MEDIA ──
     regra11 = ctrl.Rule((genero['media'] | diretor['media'] | ator['media']) & nota['boa'], recomendacao['media'])
     regra12 = ctrl.Rule((genero['alta'] | diretor['alta'] | ator['alta']) & nota['ruim'], recomendacao['media'])
     regra13 = ctrl.Rule(genero['media'] & (diretor['media'] | ator['media']), recomendacao['media'])
     regra14 = ctrl.Rule((genero['media'] | diretor['media'] | ator['media']) & nota['excelente'], recomendacao['media'])
     regra15 = ctrl.Rule(genero['baixa'] & (diretor['baixa'] | ator['baixa']) & nota['boa'], recomendacao['media'])
 
-    # ── BAIXA ─────────────────────────────────────────────────────────────────
+    # ── BAIXA ──
     regra16 = ctrl.Rule(genero['baixa'] & diretor['baixa'] & ator['baixa'], recomendacao['baixa'])
     regra17 = ctrl.Rule(genero['baixa'] & nota['ruim'], recomendacao['baixa'])
     regra18 = ctrl.Rule(diretor['baixa'] & ator['baixa'] & nota['ruim'], recomendacao['baixa'])
@@ -602,7 +479,7 @@ if __name__ == '__main__':
         plotar_matriz_confusao(resultados_eval)
 
     else:
-        user_id = get_user_id_by_name("João")
+        user_id = get_user_id_by_name("Guilherme")
 
         profile = get_user_profile(user_id)
         print("\n=====================================================")
@@ -613,7 +490,7 @@ if __name__ == '__main__':
         print(f"  Diretor favorito : {profile.get('favorite_director') or '(não definido)'}")
 
         history = get_history(user_id)
-        movies  = get_movies(query_get_movies)
+        movies  = get_movies(GET_MOVIES)
 
         if not history or not movies:
             print("Não foi possível buscar os dados do banco de dados")
