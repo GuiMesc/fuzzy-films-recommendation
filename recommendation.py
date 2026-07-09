@@ -28,23 +28,23 @@ CLASSES_RECOMENDACAO = ['baixa', 'media', 'alta', 'muito_alta']
 
 CENARIOS_TESTE = [
     # The Dark Knight (id=3)
-    {'usuario': 'Ana',     'movie_id': 3,  'esperado': 'muito_alta'},
-    {'usuario': 'Carlos',  'movie_id': 3,  'esperado': 'alta'},
-    {'usuario': 'Beatriz', 'movie_id': 3,  'esperado': 'alta'},
-    {'usuario': 'Diego',   'movie_id': 3,  'esperado': 'media'},
-    {'usuario': 'Elena',   'movie_id': 3,  'esperado': 'baixa'},
+    {'usuario': 'Ana',     'movie_id': 3,  'esperado': 95.0},
+    {'usuario': 'Carlos',  'movie_id': 3,  'esperado': 80.0},
+    {'usuario': 'Beatriz', 'movie_id': 3,  'esperado': 80.0},
+    {'usuario': 'Diego',   'movie_id': 3,  'esperado': 50.0},
+    {'usuario': 'Elena',   'movie_id': 3,  'esperado': 15.0},
     # The Green Mile (id=26)
-    {'usuario': 'Ana',     'movie_id': 26, 'esperado': 'media'},
-    {'usuario': 'Carlos',  'movie_id': 26, 'esperado': 'media'},
-    {'usuario': 'Beatriz', 'movie_id': 26, 'esperado': 'media'},
-    {'usuario': 'Diego',   'movie_id': 26, 'esperado': 'muito_alta'},
-    {'usuario': 'Elena',   'movie_id': 26, 'esperado': 'alta'},
+    {'usuario': 'Ana',     'movie_id': 26, 'esperado': 50.0},
+    {'usuario': 'Carlos',  'movie_id': 26, 'esperado': 50.0},
+    {'usuario': 'Beatriz', 'movie_id': 26, 'esperado': 50.0},
+    {'usuario': 'Diego',   'movie_id': 26, 'esperado': 95.0},
+    {'usuario': 'Elena',   'movie_id': 26, 'esperado': 80.0},
     # The Usual Suspects (id=42)
-    {'usuario': 'Ana',     'movie_id': 42, 'esperado': 'media'},
-    {'usuario': 'Carlos',  'movie_id': 42, 'esperado': 'media'},
-    {'usuario': 'Beatriz', 'movie_id': 42, 'esperado': 'alta'},
-    {'usuario': 'Diego',   'movie_id': 42, 'esperado': 'media'},
-    {'usuario': 'Elena',   'movie_id': 42, 'esperado': 'baixa'},
+    {'usuario': 'Ana',     'movie_id': 42, 'esperado': 50.0},
+    {'usuario': 'Carlos',  'movie_id': 42, 'esperado': 50.0},
+    {'usuario': 'Beatriz', 'movie_id': 42, 'esperado': 80.0},
+    {'usuario': 'Diego',   'movie_id': 42, 'esperado': 50.0},
+    {'usuario': 'Elena',   'movie_id': 42, 'esperado': 15.0},
 ]
 
 
@@ -392,8 +392,8 @@ def avaliar_cenarios(cenarios):
     """Roda o sistema fuzzy para cada cenário e coleta predição vs. esperado."""
     cache_filmes = {}
 
-    print(f"\n{'Usuário':<12} {'Filme ID':>8}  {'Esperado':<12} {'Previsto':<12} {'Score':>8}  Status")
-    print("-" * 68)
+    print(f"\n{'Usuário':<12} {'Filme':<25} {'Esperado %':>10} {'Previsto %':>10} {'Erro %':>8}")
+    print("-" * 70)
 
     resultados = []
     for c in cenarios:
@@ -408,65 +408,159 @@ def avaliar_cenarios(cenarios):
         # Cada cenário usa um sistema fuzzy isolado para evitar cache de estado interno do skfuzzy
         sistema_controle, recomendacao_var, *_ = construir_sistema_fuzzy()
 
-        score, previsto = calcular_score_usuario_filme(
+        score, previsto_str = calcular_score_usuario_filme(
             c['usuario'], movie, sistema_controle, recomendacao_var
         )
-        correto = previsto == c['esperado']
+        
+        esperado_pct = float(c['esperado'])
+        esperado_str = score_para_categoria(esperado_pct, recomendacao_var)
+        erro = abs(esperado_pct - score)
+        
         resultados.append({
-            'usuario':  c['usuario'],
-            'movie_id': movie_id,
-            'esperado': c['esperado'],
-            'previsto': previsto,
-            'score':    score,
-            'correto':  correto,
+            'usuario':      c['usuario'],
+            'movie_id':     movie_id,
+            'movie_title':  movie['title'],
+            'esperado_str': esperado_str,
+            'esperado_pct': esperado_pct,
+            'previsto_str': previsto_str,
+            'previsto_pct': score,
+            'erro':         erro,
         })
-        status = "OK" if correto else "ERRO"
-        print(f"{c['usuario']:<12} {movie_id:>8}  {c['esperado']:<12} {previsto:<12} {score:>7.1f}%  {status}")
+        print(f"{c['usuario']:<12} {movie['title'][:25]:<25} {esperado_pct:>9.1f}% {score:>9.1f}% {erro:>7.1f}%")
 
     return resultados
 
 
-def plotar_matriz_confusao(resultados, output_dir="fuzzy_plots"):
-    """Plota e salva a matriz de confusão como heatmap."""
-    classes = CLASSES_RECOMENDACAO
-    n = len(classes)
-    idx = {c: i for i, c in enumerate(classes)}
-
-    matriz = np.zeros((n, n), dtype=int)
-    for r in resultados:
-        matriz[idx[r['esperado']]][idx[r['previsto']]] += 1
-
-    fig, ax = plt.subplots(figsize=(7, 6))
-    im = ax.imshow(matriz, cmap='Blues')
-
-    ax.set_xticks(range(n))
-    ax.set_yticks(range(n))
-    ax.set_xticklabels(classes, fontsize=11)
-    ax.set_yticklabels(classes, fontsize=11)
-    ax.set_xlabel('Previsto', fontsize=12, fontweight='bold')
-    ax.set_ylabel('Real (esperado)', fontsize=12, fontweight='bold')
-    ax.set_title('Matriz de Confusão – Sistema Fuzzy de Recomendação',
-                 fontsize=13, fontweight='bold', pad=15)
-
-    for i in range(n):
-        for j in range(n):
-            cor = 'white' if matriz[i, j] > 0 and matriz[i, j] == matriz.max() else 'black'
-            ax.text(j, i, str(matriz[i, j]),
-                    ha='center', va='center',
-                    fontsize=16, color=cor, fontweight='bold')
-
-    plt.colorbar(im, ax=ax, label='Quantidade')
-    plt.tight_layout()
-
+def plotar_metricas_e_graficos(resultados, output_dir="fuzzy_plots"):
+    """Gera métricas de erro (MAE/RMSE), gráfico de dispersão, erros por perfil e mapa de calor."""
     os.makedirs(output_dir, exist_ok=True)
-    caminho = os.path.join(output_dir, 'matriz_confusao.png')
-    fig.savefig(caminho, dpi=150, bbox_inches='tight')
-    plt.show()
+    
+    # ── Mapeamento de dados
+    esperados = [r['esperado_pct'] for r in resultados]
+    previstos = [r['previsto_pct'] for r in resultados]
+    erros = [r['erro'] for r in resultados]
+    
+    # ── Cálculo das métricas gerais
+    mae = np.mean(erros)
+    rmse = np.sqrt(np.mean([e**2 for e in erros]))
+    
+    print("\n====================================================")
+    print("MÉTRICAS GERAIS DE AVALIAÇÃO DE REGRESSÃO")
+    print("====================================================")
+    print(f"  MAE (Erro Médio Absoluto): {mae:.2f}%")
+    print(f"  RMSE (Raiz do Erro Quadrático Médio): {rmse:.2f}%")
+    print("====================================================\n")
+    
+    # ── 1. GRÁFICO DE DISPERSÃO (Scatter Plot)
+    fig, ax = plt.subplots(figsize=(6, 6))
+    ax.scatter(esperados, previstos, color='#3498db', alpha=0.8, edgecolors='black', s=80, label='Cenários de Teste')
+    
+    # Linha ideal y = x
+    lims = [0, 100]
+    ax.plot(lims, lims, color='#e74c3c', linestyle='--', linewidth=1.5, label='Ideal (y = x)')
+    
+    ax.set_xlim(lims)
+    ax.set_ylim(lims)
+    ax.set_xlabel('Esperado (%)', fontsize=11, fontweight='bold')
+    ax.set_ylabel('Previsto (%)', fontsize=11, fontweight='bold')
+    ax.set_title('Esperado vs. Previsto (Porcentagem de Recomendação)', fontsize=12, fontweight='bold', pad=12)
+    ax.legend(loc='upper left')
+    ax.grid(True, linestyle=':', alpha=0.5)
+    
+    # Caixa de texto com métricas no gráfico
+    textstr = f"MAE: {mae:.2f}%\nRMSE: {rmse:.2f}%"
+    props = dict(boxstyle='round', facecolor='white', alpha=0.85, edgecolor='gray')
+    ax.text(0.05, 0.05, textstr, transform=ax.transAxes, fontsize=10,
+            verticalalignment='bottom', bbox=props)
+            
+    caminho_dispersao = os.path.join(output_dir, 'avaliacao_dispersao.png')
+    fig.savefig(caminho_dispersao, dpi=150, bbox_inches='tight')
+    plt.close(fig)
+    print(f"[PLOT] Gráfico de dispersão salvo: {caminho_dispersao}")
 
-    acertos = sum(1 for r in resultados if r['correto'])
-    total   = len(resultados)
-    print(f"\n[PLOT] Matriz salva: {caminho}")
-    print(f"Acurácia: {acertos}/{total} ({100 * acertos / total:.0f}%)")
+    # ── 2. GRÁFICO DE BARRAS DE ERRO POR PERFIL
+    erros_por_usuario = {}
+    for r in resultados:
+        user = r['usuario']
+        erros_por_usuario.setdefault(user, []).append(r['erro'])
+        
+    usuarios_unicos = sorted(erros_por_usuario.keys())
+    maes_usuarios = [np.mean(erros_por_usuario[u]) for u in usuarios_unicos]
+    rmses_usuarios = [np.sqrt(np.mean([e**2 for e in erros_por_usuario[u]])) for u in usuarios_unicos]
+    
+    fig, ax = plt.subplots(figsize=(8, 5))
+    x = np.arange(len(usuarios_unicos))
+    width = 0.35
+    
+    rects1 = ax.bar(x - width/2, maes_usuarios, width, label='MAE', color='#3498db', edgecolor='black', alpha=0.85)
+    rects2 = ax.bar(x + width/2, rmses_usuarios, width, label='RMSE', color='#e74c3c', edgecolor='black', alpha=0.85)
+    
+    ax.set_ylabel('Erro (%)', fontsize=11, fontweight='bold')
+    ax.set_title('Erro Médio de Recomendação por Perfil de Usuário', fontsize=12, fontweight='bold', pad=12)
+    ax.set_xticks(x)
+    ax.set_xticklabels(usuarios_unicos, fontsize=10, fontweight='bold')
+    ax.legend(loc='upper right')
+    ax.grid(True, linestyle=':', alpha=0.5)
+    ax.set_ylim(0, max(max(maes_usuarios), max(rmses_usuarios)) + 5)
+    
+    # Adicionar rótulos de valores em cima das barras
+    for rect in rects1:
+        h = rect.get_height()
+        ax.annotate(f'{h:.1f}%', xy=(rect.get_x() + rect.get_width()/2, h),
+                    xytext=(0, 3), textcoords="offset points", ha='center', va='bottom', fontsize=8)
+    for rect in rects2:
+        h = rect.get_height()
+        ax.annotate(f'{h:.1f}%', xy=(rect.get_x() + rect.get_width()/2, h),
+                    xytext=(0, 3), textcoords="offset points", ha='center', va='bottom', fontsize=8)
+                    
+    caminho_erros = os.path.join(output_dir, 'avaliacao_erros_perfil.png')
+    fig.savefig(caminho_erros, dpi=150, bbox_inches='tight')
+    plt.close(fig)
+    print(f"[PLOT] Gráfico de erros por perfil salvo: {caminho_erros}")
+
+    # ── 3. MAPA DE CALOR (HEATMAP) DE RECOMENDAÇÕES POR PERFIL E FILME
+    usuarios_ord = sorted(list(set(r['usuario'] for r in resultados)))
+    
+    movie_ids_ord = []
+    movie_titles = {}
+    for r in resultados:
+        m_id = r['movie_id']
+        if m_id not in movie_ids_ord:
+            movie_ids_ord.append(m_id)
+            movie_titles[m_id] = r['movie_title']
+            
+    heatmap_matrix = np.zeros((len(usuarios_ord), len(movie_ids_ord)))
+    for r in resultados:
+        u_idx = usuarios_ord.index(r['usuario'])
+        m_idx = movie_ids_ord.index(r['movie_id'])
+        heatmap_matrix[u_idx, m_idx] = r['previsto_pct']
+        
+    fig, ax = plt.subplots(figsize=(9, 6))
+    im = ax.imshow(heatmap_matrix, cmap='YlGnBu', aspect='auto', vmin=0, vmax=100)
+    
+    # Eixos e Título
+    ax.set_yticks(range(len(usuarios_ord)))
+    ax.set_yticklabels(usuarios_ord, fontsize=10, fontweight='bold')
+    
+    movie_labels = [movie_titles[m_id] for m_id in movie_ids_ord]
+    ax.set_xticks(range(len(movie_ids_ord)))
+    ax.set_xticklabels(movie_labels, rotation=20, ha='right', fontsize=9, fontweight='bold')
+    ax.set_title('Percentuais de Recomendação por Perfil e Filme', fontsize=12, fontweight='bold', pad=15)
+    
+    # Anotações numéricas nas células
+    for i in range(len(usuarios_ord)):
+        for j in range(len(movie_ids_ord)):
+            val = heatmap_matrix[i, j]
+            color = 'white' if val > 60 else 'black'
+            ax.text(j, i, f"{val:.1f}%", ha='center', va='center', fontsize=10, color=color, fontweight='bold')
+            
+    fig.colorbar(im, ax=ax, label='Recomendação (%)')
+    plt.tight_layout()
+    
+    caminho_heatmap = os.path.join(output_dir, 'avaliacao_heatmap.png')
+    fig.savefig(caminho_heatmap, dpi=150, bbox_inches='tight')
+    plt.close(fig)
+    print(f"[PLOT] Mapa de calor de recomendações salvo: {caminho_heatmap}")
 
 
 if __name__ == '__main__':
@@ -476,7 +570,7 @@ if __name__ == '__main__':
 
     if modo_avaliacao:
         resultados_eval = avaliar_cenarios(CENARIOS_TESTE)
-        plotar_matriz_confusao(resultados_eval)
+        plotar_metricas_e_graficos(resultados_eval)
 
     else:
         user_id = get_user_id_by_name("Guilherme")
