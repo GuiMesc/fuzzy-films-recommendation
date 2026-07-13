@@ -75,3 +75,10 @@ Por fim, é só executar o script de recomendação e ver o resultado no prompt 
 ```bash
 python3 recommendation.py
 ```
+ou
+```bash
+python3 recommendation.py --avaliar
+```
+
+## 4. Modos do Script
+De acordo com o tópico 3, o script tem dois modos de execução. No primeiro, o usuário definirá manualmente qual usuário do banco e qual filme será utilizado (alterando no próprio código). E no segundo, o script rodará com os usuários pré-definidos de teste, para isso, será necessário criá-los no banco. O arquivo "cenarios_teste_fuzzy.sql" contém todos os comandos para a criação deles, e caso não queira usar esse arquivo, pode usar o "dump.sql" para carregar todo o banco de vez.
